@@ -7,15 +7,7 @@
  *  terms of the license contained in the file LICENSE in this distribution.
  */
 
-#ifndef RL_PTHREAD_IFACE_HPP
-#define RL_PTHREAD_IFACE_HPP
-#ifdef _MSC_VER
-#   pragma once
-#endif
-
+#pragma once
 
 #include "relacy.hpp"
 #include "stdlib/pthread.hpp"
-
-
-#endif

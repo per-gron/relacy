@@ -7,11 +7,7 @@
  *  terms of the license contained in the file LICENSE in this distribution.
  */
 
-#ifndef RL_JAVA_VAR_HPP
-#define RL_JAVA_VAR_HPP
-#ifdef _MSC_VER
-#   pragma once
-#endif
+#pragma once
 
 #include "base.hpp"
 #include "atomic.hpp"
@@ -153,5 +149,3 @@ private:
 
 
 }
-
-#endif

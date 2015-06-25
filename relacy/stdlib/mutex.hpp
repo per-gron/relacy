@@ -7,11 +7,7 @@
  *  terms of the license contained in the file LICENSE in this distribution.
  */
 
-#ifndef RL_MUTEX_HPP
-#define RL_MUTEX_HPP
-#ifdef _MSC_VER
-#   pragma once
-#endif
+#pragma once
 
 #include "../base.hpp"
 #include "../context.hpp"
@@ -670,5 +666,3 @@ typedef std_generic_mutex<mutex_tag_std_recursive, true> recursive_mutex;
 
 
 }
-
-#endif

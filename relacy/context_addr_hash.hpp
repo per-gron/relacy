@@ -7,11 +7,7 @@
  *  terms of the license contained in the file LICENSE in this distribution.
  */
 
-#ifndef RL_CONTEXT_ADDR_HASH_HPP
-#define RL_CONTEXT_ADDR_HASH_HPP
-#ifdef _MSC_VER
-#   pragma once
-#endif
+#pragma once
 
 #include "base.hpp"
 
@@ -77,5 +73,3 @@ private:
 
 
 }
-
-#endif

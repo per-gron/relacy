@@ -7,14 +7,9 @@
  *  terms of the license contained in the file LICENSE in this distribution.
  */
 
-#ifndef RL_RMW_HPP
-#define RL_RMW_HPP
-#ifdef _MSC_VER
-#   pragma once
-#endif
+#pragma once
 
 #include "base.hpp"
-
 
 namespace rl
 {
@@ -93,9 +88,4 @@ T perform_rmw(rmw_type_t<rmw_type_xor>, T v, Y op)
     return v ^ op;
 }
 
-
-
 }
-
-
-#endif

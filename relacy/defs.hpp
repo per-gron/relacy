@@ -7,12 +7,7 @@
  *  terms of the license contained in the file LICENSE in this distribution.
  */
 
-#ifndef RL_DEFS_HPP
-#define RL_DEFS_HPP
-#ifdef _MSC_VER
-#   pragma once
-#endif
-
+#pragma once
 
 namespace rl
 {
@@ -139,6 +134,3 @@ typedef std::basic_ostringstream<char, std::char_traits<char>, raw_allocator<cha
 typedef std::basic_istringstream<char, std::char_traits<char>, raw_allocator<char> > istringstream;
 
 }
-
-
-#endif

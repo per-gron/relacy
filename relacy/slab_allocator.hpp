@@ -7,14 +7,9 @@
  *  terms of the license contained in the file LICENSE in this distribution.
  */
 
-#ifndef RL_SLAB_ALLOCATOR_HPP
-#define RL_SLAB_ALLOCATOR_HPP
-#ifdef _MSC_VER
-#   pragma once
-#endif
+#pragma once
 
 #include "base.hpp"
-
 
 namespace rl
 {
@@ -151,7 +146,4 @@ private:
     }
 };
 
-
 }
-
-#endif

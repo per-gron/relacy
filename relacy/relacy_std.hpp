@@ -7,15 +7,9 @@
  *  terms of the license contained in the file LICENSE in this distribution.
  */
 
-#ifndef RL_RELACY_STD_HPP
-#define RL_RELACY_STD_HPP
-#ifdef _MSC_VER
-#   pragma once
-#endif
-
+#pragma once
 
 #include "relacy.hpp"
-
 
 namespace std
 {
@@ -78,5 +72,3 @@ namespace std
     using rl::condition_variable;
     using rl::condition_variable_any;
 }
-
-#endif

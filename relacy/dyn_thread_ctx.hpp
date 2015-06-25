@@ -7,12 +7,7 @@
  *  terms of the license contained in the file LICENSE in this distribution.
  */
 
-#ifndef RL_DYN_THREAD_CTX_HPP
-#define RL_DYN_THREAD_CTX_HPP
-#ifdef _MSC_VER
-#   pragma once
-#endif
-
+#pragma once
 
 #include "base.hpp"
 #include "waitset.hpp"
@@ -50,7 +45,7 @@ public:
         context& c = ctx();
         sync_.acquire(c.threadx_);
     }
-    
+
     void on_finish()
     {
         RL_VERIFY(finished_ == false);
@@ -123,5 +118,3 @@ private:
 
 
 }
-
-#endif

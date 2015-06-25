@@ -7,14 +7,9 @@
  *  terms of the license contained in the file LICENSE in this distribution.
  */
 
-#ifndef RL_RANDOM_HPP
-#define RL_RANDOM_HPP
-#ifdef _MSC_VER
-#   pragma once
-#endif
+#pragma once
 
 #include "base.hpp"
-
 
 namespace rl
 {
@@ -48,8 +43,4 @@ struct random_generator
     }
 };
 
-
-
 }
-
-#endif

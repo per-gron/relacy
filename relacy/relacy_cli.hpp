@@ -7,12 +7,7 @@
  *  terms of the license contained in the file LICENSE in this distribution.
  */
 
-#ifndef RL_RELACY_CLI_HPP
-#define RL_RELACY_CLI_HPP
-#ifdef _MSC_VER
-#   pragma once
-#endif
-
+#pragma once
 
 #define RL_CLI_MODE
 
@@ -22,8 +17,3 @@
 #include "cli_interlocked.hpp"
 #include "cli_volatile.hpp"
 #include "cli_var.hpp"
-
-
-
-
-#endif

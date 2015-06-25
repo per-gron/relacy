@@ -7,11 +7,7 @@
  *  terms of the license contained in the file LICENSE in this distribution.
  */
 
-#ifndef RL_ATOMIC_EVENTS_HPP
-#define RL_ATOMIC_EVENTS_HPP
-#ifdef _MSC_VER
-#   pragma once
-#endif
+#pragma once
 
 #include "base.hpp"
 #include "memory_order.hpp"
@@ -143,6 +139,3 @@ struct atomic_rmw_event
 
 
 }
-
-
-#endif

@@ -7,11 +7,7 @@
  *  terms of the license contained in the file LICENSE in this distribution.
  */
 
-#ifndef RL_PTHREAD_HPP
-#define RL_PTHREAD_HPP
-#ifdef _MSC_VER
-#   pragma once
-#endif
+#pragma once
 
 #include "mutex.hpp"
 #include "condition_variable.hpp"
@@ -593,7 +589,3 @@ rl::rl_sem_post(sema, $)
 
 #define futex(uaddr, op, val, timeout, uaddr2, val3) \
  rl::rl_futex(uaddr, op, val, timeout, uaddr2, val3, $)
-
-#endif
-
-

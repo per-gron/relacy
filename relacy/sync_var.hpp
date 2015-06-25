@@ -7,15 +7,10 @@
  *  terms of the license contained in the file LICENSE in this distribution.
  */
 
-#ifndef RL_SYNC_VAR_HPP
-#define RL_SYNC_VAR_HPP
-#ifdef _MSC_VER
-#   pragma once
-#endif
+#pragma once
 
 #include "base.hpp"
 #include "foreach.hpp"
-
 
 namespace rl
 {
@@ -60,7 +55,4 @@ private:
     timestamp_t order_ [thread_count];
 };
 
-
 }
-
-#endif

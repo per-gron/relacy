@@ -7,15 +7,10 @@
  *  terms of the license contained in the file LICENSE in this distribution.
  */
 
-#ifndef RL_TEST_PARAMS_HPP
-#define RL_TEST_PARAMS_HPP
-#ifdef _MSC_VER
-#   pragma once
-#endif
+#pragma once
 
 #include "base.hpp"
 #include "test_result.hpp"
-
 
 namespace rl
 {
@@ -84,7 +79,4 @@ struct test_params
     }
 };
 
-
 }
-
-#endif

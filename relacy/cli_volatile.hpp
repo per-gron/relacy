@@ -7,11 +7,7 @@
  *  terms of the license contained in the file LICENSE in this distribution.
  */
 
-#ifndef RL_CLI_VOLATILE_HPP
-#define RL_CLI_VOLATILE_HPP
-#ifdef _MSC_VER
-#   pragma once
-#endif
+#pragma once
 
 #include "base.hpp"
 #include "atomic.hpp"
@@ -157,5 +153,3 @@ public:
 
 
 }
-
-#endif

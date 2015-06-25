@@ -7,11 +7,7 @@
  *  terms of the license contained in the file LICENSE in this distribution.
  */
 
-#ifndef RL_PCH_HPP
-#define RL_PCH_HPP
-#ifdef _MSC_VER
-#   pragma once
-#endif
+#pragma once
 
 #ifndef _CRT_SECURE_NO_WARNINGS
 #   define _CRT_SECURE_NO_WARNINGS 1
@@ -71,6 +67,4 @@
 #   include <unistd.h>
 #   include <ucontext.h>
 #   include <setjmp.h>
-#endif
-
 #endif

@@ -7,14 +7,9 @@
  *  terms of the license contained in the file LICENSE in this distribution.
  */
 
-#ifndef RL_MEMORY_HPP
-#define RL_MEMORY_HPP
-#ifdef _MSC_VER
-#   pragma once
-#endif
+#pragma once
 
 #include "base.hpp"
-
 
 namespace rl
 {
@@ -234,8 +229,4 @@ struct memory_free_event
     }
 };
 
-
-
 }
-
-#endif

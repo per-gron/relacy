@@ -7,11 +7,7 @@
  *  terms of the license contained in the file LICENSE in this distribution.
  */
 
-#ifndef RL_SCHEDULER_HPP
-#define RL_SCHEDULER_HPP
-#ifdef _MSC_VER
-#   pragma once
-#endif
+#pragma once
 
 #include "base.hpp"
 #include "context_base.hpp"
@@ -101,7 +97,7 @@ public:
         }
 
         thread_id_t const th = self().iteration_begin_impl();
-    
+
         thread_ = &threads_[th];
 
         return th;
@@ -328,5 +324,3 @@ private:
 
 
 }
-
-#endif

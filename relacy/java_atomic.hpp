@@ -7,11 +7,7 @@
  *  terms of the license contained in the file LICENSE in this distribution.
  */
 
-#ifndef RL_JAVA_ATOMIC_HPP
-#define RL_JAVA_ATOMIC_HPP
-#ifdef _MSC_VER
-#   pragma once
-#endif
+#pragma once
 
 #include "base.hpp"
 #include "atomic.hpp"
@@ -145,11 +141,4 @@ public:
 typedef jatomic<int> AtomicInteger;
 typedef jatomic<long> AtomicLong;
 
-
-
-
-
-
 }
-
-#endif

@@ -7,11 +7,7 @@
  *  terms of the license contained in the file LICENSE in this distribution.
  */
 
-#ifndef RL_BASE_HPP
-#define RL_BASE_HPP
-#ifdef _MSC_VER
-#   pragma once
-#endif
+#pragma once
 
 #include "pch.hpp"
 #include "platform.hpp"
@@ -139,6 +135,4 @@ T val(T x)
         ::rl::assert_failed(#x, $); RL_INT3(); } } while ((void)0, 0)
 #else
 #   define RL_VERIFY(x) (void)0
-#endif
-
 #endif

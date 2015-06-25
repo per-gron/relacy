@@ -7,11 +7,7 @@
  *  terms of the license contained in the file LICENSE in this distribution.
  */
 
-#ifndef RL_FULL_SEARCH_SCHEDULER_HPP
-#define RL_FULL_SEARCH_SCHEDULER_HPP
-#ifdef _MSC_VER
-#   pragma once
-#endif
+#pragma once
 
 #include "base.hpp"
 #include "scheduler.hpp"
@@ -416,6 +412,3 @@ public:
 
 
 }
-
-#endif
-

@@ -7,12 +7,7 @@
  *  terms of the license contained in the file LICENSE in this distribution.
  */
 
-#ifndef RL_CONTEXT_BASE_IMPL_HPP
-#define RL_CONTEXT_BASE_IMPL_HPP
-#ifdef _MSC_VER
-#   pragma once
-#endif
-
+#pragma once
 
 namespace rl
 {
@@ -66,7 +61,3 @@ void context::exec_log(debug_info_param info, event_t const& ev)
 
 
 }
-
-
-
-#endif

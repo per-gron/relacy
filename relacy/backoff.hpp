@@ -7,11 +7,7 @@
  *  terms of the license contained in the file LICENSE in this distribution.
  */
 
-#ifndef RL_BACKOFF_HPP
-#define RL_BACKOFF_HPP
-#ifdef _MSC_VER
-#   pragma once
-#endif
+#pragma once
 
 #include "base.hpp"
 #include "context_base.hpp"
@@ -53,5 +49,3 @@ typedef backoff_t<2, 0> exp_backoff;
 
 
 }
-
-#endif

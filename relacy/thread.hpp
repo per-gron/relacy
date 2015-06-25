@@ -7,11 +7,7 @@
  *  terms of the license contained in the file LICENSE in this distribution.
  */
 
-#ifndef RL_THREAD_HPP
-#define RL_THREAD_HPP
-#ifdef _MSC_VER
-#   pragma once
-#endif
+#pragma once
 
 #include "base.hpp"
 #include "context_base.hpp"
@@ -21,11 +17,8 @@
 #include "memory_order.hpp"
 #include "foreach.hpp"
 
-
 namespace rl
 {
-
-
 
 struct atomic_data;
 struct var_data;
@@ -259,7 +252,7 @@ private:
         RL_VERIFY(mo_release != mo || rmw);
         RL_VERIFY(mo_acq_rel != mo || rmw);
 
-        atomic_data_impl<thread_count>& var = 
+        atomic_data_impl<thread_count>& var =
             *static_cast<atomic_data_impl<thread_count>*>(data);
 
         typedef typename atomic_data_impl<thread_count>::history_record history_t;
@@ -289,7 +282,7 @@ private:
 
     virtual unsigned atomic_init(atomic_data* RL_RESTRICT data)
     {
-        atomic_data_impl<thread_count>& var = 
+        atomic_data_impl<thread_count>& var =
             *static_cast<atomic_data_impl<thread_count>*>(data);
 
         typedef typename atomic_data_impl<thread_count>::history_record history_t;
@@ -314,7 +307,7 @@ private:
         RL_VERIFY(mo_acquire != mo || rmw);
         RL_VERIFY(mo_acq_rel != mo || rmw);
 
-        atomic_data_impl<thread_count>& var = 
+        atomic_data_impl<thread_count>& var =
             *static_cast<atomic_data_impl<thread_count>*>(data);
 
         typedef typename atomic_data_impl<thread_count>::history_record history_t;
@@ -341,12 +334,12 @@ private:
             foreach<thread_count>(imp_seq_cst_order_, prev.acq_rel_order_, assign_max);
 #endif
 
-        bool const synch = 
+        bool const synch =
             (mo_release == mo
             || mo_acq_rel == mo
             || mo_seq_cst == mo);
 
-        bool const preserve = 
+        bool const preserve =
             prev.busy_ && (rmw || (index_ == prev.thread_id_));
 
         timestamp_t* acq_rel_order = (synch ? acq_rel_order_ : release_fence_order_);
@@ -367,7 +360,7 @@ private:
     template<memory_order mo>
     unsigned atomic_rmw(atomic_data* RL_RESTRICT data, bool& aba)
     {
-        atomic_data_impl<thread_count>& var = 
+        atomic_data_impl<thread_count>& var =
             *static_cast<atomic_data_impl<thread_count>*>(data);
         timestamp_t const last_seen = var.history_[var.current_index_ % atomic_history_size].last_seen_order_[index_];
         aba = (last_seen > own_acq_rel_order_);
@@ -384,7 +377,7 @@ private:
     virtual unpark_reason atomic_wait(atomic_data* RL_RESTRICT data, bool is_timed, bool allow_spurious_wakeup, debug_info_param info)
     {
         context& c = ctx();
-        atomic_data_impl<thread_count>& var = 
+        atomic_data_impl<thread_count>& var =
             *static_cast<atomic_data_impl<thread_count>*>(data);
         unpark_reason const res = var.futex_ws_.park_current(c, is_timed, allow_spurious_wakeup, false, info);
         if (res == unpark_reason_normal)
@@ -395,7 +388,7 @@ private:
     virtual thread_id_t atomic_wake(atomic_data* RL_RESTRICT data, thread_id_t count, debug_info_param info)
     {
         context& c = ctx();
-        atomic_data_impl<thread_count>& var = 
+        atomic_data_impl<thread_count>& var =
             *static_cast<atomic_data_impl<thread_count>*>(data);
         thread_id_t unblocked = 0;
         for (; count != 0; count -= 1, unblocked += 1)
@@ -409,7 +402,4 @@ private:
     }
 };
 
-
 }
-
-#endif

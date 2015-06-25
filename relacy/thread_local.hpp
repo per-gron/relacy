@@ -7,20 +7,14 @@
  *  terms of the license contained in the file LICENSE in this distribution.
  */
 
-#ifndef RL_THREAD_LOCAL_HPP
-#define RL_THREAD_LOCAL_HPP
-#ifdef _MSC_VER
-#   pragma once
-#endif
+#pragma once
 
 #include "base.hpp"
 #include "signature.hpp"
 #include "context.hpp"
 
-
 namespace rl
 {
-
 
 class generic_thread_local : nocopy<>
 {
@@ -188,5 +182,3 @@ inline int rl_TlsSetValue(unsigned long slot, void* value, debug_info_param info
 #define TlsSetValue(slot, value) rl::rl_TlsSetValue((slot), (value), $)
 
 }
-
-#endif

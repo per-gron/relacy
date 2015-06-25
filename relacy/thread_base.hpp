@@ -7,11 +7,7 @@
  *  terms of the license contained in the file LICENSE in this distribution.
  */
 
-#ifndef RL_THREAD_BASE_HPP
-#define RL_THREAD_BASE_HPP
-#ifdef _MSC_VER
-#   pragma once
-#endif
+#pragma once
 
 #include "base.hpp"
 #include "context_base.hpp"
@@ -19,10 +15,8 @@
 //#include "memory_order.hpp"
 //#include "foreach.hpp"
 
-
 namespace rl
 {
-
 
 
 struct atomic_data;
@@ -87,9 +81,4 @@ private:
     thread_info_base& operator = (thread_info_base const&);
 };
 
-
-
-
 }
-
-#endif

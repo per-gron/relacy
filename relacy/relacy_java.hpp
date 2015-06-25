@@ -7,12 +7,7 @@
  *  terms of the license contained in the file LICENSE in this distribution.
  */
 
-#ifndef RL_RELACY_JAVA_HPP
-#define RL_RELACY_JAVA_HPP
-#ifdef _MSC_VER
-#   pragma once
-#endif
-
+#pragma once
 
 #define RL_JAVA_MODE
 
@@ -22,8 +17,3 @@
 #include "java_atomic.hpp"
 #include "java_volatile.hpp"
 #include "java_var.hpp"
-
-
-
-
-#endif

@@ -7,11 +7,7 @@
  *  terms of the license contained in the file LICENSE in this distribution.
  */
 
-#ifndef RL_ATOMIC_HPP
-#define RL_ATOMIC_HPP
-#ifdef _MSC_VER
-#   pragma once
-#endif
+#pragma once
 
 #include "base.hpp"
 #include "context.hpp"
@@ -476,7 +472,7 @@ private:
         sign_.check(info);
 
         unsigned const index = (c.threadx_->*impl)(impl_);
-        
+
         T const prev = value_;
         last_index_ = index;
         history_[index] = v;
@@ -717,7 +713,3 @@ struct atomic_data_impl : atomic_data
 
 
 }
-
-
-
-#endif

@@ -7,16 +7,11 @@
  *  terms of the license contained in the file LICENSE in this distribution.
  */
 
-#ifndef RL_WAITSET_HPP
-#define RL_WAITSET_HPP
-#ifdef _MSC_VER
-#   pragma once
-#endif
+#pragma once
 
 #include "base.hpp"
 #include "thread_base.hpp"
 #include "context_base.hpp"
-
 
 namespace rl
 {
@@ -191,8 +186,4 @@ private:
     }
 };
 
-
 }
-
-
-#endif

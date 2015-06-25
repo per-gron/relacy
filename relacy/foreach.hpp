@@ -7,11 +7,7 @@
  *  terms of the license contained in the file LICENSE in this distribution.
  */
 
-#ifndef RL_FOREACH_HPP
-#define RL_FOREACH_HPP
-#ifdef _MSC_VER
-#   pragma once
-#endif
+#pragma once
 
 #include "base.hpp"
 
@@ -128,6 +124,3 @@ RL_INLINE void plus_one(timestamp_t& elem)
 }
 
 }
-
-
-#endif

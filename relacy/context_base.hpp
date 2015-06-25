@@ -7,11 +7,7 @@
  *  terms of the license contained in the file LICENSE in this distribution.
  */
 
-#ifndef RL_CONTEXT_BASE_HPP
-#define RL_CONTEXT_BASE_HPP
-#ifdef _MSC_VER
-#   pragma once
-#endif
+#pragma once
 
 #include "base.hpp"
 #include "history.hpp"
@@ -318,6 +314,3 @@ private:
 #endif
 #define RL_ASSERT(x) RL_ASSERT_IMPL(x, rl::test_result_user_assert_failed, "assertion: " #x, RL_INFO)
 #define RL_UNTIL(x) do {if ((x)) rl::ctx().rl_until(#x, RL_INFO);} while ((void)0, 0)
-
-
-#endif

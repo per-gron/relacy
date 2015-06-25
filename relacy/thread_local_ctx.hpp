@@ -7,19 +7,13 @@
  *  terms of the license contained in the file LICENSE in this distribution.
  */
 
-#ifndef RL_THREAD_LOCAL_CTX_HPP
-#define RL_THREAD_LOCAL_CTX_HPP
-#ifdef _MSC_VER
-#   pragma once
-#endif
+#pragma once
 
 #include "base.hpp"
 #include "test_params.hpp"
 
-
 namespace rl
 {
-
 
 struct thread_local_context_iface
 {
@@ -115,8 +109,4 @@ private:
     }
 };
 
-
-
 }
-
-#endif

@@ -7,11 +7,7 @@
  *  terms of the license contained in the file LICENSE in this distribution.
  */
 
-#ifndef RL_JAVA_HPP
-#define RL_JAVA_HPP
-#ifdef _MSC_VER
-#   pragma once
-#endif
+#pragma once
 
 #include "base.hpp"
 
@@ -21,7 +17,7 @@ namespace rl
 
 /*
 
-Hierarchy For Package java.util.concurrent.locks 
+Hierarchy For Package java.util.concurrent.locks
 
 Class Hierarchy
 
@@ -32,7 +28,7 @@ Class Hierarchy
           o java.util.concurrent.locks.ReentrantLock (implements java.util.concurrent.locks.Lock, java.io.Serializable)
           o java.util.concurrent.locks.ReentrantReadWriteLock (implements java.util.concurrent.locks.ReadWriteLock, java.io.Serializable)
           o java.util.concurrent.locks.ReentrantReadWriteLock.ReadLock (implements java.util.concurrent.locks.Lock, java.io.Serializable)
-          o java.util.concurrent.locks.ReentrantReadWriteLock.WriteLock (implements java.util.concurrent.locks.Lock, java.io.Serializable) 
+          o java.util.concurrent.locks.ReentrantReadWriteLock.WriteLock (implements java.util.concurrent.locks.Lock, java.io.Serializable)
 
 Interface Hierarchy
 
@@ -70,12 +66,12 @@ Acquires a permit, if one is available and returns immediately, reducing the num
 If no permit is available then the current thread becomes disabled for thread scheduling purposes and lies dormant until one of two things happens:
 
     * Some other thread invokes the release() method for this semaphore and the current thread is next to be assigned a permit; or
-    * Some other thread interrupts the current thread. 
+    * Some other thread interrupts the current thread.
 
 If the current thread:
 
     * has its interrupted status set on entry to this method; or
-    * is interrupted while waiting for a permit, 
+    * is interrupted while waiting for a permit,
 
 then InterruptedException is thrown and the current thread's interrupted status is cleared.
 Throws
@@ -92,12 +88,12 @@ Acquires the given number of permits, if they are available, and returns immedia
 If insufficient permits are available then the current thread becomes disabled for thread scheduling purposes and lies dormant until one of two things happens:
 
     * Some other thread invokes one of the release methods for this semaphore, the current thread is next to be assigned permits and the number of available permits satisfies this request; or
-    * Some other thread interrupts the current thread. 
+    * Some other thread interrupts the current thread.
 
 If the current thread:
 
     * has its interrupted status set on entry to this method; or
-    * is interrupted while waiting for a permit, 
+    * is interrupted while waiting for a permit,
 
 then InterruptedException is thrown and the current thread's interrupted status is cleared. Any permits that were to be assigned to this thread are instead assigned to the next waiting thread(s), as if they had been made available by a call to release().
 Parameters
@@ -135,31 +131,31 @@ Returns the current number of permits available in this semaphore.
 This method is typically used for debugging and testing purposes.
 Returns
 
-    * the number of permits available in this semaphore. 
+    * the number of permits available in this semaphore.
 
 public int drainPermits()
 Acquire and return all permits that are immediately available.
 Returns
 
-    * the number of permits 
+    * the number of permits
 
 public final int getQueueLength()
 Returns an estimate of the number of threads waiting to acquire. The value is only an estimate because the number of threads may change dynamically while this method traverses internal data structures. This method is designed for use in monitoring of the system state, not for synchronization control.
 Returns
 
-    * the estimated number of threads waiting for this lock 
+    * the estimated number of threads waiting for this lock
 
 public final boolean hasQueuedThreads()
 Queries whether any threads are waiting to acquire. Note that because cancellations may occur at any time, a true return does not guarantee that any other thread will ever acquire. This method is designed primarily for use in monitoring of the system state.
 Returns
 
-    * true if there may be other threads waiting to acquire the lock. 
+    * true if there may be other threads waiting to acquire the lock.
 
 public boolean isFair()
 Returns true if this semaphore has fairness set true.
 Returns
 
-    * true if this semaphore has fairness set true. 
+    * true if this semaphore has fairness set true.
 
 public void release(int permits)
 Releases the given number of permits, returning them to the semaphore.
@@ -181,7 +177,7 @@ public String toString()
 Returns a string identifying this semaphore, as well as its state. The state, in brackets, includes the String "Permits =" followed by the number of permits.
 Returns
 
-    * a string identifying this semaphore, as well as its state 
+    * a string identifying this semaphore, as well as its state
 
 public boolean tryAcquire(long timeout, TimeUnit unit)
 Acquires a permit from this semaphore, if one becomes available within the given waiting time and the current thread has not been interrupted.
@@ -192,14 +188,14 @@ If no permit is available then the current thread becomes disabled for thread sc
 
     * Some other thread invokes the release() method for this semaphore and the current thread is next to be assigned a permit; or
     * Some other thread interrupts the current thread; or
-    * The specified waiting time elapses. 
+    * The specified waiting time elapses.
 
 If a permit is acquired then the value true is returned.
 
 If the current thread:
 
     * has its interrupted status set on entry to this method; or
-    * is interrupted while waiting to acquire a permit, 
+    * is interrupted while waiting to acquire a permit,
 
 then InterruptedException is thrown and the current thread's interrupted status is cleared.
 
@@ -226,14 +222,14 @@ If insufficient permits are available then the current thread becomes disabled f
 
     * Some other thread invokes one of the release methods for this semaphore, the current thread is next to be assigned permits and the number of available permits satisfies this request; or
     * Some other thread interrupts the current thread; or
-    * The specified waiting time elapses. 
+    * The specified waiting time elapses.
 
 If the permits are acquired then the value true is returned.
 
 If the current thread:
 
     * has its interrupted status set on entry to this method; or
-    * is interrupted while waiting to acquire the permits, 
+    * is interrupted while waiting to acquire the permits,
 
 then InterruptedException is thrown and the current thread's interrupted status is cleared. Any permits that were to be assigned to this thread, are instead assigned to the next waiting thread(s), as if they had been made available by a call to release().
 
@@ -279,23 +275,21 @@ If no permit is available then this method will return immediately with the valu
 Even when this semaphore has been set to use a fair ordering policy, a call to tryAcquire() will immediately acquire a permit if one is available, whether or not other threads are currently waiting. This "barging" behavior can be useful in certain circumstances, even though it breaks fairness. If you want to honor the fairness setting, then use tryAcquire(0, TimeUnit.SECONDS) which is almost equivalent (it also detects interruption).
 Returns
 
-    * true if a permit was acquired and false otherwise. 
+    * true if a permit was acquired and false otherwise.
 
 Protected Methods
 protected Collection<Thread> getQueuedThreads()
 Returns a collection containing threads that may be waiting to acquire. Because the actual set of threads may change dynamically while constructing this result, the returned collection is only a best-effort estimate. The elements of the returned collection are in no particular order. This method is designed to facilitate construction of subclasses that provide more extensive monitoring facilities.
 Returns
 
-    * the collection of threads 
+    * the collection of threads
 
 protected void reducePermits(int reduction)
 Shrinks the number of available permits by the indicated reduction. This method can be useful in subclasses that use semaphores to track resources that become unavailable. This method differs from acquire in that it does not block waiting for permits to become available.
 Parameters
 reduction     the number of permits to remove
 Throws
-IllegalArgumentException     if reduction is negative 
+IllegalArgumentException     if reduction is negative
 */
 
 }
-
-#endif

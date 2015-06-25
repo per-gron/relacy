@@ -7,11 +7,7 @@
  *  terms of the license contained in the file LICENSE in this distribution.
  */
 
-#ifndef RL_CONTEXT_HPP
-#define RL_CONTEXT_HPP
-#ifdef _MSC_VER
-#   pragma once
-#endif
+#pragma once
 
 #include "base.hpp"
 #include "thread_local_ctx.hpp"
@@ -1292,5 +1288,3 @@ inline void operator delete [] (void* p) throw()
 
 #define RL_NEW_PROXY rl::new_proxy($) % new
 #define RL_DELETE_PROXY rl::delete_proxy($) , delete
-
-#endif

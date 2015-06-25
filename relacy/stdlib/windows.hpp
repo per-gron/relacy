@@ -7,11 +7,7 @@
  *  terms of the license contained in the file LICENSE.TXT in this distribution.
  */
 
-#ifndef RL_WINDOWS_HPP
-#define RL_WINDOWS_HPP
-#ifdef _MSC_VER
-#   pragma once
-#endif
+#pragma once
 
 #include "mutex.hpp"
 #include "condition_variable.hpp"
@@ -47,7 +43,7 @@ inline void rl_Sleep(unsigned long milliseconds, debug_info_param info)
 
 inline unsigned long rl_WaitForSingleObjectEx(rl_HANDLE obj, unsigned long timeout, int alertable, debug_info_param info)
 {
-    (void)alertable; //!!! not yet supported – support it!
+    (void)alertable; //!!! not yet supported ? support it!
     //!!! support WAIT_IO_COMPLETION
     RL_VERIFY(false == alertable && "Alertable wait is not supported in WaitForSingleObject() yet");
 
@@ -612,6 +608,3 @@ inline void rl_FlushProcessWriteBuffers(debug_info_param info)
 
 #define FlushProcessWriteBuffers() \
  rl::rl_FlushProcessWriteBuffers($)
-
-
-#endif

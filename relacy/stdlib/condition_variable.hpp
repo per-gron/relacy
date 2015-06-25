@@ -7,11 +7,7 @@
  *  terms of the license contained in the file LICENSE in this distribution.
  */
 
-#ifndef RL_CONDITION_VARIABLE_HPP
-#define RL_CONDITION_VARIABLE_HPP
-#ifdef _MSC_VER
-#   pragma once
-#endif
+#pragma once
 
 #include "../base.hpp"
 #include "../context_base.hpp"
@@ -344,7 +340,7 @@ public:
     {
         return condvar<tag_t>::wait(lock, pred, true, info);
     }
-    
+
     template<typename lock_t, typename rel_time_t>
     bool wait_for(lock_t& lock, rel_time_t const&, debug_info_param info)
     {
@@ -368,5 +364,3 @@ struct condvar_tag_std_any;
 typedef condition_variable_std<condvar_tag_std_any> condition_variable_any;
 
 }
-
-#endif

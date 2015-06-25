@@ -7,14 +7,9 @@
  *  terms of the license contained in the file LICENSE in this distribution.
  */
 
-#ifndef RL_MEMORY_ORDER_HPP
-#define RL_MEMORY_ORDER_HPP
-#ifdef _MSC_VER
-#   pragma once
-#endif
+#pragma once
 
 #include "base.hpp"
-
 
 namespace rl
 {
@@ -48,7 +43,4 @@ inline char const* format(memory_order mo)
     throw std::logic_error("invalid value of memory order");
 }
 
-
 }
-
-#endif

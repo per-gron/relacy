@@ -7,18 +7,12 @@
  *  terms of the license contained in the file LICENSE in this distribution.
  */
 
-#ifndef RL_TEST_RESULT_HPP
-#define RL_TEST_RESULT_HPP
-#ifdef _MSC_VER
-#   pragma once
-#endif
+#pragma once
 
 #include "base.hpp"
 
-
 namespace rl
 {
-
 
 enum test_result_e
 {
@@ -105,7 +99,4 @@ inline char const* test_result_str(test_result_e r)
     }
 }
 
-
 }
-
-#endif

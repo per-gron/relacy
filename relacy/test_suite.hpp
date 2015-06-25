@@ -7,19 +7,13 @@
  *  terms of the license contained in the file LICENSE in this distribution.
  */
 
-#ifndef RL_TEST_SUITE_HPP
-#define RL_TEST_SUITE_HPP
-#ifdef _MSC_VER
-#   pragma once
-#endif
+#pragma once
 
 #include "base.hpp"
 #include "test_result.hpp"
 
-
 namespace rl
 {
-
 
 template<
     typename derived_t,
@@ -42,7 +36,4 @@ struct test_suite : nocopy<>
     void after() {}
 };
 
-
 }
-
-#endif

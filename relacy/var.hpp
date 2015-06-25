@@ -7,17 +7,12 @@
  *  terms of the license contained in the file LICENSE in this distribution.
  */
 
-#ifndef RL_VAR_HPP
-#define RL_VAR_HPP
-#ifdef _MSC_VER
-#   pragma once
-#endif
+#pragma once
 
 #include "base.hpp"
 #include "context.hpp"
 #include "signature.hpp"
 #include "atomic_events.hpp"
-
 
 namespace rl
 {
@@ -379,10 +374,4 @@ struct var_data_impl : var_data
     virtual ~var_data_impl() {} // just to calm down gcc
 };
 
-
-
 }
-
-
-
-#endif

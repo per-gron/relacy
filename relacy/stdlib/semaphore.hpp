@@ -7,11 +7,7 @@
  *  terms of the license contained in the file LICENSE in this distribution.
  */
 
-#ifndef RL_SEMAPHORE_HPP
-#define RL_SEMAPHORE_HPP
-#ifdef _MSC_VER
-#   pragma once
-#endif
+#pragma once
 
 #include "../base.hpp"
 #include "../context_base.hpp"
@@ -237,7 +233,7 @@ public:
         context& c = ctx();
         c.sched();
         sign_.check(info);
-        
+
         RL_VERIFY(count_ <= INT_MAX);
         int result = (int)count_ - ws_.size();
         sync_.acquire(c.threadx_);
@@ -545,14 +541,10 @@ inline sema_wakeup_reason wait_for_multiple_objects(
             }
         }
     }
-    
+
     RL_HIST(wfmo_event) {(unsigned)count, wait_all, try_wait, is_timed, result, signaled} RL_HIST_END();
     return result;
 }
 
 
 }
-
-
-#endif
-

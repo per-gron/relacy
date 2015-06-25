@@ -7,11 +7,7 @@
  *  terms of the license contained in the file LICENSE in this distribution.
  */
 
-#ifndef RL_SIGNATURE_HPP
-#define RL_SIGNATURE_HPP
-#ifdef _MSC_VER
-#   pragma once
-#endif
+#pragma once
 
 #include "base.hpp"
 #include "test_result.hpp"
@@ -45,7 +41,7 @@ public:
     void check(debug_info_param info) const
     {
         if (
-            ((uintptr_t)this <= (uintptr_t)-1 - 4096) && 
+            ((uintptr_t)this <= (uintptr_t)-1 - 4096) &&
             ((uintptr_t)this >= 4096) &&
             ((uintptr_t)this % sizeof(unsigned) == 0) && (magic == magic_))
         {
@@ -78,7 +74,4 @@ private:
     }
 };
 
-
 }
-
-#endif

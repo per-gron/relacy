@@ -7,11 +7,7 @@
  *  terms of the license contained in the file LICENSE in this distribution.
  */
 
-#ifndef RL_PLATFORM_HPP
-#define RL_PLATFORM_HPP
-#ifdef _MSC_VER
-#   pragma once
-#endif
+#pragma once
 
 #include "pch.hpp"
 
@@ -252,8 +248,4 @@ inline void switch_to_fiber(fiber_t& fib, fiber_t& prv)
 #   define RL_RESTRICT __restrict
 #else
 #   define RL_RESTRICT
-#endif
-
-
-
 #endif

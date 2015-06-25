@@ -7,11 +7,7 @@
  *  terms of the license contained in the file LICENSE in this distribution.
  */
 
-#ifndef RL_CONTEXT_BOUND_SCHEDULER_HPP
-#define RL_CONTEXT_BOUND_SCHEDULER_HPP
-#ifdef _MSC_VER
-#   pragma once
-#endif
+#pragma once
 
 #include "base.hpp"
 #include "full_search_scheduler.hpp"
@@ -163,6 +159,3 @@ private:
 
 
 }
-
-#endif
-
