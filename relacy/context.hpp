@@ -273,35 +273,16 @@ public:
     virtual void* alloc(size_t size, bool is_array, debug_info_param info)
     {
         disable_alloc_ += 1;
-#ifndef RL_GC
         void* p = memory_.alloc(size);
-#else
-        void* p = memory_.alloc(size, (void(*)(void*))0);
-#endif
         disable_alloc_ -= 1;
         RL_HIST_CTX(memory_alloc_event) {p, size, is_array} RL_HIST_END();
         return p;
     }
-
-#ifdef RL_GC
-    virtual void* alloc(size_t size, bool is_array, void(*dtor)(void*), debug_info_param info)
-    {
-        disable_alloc_ += 1;
-        void* p = memory_.alloc(size, dtor);
-        disable_alloc_ -= 1;
-        RL_HIST_CTX(memory_alloc_event) {p, size, is_array} RL_HIST_END();
-        return p;
-    }
-#endif
 
     virtual void free(void* p, bool is_array, debug_info_param info)
     {
         RL_HIST_CTX(memory_free_event) {p, is_array} RL_HIST_END();
-#ifndef RL_GC
         bool const defer = (0 == sched_.rand(this->is_random_sched() ? 4 : 2, sched_type_mem_realloc));
-#else
-        bool const defer = false;
-#endif
         disable_alloc_ += 1;
         if (false == memory_.free(p, defer))
             fail_test("incorrect address passed to free() function", test_result_double_free, info);
@@ -318,11 +299,7 @@ public:
 
         prev_alloc_size_ = size;
         disable_alloc_ += 1;
-#ifndef RL_GC
         void* p = (memory_.alloc)(size);
-#else
-        void* p = (memory_.alloc)(size, 0);
-#endif
         disable_alloc_ -= 1;
         return p;
     }
@@ -350,11 +327,7 @@ public:
         disable_alloc_ += 1;
         debug_info const& info = last_info_;
         RL_HIST_CTX(memory_free_event) {p, false} RL_HIST_END();
-#ifndef RL_GC
         bool const defer = (0 == sched_.rand(this->is_random_sched() ? 4 : 2, sched_type_mem_realloc));
-#else
-        bool const defer = false;
-#endif
         if (false == memory_.free(p, defer))
             fail_test("incorrect address passed to free() function", test_result_double_free, info);
         disable_alloc_ -= 1;
@@ -735,12 +708,10 @@ private:
         }
         history_.print_exec_history(params_.output_history);
 
-#ifndef RL_GC
         if (test_result_memory_leak == test_result_)
         {
             memory_.output_allocs(*params_.output_stream);
         }
-#endif
 
         //!!! output other leaked resources
         if (test_result_ == test_result_resource_leak
@@ -1059,11 +1030,7 @@ type* new_arr_impl(size_t count, rl::debug_info_param info)
 {
     RL_VERIFY(alignment >= sizeof(size_t));
     context& c = ctx();
-#ifndef RL_GC
     void* mem = c.alloc(alignment + count * sizeof(type), true, info);
-#else
-    void* mem = c.alloc(alignment + count * sizeof(type), true, &dtor_arr_impl<type>, info);
-#endif
     *(size_t*)mem = count;
     size_t i = 0;
     char* begin = (char*)mem + alignment;
@@ -1211,8 +1178,6 @@ inline void systemwide_fence(debug_info_param info)
 
 } // namespace rl
 
-
-#ifndef RL_GC
 inline void* operator new (size_t size, rl::debug_info_param info)
 {
     return rl::ctx().alloc(size, false, info);
@@ -1232,23 +1197,6 @@ inline void operator delete [] (void* p, rl::debug_info_param info)
 {
     rl::ctx().free(p, false, info);
 }
-#endif
-
-
-
-#ifdef RL_GC
-inline void* operator new (size_t size, void(*dtor)(void*), rl::debug_info_param info)
-{
-    return rl::ctx().alloc(size, false, dtor, info);
-}
-
-inline void operator delete (void* p, void(*dtor)(void*), rl::debug_info_param info)
-{
-    (void)p;
-    (void)dtor;
-    (void)info;
-}
-#endif
 
 inline void* operator new (size_t size) RL_THROW_SPEC(std::bad_alloc)
 {

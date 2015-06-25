@@ -123,9 +123,6 @@ public:
     virtual void rl_until(char const* desc, debug_info_param info) = 0;
 
     virtual void* alloc(size_t size, bool is_array, debug_info_param info) = 0;
-#ifdef RL_GC
-    virtual void* alloc(size_t size, bool is_array, void(*dtor)(void*), debug_info_param info) = 0;
-#endif
     virtual void free(void* p, bool is_array, debug_info_param info) = 0;
 
     virtual void* alloc(size_t size) = 0;

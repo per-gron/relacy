@@ -37,11 +37,7 @@ public:
         */
     }
 
-#ifndef RL_GC
     void* alloc(size_t size)
-#else
-    void* alloc(size_t size, void (*dtor)(void*))
-#endif
     {
         void* pp = 0;
         for (size_t i = 0; i != alloc_cache_.size(); ++i)
@@ -64,12 +60,7 @@ public:
             RL_VERIFY(alignment >= sizeof(void*));
             *(size_t*)pp = size;
             void* p = (char*)pp + alignment;
-#ifndef RL_GC
             allocs_.insert(std::make_pair(p, size));
-#else
-            alloc_desc_t desc = {p, size, dtor};
-            gc_allocs_.push_back(desc);
-#endif
             return p;
         }
         else
@@ -83,7 +74,6 @@ public:
         if (0 == pp)
             return true;
 
-#ifndef RL_GC
         map<void*, size_t>::type::iterator iter = allocs_.find(pp);
         if (allocs_.end() == iter)
             return false;
@@ -108,42 +98,13 @@ public:
             rl_free_impl(p, size);
         }
         return true;
-#else
-        (void)defer;
-        for (size_t i = 0; i != gc_allocs_.size(); ++i)
-        {
-            alloc_desc_t const& desc = gc_allocs_[i];
-            if (desc.addr == pp)
-            {
-                void* p = (char*)desc.addr - alignment;
-                rl_free_impl(p, desc.size);
-                gc_allocs_.erase(gc_allocs_.begin() + i);
-                return true;
-            }
-        }
-        return false;
-#endif
     }
 
     bool iteration_end()
     {
-#ifndef RL_GC
         return allocs_.empty();
-#else
-        for (size_t i = 0; i != gc_allocs_.size(); ++i)
-        {
-            alloc_desc_t const& desc = gc_allocs_[i];
-            if (desc.dtor)
-                desc.dtor(desc.addr);
-            void* p = (char*)desc.addr - alignment;
-            rl_free_impl(p, desc.size);
-        }
-        gc_allocs_.clear();
-        return true;
-#endif
     }
 
-#ifndef RL_GC
     void output_allocs(std::ostream& stream)
     {
         stream << "memory allocations:" << std::endl;
@@ -155,7 +116,6 @@ public:
         }
         stream << std::endl;
     }
-#endif
 
 private:
     typedef stack<void*>::type              freelist_t;
@@ -169,17 +129,7 @@ private:
     void* deferred_free_ [deferred_count];
     size_t deferred_free_size_ [deferred_count];
 
-#ifndef RL_GC
     map<void*, size_t>::type allocs_;
-#else
-    struct alloc_desc_t
-    {
-        void*       addr;
-        size_t      size;
-        void        (*dtor)(void*);
-    };
-    vector<alloc_desc_t>::type gc_allocs_;
-#endif
 
     void rl_free_impl(void* p, size_t size)
     {

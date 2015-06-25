@@ -142,26 +142,14 @@ private:
 
 inline unsigned long rl_TlsAlloc(debug_info_param info)
 {
-#ifndef RL_GC
     //!!! may break on x64 platform
     // TLS index is exactly DWORD (not DWORD_PTR), so one has to use indirection
     return (unsigned long)new (info) thread_local_var<void*> ();
-#else
-    void* p = ctx().alloc(sizeof(thread_local_var<void*>), false, info);
-    new (p) thread_local_var<void*> ();
-    return (unsigned long)p;
-#endif
 }
 
 inline void rl_TlsFree(unsigned long slot, debug_info_param info)
 {
-#ifndef RL_GC
     delete_impl((thread_local_var<void*>*)slot, info);
-#else
-    thread_local_var<void*>* t = (thread_local_var<void*>*)slot;
-    t->~thread_local_var<void*>();
-    ctx().free(t, false, info);
-#endif
 }
 
 inline void* rl_TlsGetValue(unsigned long slot, debug_info_param info)

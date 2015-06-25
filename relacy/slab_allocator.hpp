@@ -64,27 +64,7 @@ public:
 
     bool iteration_end()
     {
-#ifndef RL_GC
         return alloc_count_ == 0;
-#else
-        freelist_ = 0;
-        size_t elem_size = sizeof(void*) + sizeof(type);
-        elem_size = (elem_size + 15) & ~15;
-        char* pos = blocks_;
-        while (pos)
-        {
-            char* p = pos;
-            p += elem_size;
-            for (size_t i = 0; i != batch_size; ++i)
-            {
-                *reinterpret_cast<type**>(p) = freelist_;
-                freelist_ = reinterpret_cast<type*>(p);
-                p += elem_size;
-            }
-            pos = *reinterpret_cast<char**>(pos);
-        }
-        return true;
-#endif
     }
 
     void output_allocs(std::ostream& stream)
