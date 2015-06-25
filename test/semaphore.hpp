@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../relacy/relacy_std.hpp"
+#include "../relacy/stdlib/windows.hpp"
 
 
 
@@ -44,19 +45,19 @@ struct test_semaphore : rl::test_suite<test_semaphore, 2>
 struct test_semaphore_atomic : rl::test_suite<test_semaphore_atomic, 2>
 {
 	HANDLE sem [2];
-	
+
 	void before()
 	{
 		sem[0] = CreateSemaphore(0, 0, 2, 0);
 		sem[1] = CreateSemaphore(0, 0, 2, 0);
 	}
-	
+
 	void after()
 	{
 		CloseHandle(sem[0]);
 		CloseHandle(sem[1]);
 	}
-	
+
 	void thread(unsigned index)
 	{
 		if (0 == index)

@@ -26,9 +26,6 @@
 #include "stdlib/semaphore.hpp"
 #include "stdlib/event.hpp"
 
-#include "stdlib/windows.hpp"
-#include "stdlib/pthread.hpp"
-
 #define VAR_T(x) rl::var<x>
 #define TLS_T(T) rl::thread_local_var<T>
 #define VAR(x) x($)
