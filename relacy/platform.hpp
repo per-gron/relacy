@@ -180,7 +180,10 @@ static void fiber_start_fnc(void* p)
     if (_setjmp(*ctx->cur) == 0)
     {
         ucontext_t tmp;
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
         swapcontext(&tmp, ctx->prv);
+#pragma clang diagnostic pop
     }
     ufnc(uctx);
 }
@@ -197,6 +200,8 @@ inline void delete_main_fiber(fiber_t& fib)
 
 inline void create_fiber(fiber_t& fib, void(*ufnc)(void*), void* uctx)
 {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
     size_t const stack_size = 64*1024;
     getcontext(&fib.fib);
     fib.fib.uc_stack.ss_sp = (::malloc)(stack_size);
@@ -206,6 +211,7 @@ inline void create_fiber(fiber_t& fib, void(*ufnc)(void*), void* uctx)
     fiber_ctx_t ctx = {ufnc, uctx, &fib.jmp, &tmp};
     makecontext(&fib.fib, (void(*)())fiber_start_fnc, 1, &ctx);
     swapcontext(&tmp, &fib.fib);
+#pragma clang diagnostic pop
 }
 
 inline void delete_fiber(fiber_t& fib)
