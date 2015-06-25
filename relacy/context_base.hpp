@@ -74,7 +74,7 @@ struct user_msg_event
     void output(std::ostream& s) const
     {
         s << msg_;
-    }            
+    }
 };
 
 class context;
@@ -154,6 +154,7 @@ public:
     virtual unsigned rand(unsigned limit, sched_type t) = 0;
 
     virtual win_waitable_object* create_thread(void*(*fn)(void*), void* ctx) = 0;
+    virtual win_waitable_object* get_thread(thread_id_t id) = 0;
 
     virtual unpark_reason wfmo_park(void** ws,
                                     win_waitable_object** wo,
@@ -161,7 +162,7 @@ public:
                                     bool wait_all,
                                     bool is_timed,
                                     debug_info_param info) = 0;
-	
+
     int get_errno();
     void set_errno(int value);
 
@@ -236,7 +237,7 @@ protected:
         RL_VERIFY(this == context_holder<>::instance_);
         context_holder<>::instance_ = 0;
     }
-    
+
 private:
     bool is_random_sched_;
     unsigned ctx_seq_;

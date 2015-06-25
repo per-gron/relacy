@@ -173,7 +173,7 @@ private:
         static_cast<var_data_impl<thread_count>*>(data)->~var_data_impl<thread_count>();
         var_alloc_->free(static_cast<var_data_impl<thread_count>*>(data));
     }
-	
+
     virtual unpark_reason wfmo_park(void** ws,
                                     win_waitable_object** wo,
                                     size_t count,
@@ -350,7 +350,7 @@ public:
             (::free)(p);
             return;
         }
-        
+
         disable_alloc_ += 1;
         debug_info const& info = last_info_;
         RL_HIST_CTX(memory_free_event) {p, false} RL_HIST_END();
@@ -544,6 +544,11 @@ public:
         threads_[id].dynamic_thread_func_ = fn;
         threads_[id].dynamic_thread_param_ = ctx;
         threads_[id].sync_object_.on_create();
+        return &threads_[id].sync_object_;
+    }
+
+    virtual win_waitable_object* get_thread(thread_id_t id)
+    {
         return &threads_[id].sync_object_;
     }
 

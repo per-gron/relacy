@@ -51,6 +51,12 @@ inline int rl_pthread_create(rl_pthread_t* th, rl_pthread_attr_t* attr, void* (*
     return 0;
 }
 
+inline rl_pthread_t rl_pthread_self(debug_info_param info)
+{
+    (void)info;//!!!
+    return ctx().get_thread(ctx().current_thread());
+}
+
 inline int rl_pthread_join(rl_pthread_t th, void** res, debug_info_param info)
 {
     RL_VERIFY(th && res);
@@ -298,7 +304,7 @@ inline int rl_pthread_cond_timedwait(rl_pthread_cond_t* cv, rl_pthread_mutex_t* 
         return RL_ETIMEDOUT;
     else if (res == sema_wakeup_reason_spurious)
         return RL_EINTR;
-    else 
+    else
         return RL_EINVAL;
 }
 
@@ -309,13 +315,13 @@ inline int rl_pthread_cond_wait(rl_pthread_cond_t* cv, rl_pthread_mutex_t* m, de
         return 0;
     else if (res == sema_wakeup_reason_spurious)
         return RL_EINTR;
-    else 
+    else
         return RL_EINVAL;
 }
 
-	
-	
-	
+
+
+
 enum RL_FUTEX_OP
 {
     RL_FUTEX_WAIT,
@@ -388,7 +394,7 @@ inline int rl_int_futex_impl(context& c,
                 s << (res_ == RL_EWOULDBLOCK ? "EWOULDBLOCK" : res_ == RL_ETIMEDOUT ? "ETIMEDOUT" : res_ == RL_EINTR ? "EINTR" : "UNKNOWN");
         }
     };
-	
+
 inline int rl_futex(atomic<int>* uaddr,
                     int op,
                     int val,
@@ -400,7 +406,7 @@ inline int rl_futex(atomic<int>* uaddr,
     context& c = ctx();
     int res = rl_int_futex_impl(c, uaddr, op, val, timeout, uaddr2, val3, info);
     RL_HIST(futex_event) {uaddr, op, val, timeout != 0, res} RL_HIST_END();
-    return res;    
+    return res;
 }
 
 }
@@ -450,6 +456,9 @@ inline int rl_futex(atomic<int>* uaddr,
 
 #define pthread_create(th, attr, func, arg) \
  rl::rl_pthread_create(th, attr, func, arg, $)
+
+#define pthread_self() \
+ rl::rl_pthread_self($)
 
 #define pthread_join(th, res) \
  rl::rl_pthread_join(th, res, $)
