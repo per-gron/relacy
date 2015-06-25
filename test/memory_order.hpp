@@ -7,8 +7,8 @@
 template<int index>
 struct order_relaxed_test : rl::test_suite<order_relaxed_test<index>, 2>
 {
-    std::atomic<int> x1;
-    std::atomic<int> x2;
+    rl::atomic<int> x1;
+    rl::atomic<int> x2;
 
     void before()
     {
@@ -52,7 +52,7 @@ struct order_relaxed_test : rl::test_suite<order_relaxed_test<index>, 2>
 
 struct reorder_single_var_test : rl::test_suite<reorder_single_var_test, 2>
 {
-    std::atomic<int> x;
+    rl::atomic<int> x;
 
     void before()
     {
@@ -79,7 +79,7 @@ struct reorder_single_var_test : rl::test_suite<reorder_single_var_test, 2>
 
 struct acq_rel_test : rl::test_suite<acq_rel_test, 2>
 {
-    std::atomic<int> x;
+    rl::atomic<int> x;
     rl::var<int> y;
 
     void before()
@@ -92,7 +92,7 @@ struct acq_rel_test : rl::test_suite<acq_rel_test, 2>
         if (index)
         {
             VAR(y) = 1;
-            x.store(1, std::memory_order_release);
+            x.store(1, rl::memory_order_release);
         }
         else
         {
@@ -110,11 +110,11 @@ struct acq_rel_test : rl::test_suite<acq_rel_test, 2>
 
 
 template<int index>
-struct seq_cst_test : rl::test_suite<seq_cst_test<index>, 4, 
+struct seq_cst_test : rl::test_suite<seq_cst_test<index>, 4,
     (rl::test_result_e)((1 - index) * rl::test_result_until_condition_hit)>
 {
-    std::atomic<int> x1;
-    std::atomic<int> x2;
+    rl::atomic<int> x1;
+    rl::atomic<int> x2;
 
     int res;
 
@@ -174,7 +174,7 @@ struct seq_cst_test : rl::test_suite<seq_cst_test<index>, 4,
 
 struct modification_order_test : rl::test_suite<modification_order_test, 2>
 {
-    std::atomic<int> a;
+    rl::atomic<int> a;
     rl::var<int> x;
 
     void before()
@@ -201,9 +201,9 @@ struct modification_order_test : rl::test_suite<modification_order_test, 2>
 
 struct reordering_test : rl::test_suite<reordering_test, 3>
 {
-    std::atomic<int> x;
-    std::atomic<int> y;
-    std::atomic<int> r;
+    rl::atomic<int> x;
+    rl::atomic<int> y;
+    rl::atomic<int> r;
 
     void before()
     {
@@ -239,14 +239,14 @@ struct reordering_test : rl::test_suite<reordering_test, 3>
 
 struct reordering_test2 : rl::test_suite<reordering_test2, 3, rl::test_result_until_condition_hit>
 {
-    std::atomic<int> x1;
-    std::atomic<int> x2;
-    std::atomic<int> y;
-    std::atomic<int> r;
+    rl::atomic<int> x1;
+    rl::atomic<int> x2;
+    rl::atomic<int> y;
+    rl::atomic<int> r;
 
     void before()
     {
-        std::atomic<char*> x (0);
+        rl::atomic<char*> x (0);
         char* ch = 0;
         x.compare_exchange_weak(ch, 0, std::memory_order_seq_cst);
 
@@ -284,7 +284,7 @@ struct reordering_test2 : rl::test_suite<reordering_test2, 3, rl::test_result_un
 
 struct transitive_test : rl::test_suite<transitive_test, 3>
 {
-    std::atomic<int> x;
+    rl::atomic<int> x;
     rl::var<int> y;
 
     void before()
@@ -318,8 +318,8 @@ struct transitive_test : rl::test_suite<transitive_test, 3>
 
 struct cc_transitive_test : rl::test_suite<cc_transitive_test, 3>
 {
-    std::atomic<int> x;
-    std::atomic<int> y;
+    rl::atomic<int> x;
+    rl::atomic<int> y;
 
     void before()
     {
@@ -349,7 +349,7 @@ struct cc_transitive_test : rl::test_suite<cc_transitive_test, 3>
 
 struct occasional_test : rl::test_suite<occasional_test, 3, rl::test_result_until_condition_hit>
 {
-    std::atomic<int> x, y, z;
+    rl::atomic<int> x, y, z;
 
     void before()
     {

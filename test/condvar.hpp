@@ -6,8 +6,8 @@
 
 struct test_condvar : rl::test_suite<test_condvar, 2>
 {
-    std::mutex mtx;
-    std::condition_variable cv;
+    rl::mutex mtx;
+    rl::condition_variable cv;
     rl::var<int> data;
 
     void before()
@@ -42,8 +42,8 @@ struct test_condvar : rl::test_suite<test_condvar, 2>
 struct test_condvar2 : rl::test_suite<test_condvar2, 3>
 {
     rl::var<int> stage;
-    std::mutex mtx;
-    std::condition_variable cv;
+    rl::mutex mtx;
+    rl::condition_variable cv;
 
     void before()
     {

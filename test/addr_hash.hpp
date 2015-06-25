@@ -39,7 +39,7 @@ struct test_addr_hash : rl::test_suite<test_addr_hash, 2>
 struct test_addr_hash2 : rl::test_suite<test_addr_hash2, 2, rl::test_result_until_condition_hit>
 {
     static size_t const table_size = 4;
-    std::atomic<int> table [table_size];
+    rl::atomic<int> table [table_size];
 
     void before()
     {
