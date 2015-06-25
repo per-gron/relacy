@@ -55,10 +55,6 @@ struct thread_info : thread_info_base
     timestamp_t acquire_fence_order_ [thread_count];
     timestamp_t release_fence_order_ [thread_count];
 
-#ifdef RL_IMPROVED_SEQ_CST_FENCE
-    timestamp_t imp_seq_cst_order_ [thread_count];
-#endif
-
     virtual void on_start()
     {
         RL_VERIFY(temp_switch_from_ == -1);
@@ -97,10 +93,6 @@ struct thread_info : thread_info_base
 
     void atomic_thread_fence_seq_cst(timestamp_t* seq_cst_fence_order)
     {
-#ifdef RL_IMPROVED_SEQ_CST_FENCE
-        foreach<thread_count>(acq_rel_order_, imp_seq_cst_order_, assign_max);
-#endif
-
         atomic_thread_fence_acquire();
 
         foreach<thread_count>(
@@ -329,11 +321,6 @@ private:
         unsigned const prev_idx = (var.current_index_ - 1) % atomic_history_size;
         history_t& prev = var.history_[prev_idx];
 
-#ifdef RL_IMPROVED_SEQ_CST_FENCE
-        if (val(mo) == mo_release && val(rmw) == false)
-            foreach<thread_count>(imp_seq_cst_order_, prev.acq_rel_order_, assign_max);
-#endif
-
         bool const synch =
             (mo_release == mo
             || mo_acq_rel == mo
@@ -366,10 +353,6 @@ private:
         aba = (last_seen > own_acq_rel_order_);
         atomic_load<mo, true>(data);
         unsigned result = atomic_store<mo, true>(data);
-
-#ifdef RL_IMPROVED_SEQ_CST_RMW
-        atomic_thread_fence_seq_cst(ctx_->seq_cst_fence_order_);
-#endif
 
         return result;
     }

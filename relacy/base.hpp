@@ -19,13 +19,6 @@ size_t const subsequent_timed_wait_limit = 4;
 
 #define RL_TEST
 
-#ifdef RL_CLI_MODE
-#   define RL_GC
-#   define RL_NO_MALLOC
-#   define RL_CLI_API
-#   define RL_CLI_MM
-#endif
-
 #ifdef RL_POSIX_MODE
 #   define RL_POSIX_API
 #endif
@@ -37,11 +30,6 @@ size_t const subsequent_timed_wait_limit = 4;
 #ifdef RL_CPP_MODE
 #   define RL_CPP_API
 #   define RL_CPP_MM
-#endif
-
-#if defined(RL_CLI_MM)
-#   define RL_IMPROVED_SEQ_CST_FENCE
-#   define RL_IMPROVED_SEQ_CST_RMW
 #endif
 
 namespace rl

@@ -658,10 +658,6 @@ public:
         foreach<thread_count>(
             ti.release_fence_order_,
             &assign_zero);
-
-#ifdef RL_IMPROVED_SEQ_CST_FENCE
-        foreach<thread_count>(ti.imp_seq_cst_order_, &assign_zero);
-#endif
     }
 
     void iteration(iteration_t iter)
