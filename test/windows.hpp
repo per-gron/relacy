@@ -311,8 +311,8 @@ struct test_FlushProcessWriteBuffers : rl::test_suite<test_FlushProcessWriteBuff
 
     void before()
     {
-        x1.store(0, rl::memory_order_relaxed);
-        x2.store(0, rl::memory_order_relaxed);
+        x1.store(0, rl::mo_relaxed, $);
+        x2.store(0, rl::mo_relaxed, $);
         r1 = r2 = 0;
     }
 
@@ -325,14 +325,14 @@ struct test_FlushProcessWriteBuffers : rl::test_suite<test_FlushProcessWriteBuff
     {
         if (index)
         {
-            x1.store(1, rl::memory_order_relaxed);
-            r1 = x2.load(rl::memory_order_relaxed);
+            x1.store(1, rl::mo_relaxed, $);
+            r1 = x2.load(rl::mo_relaxed, $);
         }
         else
         {
-            x2.store(1, rl::memory_order_relaxed);
+            x2.store(1, rl::mo_relaxed, $);
             FlushProcessWriteBuffers();
-            r2 = x1.load(rl::memory_order_relaxed);
+            r2 = x1.load(rl::mo_relaxed, $);
         }
     }
 };

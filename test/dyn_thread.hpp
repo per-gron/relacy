@@ -35,7 +35,7 @@ struct dyn_thread_basic_test : rl::test_suite<dyn_thread_basic_test, 2>
     static void* thread3(void* p)
     {
         dyn_thread_basic_test& self = *(dyn_thread_basic_test*)p;
-        self.data3.store(3, rl::memory_order_relaxed);
+        self.data3.store(3, rl::mo_relaxed, $);
         return 0;
     }
 
@@ -56,7 +56,7 @@ struct dyn_thread_basic_test : rl::test_suite<dyn_thread_basic_test, 2>
         {
             rl::dyn_thread t1;
             t1.start(&dyn_thread_basic_test::thread3, this);
-            while (data3.load(rl::memory_order_relaxed) != 3)
+            while (data3.load(rl::mo_relaxed, $) != 3)
                 rl::yield(1, $);
             t1.join();
         }
@@ -100,7 +100,7 @@ struct dyn_thread_win32_test : rl::test_suite<dyn_thread_win32_test, 2>
     static unsigned long RL_STDCALL thread3(void* p)
     {
         dyn_thread_win32_test& self = *(dyn_thread_win32_test*)p;
-        self.data3.store(3, rl::memory_order_relaxed);
+        self.data3.store(3, rl::mo_relaxed, $);
         return 0;
     }
 
@@ -118,7 +118,7 @@ struct dyn_thread_win32_test : rl::test_suite<dyn_thread_win32_test, 2>
         else if (index == 1)
         {
             HANDLE th = CreateThread(0, 0, &dyn_thread_win32_test::thread3, this, 0, 0);
-            while (data3.load(rl::memory_order_relaxed) != 3)
+            while (data3.load(rl::mo_relaxed, $) != 3)
                 rl::yield(1, $);
             WaitForSingleObject(th, INFINITE);
         }
