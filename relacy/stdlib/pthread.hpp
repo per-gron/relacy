@@ -342,7 +342,7 @@ inline int rl_int_futex_impl(context& c,
         int v0;
         {
             preemption_disabler pd (c);
-            v0 = uaddr->load(mo_acquire, info);
+            v0 = uaddr->load(memory_order_acquire, info);
         }
 	if (v0 != val)
             return RL_EWOULDBLOCK;

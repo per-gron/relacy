@@ -41,20 +41,20 @@ void atomic_thread_fence(memory_order mo, debug_info_param info)
 
     switch (mo)
     {
-    case mo_relaxed:
+    case memory_order_relaxed:
         RL_VERIFY(false);
         break;
-    case mo_consume:
-    case mo_acquire:
+    case memory_order_consume:
+    case memory_order_acquire:
         c.atomic_thread_fence_acquire();
         break;
-    case mo_release:
+    case memory_order_release:
         c.atomic_thread_fence_release();
         break;
-    case mo_acq_rel:
+    case memory_order_acq_rel:
         c.atomic_thread_fence_acq_rel();
         break;
-    case mo_seq_cst:
+    case memory_order_seq_cst:
         c.atomic_thread_fence_seq_cst();
         break;
     }

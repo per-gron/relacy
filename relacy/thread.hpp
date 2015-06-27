@@ -116,72 +116,72 @@ private:
 
     virtual unsigned atomic_load_relaxed(atomic_data* RL_RESTRICT data)
     {
-        return atomic_load<mo_relaxed, false>(data);
+        return atomic_load<memory_order_relaxed, false>(data);
     }
 
     virtual unsigned atomic_load_acquire(atomic_data* RL_RESTRICT data)
     {
-        return atomic_load<mo_acquire, false>(data);
+        return atomic_load<memory_order_acquire, false>(data);
     }
 
     virtual unsigned atomic_load_seq_cst(atomic_data* RL_RESTRICT data)
     {
-        return atomic_load<mo_seq_cst, false>(data);
+        return atomic_load<memory_order_seq_cst, false>(data);
     }
 
     virtual unsigned atomic_load_relaxed_rmw(atomic_data* RL_RESTRICT data)
     {
-        return atomic_load<mo_relaxed, true>(data);
+        return atomic_load<memory_order_relaxed, true>(data);
     }
 
     virtual unsigned atomic_load_acquire_rmw(atomic_data* RL_RESTRICT data)
     {
-        return atomic_load<mo_acquire, true>(data);
+        return atomic_load<memory_order_acquire, true>(data);
     }
 
     virtual unsigned atomic_load_seq_cst_rmw(atomic_data* RL_RESTRICT data)
     {
-        return atomic_load<mo_seq_cst, true>(data);
+        return atomic_load<memory_order_seq_cst, true>(data);
     }
 
     virtual unsigned atomic_store_relaxed(atomic_data* RL_RESTRICT data)
     {
-        return atomic_store<mo_relaxed, false>(data);
+        return atomic_store<memory_order_relaxed, false>(data);
     }
 
     virtual unsigned atomic_store_release(atomic_data* RL_RESTRICT data)
     {
-        return atomic_store<mo_release, false>(data);
+        return atomic_store<memory_order_release, false>(data);
     }
 
     virtual unsigned atomic_store_seq_cst(atomic_data* RL_RESTRICT data)
     {
-        return atomic_store<mo_seq_cst, false>(data);
+        return atomic_store<memory_order_seq_cst, false>(data);
     }
 
     virtual unsigned atomic_rmw_relaxed(atomic_data* RL_RESTRICT data, bool& aba)
     {
-        return atomic_rmw<mo_relaxed>(data, aba);
+        return atomic_rmw<memory_order_relaxed>(data, aba);
     }
 
     virtual unsigned atomic_rmw_acquire(atomic_data* RL_RESTRICT data, bool& aba)
     {
-        return atomic_rmw<mo_acquire>(data, aba);
+        return atomic_rmw<memory_order_acquire>(data, aba);
     }
 
     virtual unsigned atomic_rmw_release(atomic_data* RL_RESTRICT data, bool& aba)
     {
-        return atomic_rmw<mo_release>(data, aba);
+        return atomic_rmw<memory_order_release>(data, aba);
     }
 
     virtual unsigned atomic_rmw_acq_rel(atomic_data* RL_RESTRICT data, bool& aba)
     {
-        return atomic_rmw<mo_acq_rel>(data, aba);
+        return atomic_rmw<memory_order_acq_rel>(data, aba);
     }
 
     virtual unsigned atomic_rmw_seq_cst(atomic_data* RL_RESTRICT data, bool& aba)
     {
-        return atomic_rmw<mo_seq_cst>(data, aba);
+        return atomic_rmw<memory_order_seq_cst>(data, aba);
     }
 
     template<memory_order mo, bool rmw>
@@ -205,7 +205,7 @@ private:
                 if (prev.busy_ && prev.last_seen_order_[index_] <= last_yield_)
                     break;
 
-                if (mo_seq_cst == val(mo) && rec.seq_cst_)
+                if (memory_order_seq_cst == val(mo) && rec.seq_cst_)
                     break;
 
                 timestamp_t acq_rel_order =
@@ -241,8 +241,8 @@ private:
     template<memory_order mo, bool rmw>
     unsigned atomic_load(atomic_data* RL_RESTRICT data)
     {
-        RL_VERIFY(mo_release != mo || rmw);
-        RL_VERIFY(mo_acq_rel != mo || rmw);
+        RL_VERIFY(memory_order_release != mo || rmw);
+        RL_VERIFY(memory_order_acq_rel != mo || rmw);
 
         atomic_data_impl<thread_count>& var =
             *static_cast<atomic_data_impl<thread_count>*>(data);
@@ -261,9 +261,9 @@ private:
         rec.last_seen_order_[index_] = own_acq_rel_order_;
 
         bool const synch =
-            (mo_acquire == mo
-            || mo_acq_rel == mo
-            || mo_seq_cst == mo);
+            (memory_order_acquire == mo
+            || memory_order_acq_rel == mo
+            || memory_order_seq_cst == mo);
 
         timestamp_t* acq_rel_order = (synch ? acq_rel_order_ : acquire_fence_order_);
 
@@ -295,9 +295,9 @@ private:
     template<memory_order mo, bool rmw>
     unsigned atomic_store(atomic_data* RL_RESTRICT data)
     {
-        RL_VERIFY(mo_consume != mo || rmw);
-        RL_VERIFY(mo_acquire != mo || rmw);
-        RL_VERIFY(mo_acq_rel != mo || rmw);
+        RL_VERIFY(memory_order_consume != mo || rmw);
+        RL_VERIFY(memory_order_acquire != mo || rmw);
+        RL_VERIFY(memory_order_acq_rel != mo || rmw);
 
         atomic_data_impl<thread_count>& var =
             *static_cast<atomic_data_impl<thread_count>*>(data);
@@ -309,7 +309,7 @@ private:
 
         rec.busy_ = true;
         rec.thread_id_ = index_;
-        rec.seq_cst_ = (mo_seq_cst == mo);
+        rec.seq_cst_ = (memory_order_seq_cst == mo);
 
         own_acq_rel_order_ += 1;
         rec.acq_rel_timestamp_ = own_acq_rel_order_;
@@ -322,9 +322,9 @@ private:
         history_t& prev = var.history_[prev_idx];
 
         bool const synch =
-            (mo_release == mo
-            || mo_acq_rel == mo
-            || mo_seq_cst == mo);
+            (memory_order_release == mo
+            || memory_order_acq_rel == mo
+            || memory_order_seq_cst == mo);
 
         bool const preserve =
             prev.busy_ && (rmw || (index_ == prev.thread_id_));

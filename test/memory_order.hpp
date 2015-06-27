@@ -38,11 +38,11 @@ struct order_relaxed_test : rl::test_suite<order_relaxed_test<index>, 2>
         switch (index)
         {
         default: RL_VERIFY(false);
-        case 0: return std::make_pair(rl::mo_relaxed, rl::mo_relaxed);
-        case 1: return std::make_pair(rl::mo_release, rl::mo_relaxed);
-        case 2: return std::make_pair(rl::mo_seq_cst, rl::mo_relaxed);
-        case 3: return std::make_pair(rl::mo_relaxed, rl::mo_acquire);
-        case 4: return std::make_pair(rl::mo_relaxed, rl::mo_seq_cst);
+        case 0: return std::make_pair(rl::memory_order_relaxed, rl::memory_order_relaxed);
+        case 1: return std::make_pair(rl::memory_order_release, rl::memory_order_relaxed);
+        case 2: return std::make_pair(rl::memory_order_seq_cst, rl::memory_order_relaxed);
+        case 3: return std::make_pair(rl::memory_order_relaxed, rl::memory_order_acquire);
+        case 4: return std::make_pair(rl::memory_order_relaxed, rl::memory_order_seq_cst);
         }
     }
 };
@@ -63,12 +63,12 @@ struct reorder_single_var_test : rl::test_suite<reorder_single_var_test, 2>
     {
         if (index)
         {
-            x.store(1, rl::mo_relaxed, $);
+            x.store(1, rl::memory_order_relaxed, $);
         }
         else
         {
-            int y1 = x.load(rl::mo_relaxed, $);
-            int y2 = x.load(rl::mo_relaxed, $);
+            int y1 = x.load(rl::memory_order_relaxed, $);
+            int y2 = x.load(rl::memory_order_relaxed, $);
             RL_ASSERT(y1 == 0 || y2 == 1);
         }
     }
@@ -92,11 +92,11 @@ struct acq_rel_test : rl::test_suite<acq_rel_test, 2>
         if (index)
         {
             VAR(y) = 1;
-            x.store(1, rl::mo_release, $);
+            x.store(1, rl::memory_order_release, $);
         }
         else
         {
-            int f = x.load(rl::mo_acquire, $);
+            int f = x.load(rl::memory_order_acquire, $);
             if (f)
             {
                 int d = VAR(y);
@@ -166,8 +166,8 @@ struct seq_cst_test : rl::test_suite<seq_cst_test<index>, 4,
         switch (index)
         {
         default: RL_VERIFY(false);
-        case 0: return std::make_pair(rl::mo_release, rl::mo_acquire);
-        case 1: return std::make_pair(rl::mo_seq_cst, rl::mo_seq_cst);
+        case 0: return std::make_pair(rl::memory_order_release, rl::memory_order_acquire);
+        case 1: return std::make_pair(rl::memory_order_seq_cst, rl::memory_order_seq_cst);
         }
     }
 };
@@ -188,12 +188,12 @@ struct modification_order_test : rl::test_suite<modification_order_test, 2>
         if (index)
         {
             x($) = 1;
-            a.store(1, rl::mo_release, $);
-            a.store(2, rl::mo_relaxed, $);
+            a.store(1, rl::memory_order_release, $);
+            a.store(2, rl::memory_order_relaxed, $);
         }
         else
         {
-            if (a.load(rl::mo_acquire, $))
+            if (a.load(rl::memory_order_acquire, $))
                 x($).load();
         }
     }
@@ -216,21 +216,21 @@ struct reordering_test : rl::test_suite<reordering_test, 3>
     {
         if (0 == index)
         {
-            x.store(1, rl::mo_relaxed, $);
+            x.store(1, rl::memory_order_relaxed, $);
         }
         else if (1 == index)
         {
-            if (x.load(rl::mo_relaxed, $))
-                r.store(1, rl::mo_relaxed, $);
-            y.store(1, rl::mo_release, $);
+            if (x.load(rl::memory_order_relaxed, $))
+                r.store(1, rl::memory_order_relaxed, $);
+            y.store(1, rl::memory_order_release, $);
         }
         else
         {
-            if (y.load(rl::mo_acquire, $))
+            if (y.load(rl::memory_order_acquire, $))
             {
-                if (r.load(rl::mo_relaxed, $))
+                if (r.load(rl::memory_order_relaxed, $))
                 {
-                    RL_ASSERT(x.load(rl::mo_relaxed, $));
+                    RL_ASSERT(x.load(rl::memory_order_relaxed, $));
                 }
             }
         }
@@ -248,7 +248,7 @@ struct reordering_test2 : rl::test_suite<reordering_test2, 3, rl::test_result_un
     {
         rl::atomic<char*> x (0);
         char* ch = 0;
-        x.compare_exchange_weak(ch, 0, rl::mo_seq_cst, $);
+        x.compare_exchange_weak(ch, 0, rl::memory_order_seq_cst, $);
 
         x1($) = 0;
         x2($) = 0;
@@ -260,22 +260,22 @@ struct reordering_test2 : rl::test_suite<reordering_test2, 3, rl::test_result_un
     {
         if (0 == index)
         {
-            x1.store(1, rl::mo_relaxed, $);
-            x2.store(1, rl::mo_relaxed, $);
+            x1.store(1, rl::memory_order_relaxed, $);
+            x2.store(1, rl::memory_order_relaxed, $);
         }
         else if (1 == index)
         {
-            if (x2.load(rl::mo_relaxed, $))
-                r.store(1, rl::mo_relaxed, $);
-            y.store(1, rl::mo_release, $);
+            if (x2.load(rl::memory_order_relaxed, $))
+                r.store(1, rl::memory_order_relaxed, $);
+            y.store(1, rl::memory_order_release, $);
         }
         else
         {
-            if (y.load(rl::mo_acquire, $))
+            if (y.load(rl::memory_order_acquire, $))
             {
-                if (r.load(rl::mo_relaxed, $))
+                if (r.load(rl::memory_order_relaxed, $))
                 {
-                    RL_UNTIL(0 == x1.load(rl::mo_relaxed, $));
+                    RL_UNTIL(0 == x1.load(rl::memory_order_relaxed, $));
                 }
             }
         }
@@ -297,16 +297,16 @@ struct transitive_test : rl::test_suite<transitive_test, 3>
         if (0 == index)
         {
             VAR(y) = 1;
-            x.fetch_add(1, rl::mo_release, $);
+            x.fetch_add(1, rl::memory_order_release, $);
         }
         else if (1 == index)
         {
-            x.fetch_add(2, rl::mo_acquire, $);
+            x.fetch_add(2, rl::memory_order_acquire, $);
         }
         else
         {
-            x.load(rl::mo_acquire, $);
-            int w = x.load(rl::mo_acquire, $);
+            x.load(rl::memory_order_acquire, $);
+            int w = x.load(rl::memory_order_acquire, $);
             if (1 == w || 3 == w)
             {
                 y($).load();
@@ -323,25 +323,25 @@ struct cc_transitive_test : rl::test_suite<cc_transitive_test, 3>
 
     void before()
     {
-        x.store(0, rl::mo_relaxed, $);
-        y.store(0, rl::mo_relaxed, $);
+        x.store(0, rl::memory_order_relaxed, $);
+        y.store(0, rl::memory_order_relaxed, $);
     }
 
     void thread(unsigned index)
     {
         if (0 == index)
         {
-            x.store(1, rl::mo_relaxed, $);
+            x.store(1, rl::memory_order_relaxed, $);
         }
         else if (1 == index)
         {
-            if (x.load(rl::mo_relaxed, $))
-                y.store(1, rl::mo_release, $);
+            if (x.load(rl::memory_order_relaxed, $))
+                y.store(1, rl::memory_order_release, $);
         }
         else
         {
-            if (y.load(rl::mo_acquire, $))
-                assert(x.load(rl::mo_relaxed, $));
+            if (y.load(rl::memory_order_acquire, $))
+                assert(x.load(rl::memory_order_relaxed, $));
         }
     }
 };
@@ -353,29 +353,29 @@ struct occasional_test : rl::test_suite<occasional_test, 3, rl::test_result_unti
 
     void before()
     {
-        x.store(0, rl::mo_relaxed, $);
-        y.store(0, rl::mo_relaxed, $);
-        z.store(0, rl::mo_relaxed, $);
+        x.store(0, rl::memory_order_relaxed, $);
+        y.store(0, rl::memory_order_relaxed, $);
+        z.store(0, rl::memory_order_relaxed, $);
     }
 
     void thread(unsigned index)
     {
         if (0 == index)
         {
-            x.store(1, rl::mo_relaxed, $);
-            y.store(1, rl::mo_release, $);
+            x.store(1, rl::memory_order_relaxed, $);
+            y.store(1, rl::memory_order_release, $);
         }
         else if (1 == index)
         {
-            if (y.load(rl::mo_relaxed, $))
-                z.store(1, rl::mo_release, $);
+            if (y.load(rl::memory_order_relaxed, $))
+                z.store(1, rl::memory_order_release, $);
         }
         else
         {
-            if (z.load(rl::mo_acquire, $))
+            if (z.load(rl::memory_order_acquire, $))
             {
-                RL_ASSERT(y.load(rl::mo_relaxed, $));
-                RL_UNTIL(0 == x.load(rl::mo_relaxed, $));
+                RL_ASSERT(y.load(rl::memory_order_relaxed, $));
+                RL_UNTIL(0 == x.load(rl::memory_order_relaxed, $));
             }
         }
     }

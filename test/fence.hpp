@@ -22,7 +22,7 @@ struct fence_synch_test : rl::test_suite<fence_synch_test<index, mo_index>, 2>
             if (0 == index || 1 == index)
             {
                 rl::atomic_thread_fence(order().first, $);
-                x.store(1, rl::mo_relaxed, $);
+                x.store(1, rl::memory_order_relaxed, $);
             }
             else
             {
@@ -33,7 +33,7 @@ struct fence_synch_test : rl::test_suite<fence_synch_test<index, mo_index>, 2>
         {
             if (0 == index || 2 == index)
             {
-                if (x.load(rl::mo_relaxed, $))
+                if (x.load(rl::memory_order_relaxed, $))
                 {
                     rl::atomic_thread_fence(order().second, $);
                     data($).load();
@@ -54,8 +54,8 @@ struct fence_synch_test : rl::test_suite<fence_synch_test<index, mo_index>, 2>
         switch (mo_index)
         {
         default: RL_VERIFY(false);
-        case 0: return std::make_pair(rl::mo_release, rl::mo_acquire);
-        case 1: return std::make_pair(rl::mo_seq_cst, rl::mo_seq_cst);
+        case 0: return std::make_pair(rl::memory_order_release, rl::memory_order_acquire);
+        case 1: return std::make_pair(rl::memory_order_seq_cst, rl::memory_order_seq_cst);
         }
     }
 };
@@ -81,22 +81,22 @@ struct two_fence_synch_test : rl::test_suite<two_fence_synch_test, 3>
         if (0 == index)
         {
             data0($) = 1;
-            rl::atomic_thread_fence(rl::mo_release, $);
-            x0.store(1, rl::mo_relaxed, $);
+            rl::atomic_thread_fence(rl::memory_order_release, $);
+            x0.store(1, rl::memory_order_relaxed, $);
         }
         else if (1 == index)
         {
             data1($) = 1;
-            rl::atomic_thread_fence(rl::mo_release, $);
-            x1.store(1, rl::mo_relaxed, $);
+            rl::atomic_thread_fence(rl::memory_order_release, $);
+            x1.store(1, rl::memory_order_relaxed, $);
         }
         else
         {
-            int y0 = x0.load(rl::mo_relaxed, $);
-            int y1 = x1.load(rl::mo_relaxed, $);
+            int y0 = x0.load(rl::memory_order_relaxed, $);
+            int y1 = x1.load(rl::memory_order_relaxed, $);
             if (y0 || y1)
             {
-                rl::atomic_thread_fence(rl::mo_acquire, $);
+                rl::atomic_thread_fence(rl::memory_order_acquire, $);
                 if (y0)
                     data0($).load();
                 if (y1)
@@ -129,15 +129,15 @@ struct seq_cst_fence_test : rl::test_suite<seq_cst_fence_test<index>, 2,
     {
         if (0 == th)
         {
-            x0.store(1, rl::mo_relaxed, $);
-            rl::atomic_thread_fence(rl::mo_seq_cst, $);
-            r0($) = x1.load(rl::mo_relaxed, $);
+            x0.store(1, rl::memory_order_relaxed, $);
+            rl::atomic_thread_fence(rl::memory_order_seq_cst, $);
+            r0($) = x1.load(rl::memory_order_relaxed, $);
         }
         else
         {
-            x1.store(1, rl::mo_relaxed, $);
-            rl::atomic_thread_fence(rl::mo_seq_cst, $);
-            r1($) = x0.load(rl::mo_relaxed, $);
+            x1.store(1, rl::memory_order_relaxed, $);
+            rl::atomic_thread_fence(rl::memory_order_seq_cst, $);
+            r1($) = x0.load(rl::memory_order_relaxed, $);
         }
     }
 

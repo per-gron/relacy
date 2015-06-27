@@ -79,12 +79,12 @@ struct race_seq_ld_ld_test : rl::test_suite<race_seq_ld_ld_test, 2>
         if (index)
         {
             x($).load();
-            a.store(1, rl::mo_relaxed, $);
+            a.store(1, rl::memory_order_relaxed, $);
         }
         else
         {
             rl::backoff b;
-            while (0 == a.load(rl::mo_relaxed, $))
+            while (0 == a.load(rl::memory_order_relaxed, $))
                 b.yield($);
             x($).load();
         }
@@ -110,12 +110,12 @@ struct race_seq_ld_st_test : rl::test_suite<race_seq_ld_st_test, 2, rl::test_res
         if (index)
         {
             x($).load();
-            a.store(1, rl::mo_relaxed, $);
+            a.store(1, rl::memory_order_relaxed, $);
         }
         else
         {
             rl::backoff b;
-            while (0 == a.load(rl::mo_relaxed, $))
+            while (0 == a.load(rl::memory_order_relaxed, $))
                 b.yield($);
             x($).store(1);
         }
@@ -140,12 +140,12 @@ struct race_seq_st_ld_test : rl::test_suite<race_seq_st_ld_test, 2, rl::test_res
         if (0 == index)
         {
             x($).store(1);
-            a.store(1, rl::mo_relaxed, $);
+            a.store(1, rl::memory_order_relaxed, $);
         }
         else
         {
             rl::backoff b;
-            while (0 == a.load(rl::mo_relaxed, $))
+            while (0 == a.load(rl::memory_order_relaxed, $))
                 b.yield($);
             x($).load();
         }
@@ -170,12 +170,12 @@ struct race_seq_st_st_test : rl::test_suite<race_seq_st_st_test, 2, rl::test_res
         if (index)
         {
             x($).store(1);
-            a.store(1, rl::mo_relaxed, $);
+            a.store(1, rl::memory_order_relaxed, $);
         }
         else
         {
             rl::backoff b;
-            while (0 == a.load(rl::mo_relaxed, $))
+            while (0 == a.load(rl::memory_order_relaxed, $))
                 b.yield($);
             VAR(x) = 1;
         }
@@ -199,15 +199,15 @@ struct race_uninit_test : rl::test_suite<race_uninit_test, 2, rl::test_result_un
     {
         if (index)
         {
-            x.store(1, rl::mo_relaxed, $);
-            a.store(1, rl::mo_relaxed, $);
+            x.store(1, rl::memory_order_relaxed, $);
+            a.store(1, rl::memory_order_relaxed, $);
         }
         else
         {
             rl::backoff b;
-            while (0 == a.load(rl::mo_relaxed, $))
+            while (0 == a.load(rl::memory_order_relaxed, $))
                 b.yield($);
-            x.load(rl::mo_seq_cst, $);
+            x.load(rl::memory_order_seq_cst, $);
         }
     }
 };
@@ -231,13 +231,13 @@ struct race_indirect_test : rl::test_suite<race_indirect_test, 2, rl::test_resul
         if (0 == index)
         {
             x($) = 1;
-            a.store(1, rl::mo_release, $);
+            a.store(1, rl::memory_order_release, $);
             (void)(int)x($);
         }
         else
         {
             rl::backoff b;
-            while (0 == a.load(rl::mo_acquire, $))
+            while (0 == a.load(rl::memory_order_acquire, $))
                 b.yield($);
             (void)(int)x($);
             x($) = 2;

@@ -44,7 +44,7 @@ struct test_addr_hash2 : rl::test_suite<test_addr_hash2, 2, rl::test_result_unti
     void before()
     {
         for (size_t i = 0; i != table_size; i += 1)
-            table[i].store(0, rl::mo_relaxed, $);
+            table[i].store(0, rl::memory_order_relaxed, $);
     }
 
     void thread(unsigned)
@@ -54,7 +54,7 @@ struct test_addr_hash2 : rl::test_suite<test_addr_hash2, 2, rl::test_result_unti
             void* p = malloc(0);
             size_t idx = rl::hash_ptr(p, table_size);
             free(p);
-            int v = table[idx].exchange(1, rl::mo_relaxed, $);
+            int v = table[idx].exchange(1, rl::memory_order_relaxed, $);
             RL_UNTIL(v);
         }
     }

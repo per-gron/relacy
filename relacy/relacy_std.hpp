@@ -14,12 +14,12 @@
 namespace std
 {
     using rl::memory_order;
-    using rl::mo_relaxed;
-    using rl::mo_consume;
-    using rl::mo_acquire;
-    using rl::mo_release;
-    using rl::mo_acq_rel;
-    using rl::mo_seq_cst;
+    using rl::memory_order_relaxed;
+    using rl::memory_order_consume;
+    using rl::memory_order_acquire;
+    using rl::memory_order_release;
+    using rl::memory_order_acq_rel;
+    using rl::memory_order_seq_cst;
 
     using rl::atomic;
     using rl::atomic_thread_fence;
