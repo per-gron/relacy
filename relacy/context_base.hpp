@@ -94,8 +94,13 @@ class context
 public:
     static context& instance()
     {
-        //!!! disabled for check in operator new RL_VERIFY(context_holder<>::instance_);
+        RL_VERIFY(context_holder<>::instance_);
         return *context_holder<>::instance_;
+    }
+
+    static bool has_instance()
+    {
+        return context_holder<>::instance_ != nullptr;
     }
 
     virtual atomic_data* atomic_ctor(void* ctx) = 0;
@@ -246,6 +251,11 @@ context* context_holder<fake>::instance_ = 0;
 inline context& ctx()
 {
     return context::instance();
+}
+
+inline bool has_ctx()
+{
+    return context::has_instance();
 }
 
 
