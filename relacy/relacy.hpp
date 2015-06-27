@@ -30,21 +30,12 @@
 #define TLS_T(T) rl::thread_local_var<T>
 #define VAR(x) x($)
 
-#ifndef RL_FORCE_SEQ_CST
 #define memory_order_relaxed mo_relaxed, $
 #define memory_order_consume mo_consume, $
 #define memory_order_acquire mo_acquire, $
 #define memory_order_release mo_release, $
 #define memory_order_acq_rel mo_acq_rel, $
 #define memory_order_seq_cst mo_seq_cst, $
-#else
-#define memory_order_relaxed mo_seq_cst, $
-#define memory_order_consume mo_seq_cst, $
-#define memory_order_acquire mo_seq_cst, $
-#define memory_order_release mo_seq_cst, $
-#define memory_order_acq_rel mo_seq_cst, $
-#define memory_order_seq_cst mo_seq_cst, $
-#endif
 
 #define new                 RL_NEW_PROXY
 #define delete              RL_DELETE_PROXY
