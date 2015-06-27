@@ -9,6 +9,5 @@ g++ ../../example/stack/stack.cpp -o stack_debug.exe -Wall -D_DEBUG
 g++ ../../example/condvar/condvar.cpp -o condvar_debug.exe -Wall -D_DEBUG
 g++ ../../example/mutex_business_logic/mutex_business_logic.cpp -o mutex_business_logic_debug.exe -Wall -D_DEBUG
 g++ ../../example/ws_deque/ws_deque.cpp -o ws_deque_debug.exe -Wall -D_DEBUG
-g++ ../../example/cli_ws_deque/cli_ws_deque.cpp -o cli_ws_deque_debug.exe -Wall -D_DEBUG
 g++ ../../example/java_ws_deque/java_ws_deque.cpp -o java_ws_deque_debug.exe -Wall -D_DEBUG
 g++ ../main.cpp -o test_debug.exe -Wall -D_DEBUG
