@@ -15,12 +15,12 @@ struct test_memory_allocation : rl::test_suite<test_memory_allocation, 2>
         VAR(p2[0]) = 1;
         delete [] p2, delete [] p22;
 
-        void* p3 = rl::rl_malloc(10, $), *i3 = 0, *p33 = rl::rl_malloc(20, $);
-        rl::rl_free(p3, $), rl::rl_free(p33, $);
+        void* p3 = rl::malloc(10, $), *i3 = 0, *p33 = rl::malloc(20, $);
+        rl::free(p3, $), rl::free(p33, $);
 
-        void* p4 = rl::rl_malloc(sizeof(int), $);
+        void* p4 = rl::malloc(sizeof(int), $);
         int* i4 = new (p4) int (11);
-        rl::rl_free(p4, $);
+        rl::free(p4, $);
 
         //RL_ASSERT(false);
         (void)i1, (void)i2, (void)i3; (void)i4;

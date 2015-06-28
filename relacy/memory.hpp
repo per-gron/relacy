@@ -91,11 +91,11 @@ public:
             p = deferred_free_[deferred_index_ % deferred_count];
             size = deferred_free_size_[deferred_index_ % deferred_count];
             if (p)
-                rl_free_impl(p, size);
+                free_impl(p, size);
         }
         else
         {
-            rl_free_impl(p, size);
+            free_impl(p, size);
         }
         return true;
     }
@@ -131,7 +131,7 @@ private:
 
     map<void*, size_t>::type allocs_;
 
-    void rl_free_impl(void* p, size_t size)
+    void free_impl(void* p, size_t size)
     {
         bool found = false;
         for (size_t i = 0; i != alloc_cache_.size(); ++i)

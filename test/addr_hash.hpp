@@ -13,16 +13,16 @@ struct test_addr_hash : rl::test_suite<test_addr_hash, 2>
 
     void before()
     {
-        p1 = rl::rl_malloc(0, $);
+        p1 = rl::malloc(0, $);
         h1 = rl::hash_ptr(p1, table_size);
-        p2 = rl::rl_malloc(0, $);
+        p2 = rl::malloc(0, $);
         h2 = rl::hash_ptr(p2, table_size);
     }
 
     void after()
     {
-        rl::rl_free(p1, $);
-        rl::rl_free(p2, $);
+        rl::free(p1, $);
+        rl::free(p2, $);
     }
 
     void thread(unsigned index)
@@ -51,9 +51,9 @@ struct test_addr_hash2 : rl::test_suite<test_addr_hash2, 2, rl::test_result_unti
     {
         for (size_t i = 0; i != table_size + 1; i += 1)
         {
-            void* p = rl::rl_malloc(0, $);
+            void* p = rl::malloc(0, $);
             size_t idx = rl::hash_ptr(p, table_size);
-            rl::rl_free(p, $);
+            rl::free(p, $);
             int v = table[idx].exchange(1, rl::memory_order_relaxed, $);
             RL_UNTIL(v);
         }

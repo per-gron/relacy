@@ -1131,12 +1131,12 @@ struct delete_proxy
     }
 };
 
-inline void* rl_malloc(size_t sz, debug_info_param info)
+inline void* malloc(size_t sz, debug_info_param info)
 {
     return ctx().alloc(sz, false, info);
 }
 
-inline void* rl_calloc(size_t sz, size_t cnt, debug_info_param info)
+inline void* calloc(size_t sz, size_t cnt, debug_info_param info)
 {
     void* p = ctx().alloc(sz * cnt, false, info);
     memset(p, 0, sz * cnt);
@@ -1159,7 +1159,7 @@ inline void* realloc(void* p, size_t sz, debug_info_param info)
     }
 }
 
-inline void rl_free(void* p, debug_info_param info)
+inline void free(void* p, debug_info_param info)
 {
     ctx().free(p, false, info);
 }
