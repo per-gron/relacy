@@ -199,12 +199,12 @@ struct test_wfmo_mixed : rl::test_suite<test_wfmo_mixed, 3>
 		else if (1 == index)
 		{
 			unsigned rv = WaitForMultipleObjects(2, sem, 1, INFINITE);
-			assert(rv == WAIT_OBJECT_0);
+			RL_ASSERT(rv == WAIT_OBJECT_0);
 		}
 		else if (2 == index)
 		{
 			unsigned rv = WaitForSingleObject(sem[0], INFINITE);
-			assert(rv == WAIT_OBJECT_0);
+			RL_ASSERT(rv == WAIT_OBJECT_0);
 		}
 	}
 };
@@ -239,12 +239,12 @@ struct test_wfmo_mixed2 : rl::test_suite<test_wfmo_mixed2, 4>
 		else if (1 == index)
 		{
 			unsigned rv = WaitForSingleObject(sem[0], INFINITE);
-			assert(rv == WAIT_OBJECT_0);
+			RL_ASSERT(rv == WAIT_OBJECT_0);
 		}
 		else if (2 == index || 3 == index)
 		{
 			unsigned rv = WaitForMultipleObjects(2, sem, 1, 42);
-			assert(rv == WAIT_OBJECT_0 || rv == WAIT_TIMEOUT);
+			RL_ASSERT(rv == WAIT_OBJECT_0 || rv == WAIT_TIMEOUT);
 		}
 	}
 };
@@ -275,8 +275,8 @@ struct test_wfmo_event_all : rl::test_suite<test_wfmo_event_all, 2>
 		if (0 == index)
 		{
 			unsigned rv = WaitForMultipleObjects(2, ev, 1, INFINITE);
-			assert(rv == WAIT_OBJECT_0 + 0 || rv == WAIT_OBJECT_0 + 1);
-			assert(state.load(rl::memory_order_relaxed, $) == 1);
+			RL_ASSERT(rv == WAIT_OBJECT_0 + 0 || rv == WAIT_OBJECT_0 + 1);
+			RL_ASSERT(state.load(rl::memory_order_relaxed, $) == 1);
 		}
 		else if (1 == index)
 		{
@@ -313,8 +313,8 @@ struct test_wfmo_event_any : rl::test_suite<test_wfmo_event_any, 2>
 		if (0 == index)
 		{
 			unsigned rv = WaitForMultipleObjects(2, ev, 0, INFINITE);
-			assert(rv == WAIT_OBJECT_0 + 0 || rv == WAIT_OBJECT_0 + 1);
-			assert(state.load(rl::memory_order_relaxed, $) == 1);
+			RL_ASSERT(rv == WAIT_OBJECT_0 + 0 || rv == WAIT_OBJECT_0 + 1);
+			RL_ASSERT(state.load(rl::memory_order_relaxed, $) == 1);
 		}
 		else if (1 == index)
 		{
@@ -358,7 +358,7 @@ struct test_wfmo_atomic : rl::test_suite<test_wfmo_atomic, 2, rl::test_result_un
 			SetEvent(ev[1]);
 			unsigned rv = WaitForSingleObject(ev[0], 0);
 			if (rv == WAIT_TIMEOUT) {
-				assert(state.load(rl::memory_order_relaxed, $) == 1);
+				RL_ASSERT(state.load(rl::memory_order_relaxed, $) == 1);
 				RL_UNTIL(true);
 			}
 		}

@@ -19,9 +19,9 @@ struct test_futex : rl::test_suite<test_futex, 2>
 
 	void after()
 	{
-		assert((waitres == 0 && wakeres == 1)
-					 || (waitres == EWOULDBLOCK && wakeres == 0)
-					 || (waitres == EINTR && wakeres == 0));
+		RL_ASSERT((waitres == 0 && wakeres == 1)
+					    || (waitres == EWOULDBLOCK && wakeres == 0)
+					    || (waitres == EINTR && wakeres == 0));
 	}
 
 	void thread(unsigned index)
@@ -53,7 +53,7 @@ struct test_futex_deadlock : rl::test_suite<test_futex_deadlock, 1, rl::test_res
 	{
 		state.store(0, rl::memory_order_relaxed, $);
 		int rv = futex(&state, FUTEX_WAIT, 0, 0, 0, 0);
-		assert(rv == EINTR);
+		RL_ASSERT(rv == EINTR);
 	}
 };
 
@@ -82,11 +82,11 @@ struct test_futex_sync1 : rl::test_suite<test_futex_sync1, 2, rl::test_result_un
 		else
 		{
 			int rv = futex(&state, FUTEX_WAIT, 0, 0, 0, 0);
-			assert(rv == 0 || rv == EWOULDBLOCK || rv == EINTR);
+			RL_ASSERT(rv == 0 || rv == EWOULDBLOCK || rv == EINTR);
 			if (rv == 0)
 			{
-				assert(VAR(data) == 1);
-				assert(state.load(rl::memory_order_relaxed, $) == 1);
+				RL_ASSERT(VAR(data) == 1);
+				RL_ASSERT(state.load(rl::memory_order_relaxed, $) == 1);
 				RL_UNTIL(true);
 			}
 		}
@@ -118,11 +118,11 @@ struct test_futex_sync2 : rl::test_suite<test_futex_sync2, 2, rl::test_result_un
 		else
 		{
 			int rv = futex(&state, FUTEX_WAIT, 0, 0, 0, 0);
-			assert(rv == 0 || rv == EWOULDBLOCK || rv == EINTR);
+			RL_ASSERT(rv == 0 || rv == EWOULDBLOCK || rv == EINTR);
 			if (rv == EWOULDBLOCK)
 			{
-				assert(VAR(data) == 1);
-				assert(state.load(rl::memory_order_relaxed, $) == 1);
+				RL_ASSERT(VAR(data) == 1);
+				RL_ASSERT(state.load(rl::memory_order_relaxed, $) == 1);
 				RL_UNTIL(true);
 			}
 		}
@@ -154,7 +154,7 @@ struct test_futex_intr : rl::test_suite<test_futex_intr, 2, rl::test_result_unti
 		else
 		{
 			int rv = futex(&state, FUTEX_WAIT, 0, 0, 0, 0);
-			assert(rv == 0 || rv == EWOULDBLOCK || rv == EINTR);
+			RL_ASSERT(rv == 0 || rv == EWOULDBLOCK || rv == EINTR);
 			RL_UNTIL(rv == EINTR);
 		}
 	}

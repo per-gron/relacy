@@ -37,9 +37,4 @@
 #define realloc(p, sz)      rl::rl_realloc((p), (sz), $)
 #define free(p)             rl::rl_free((p), $)
 
-#ifdef assert
-#undef assert
-#endif
-#define assert              RL_ASSERT
-
 #define RL_ERRNO               (rl::get_errno())

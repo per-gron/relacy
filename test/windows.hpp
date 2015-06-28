@@ -233,7 +233,7 @@ struct test_win_sem : rl::test_suite<test_win_sem, 2>
             VAR(data) = 1;
             long count = -1;
             ReleaseSemaphore(sem1, 1, &count);
-            assert(count == 0);
+            RL_ASSERT(count == 0);
             for (;;)
             {
                 unsigned long rv = WaitForSingleObject(sem2, 0);
@@ -252,7 +252,7 @@ struct test_win_sem : rl::test_suite<test_win_sem, 2>
         else
         {
             unsigned long rv = WaitForSingleObject(sem1, INFINITE);
-            assert(rv == WAIT_OBJECT_0);
+            RL_ASSERT(rv == WAIT_OBJECT_0);
             RL_ASSERT(VAR(data) == 1);
             VAR(data) = 2;
             ReleaseSemaphore(sem2, 1, 0);
@@ -290,10 +290,10 @@ struct test_win_event : rl::test_suite<test_win_event, 2>
 		else
 		{
 			unsigned rv = WaitForSingleObject(ev, INFINITE);
-			assert(rv == WAIT_OBJECT_0);
-			assert(VAR(data) == 1);
+			RL_ASSERT(rv == WAIT_OBJECT_0);
+			RL_ASSERT(VAR(data) == 1);
 			rv = WaitForSingleObject(ev, 0);
-			assert(rv == WAIT_TIMEOUT);
+			RL_ASSERT(rv == WAIT_TIMEOUT);
 			ResetEvent(ev);
 		}
 	}
@@ -318,7 +318,7 @@ struct test_FlushProcessWriteBuffers : rl::test_suite<test_FlushProcessWriteBuff
 
     void after()
     {
-        assert(r1 == 1 || r2 == 1);
+        RL_ASSERT(r1 == 1 || r2 == 1);
     }
 
     void thread(unsigned index)

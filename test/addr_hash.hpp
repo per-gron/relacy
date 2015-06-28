@@ -27,10 +27,10 @@ struct test_addr_hash : rl::test_suite<test_addr_hash, 2>
 
     void thread(unsigned index)
     {
-        assert(h1 == rl::hash_ptr(p1, table_size));
-        assert(h2 == rl::hash_ptr(p2, table_size));
-        assert(rl::hash_ptr(&index, table_size) == rl::hash_ptr(&index,table_size));
-        assert(rl::hash_ptr(0, table_size) == rl::hash_ptr(0, table_size));
+        RL_ASSERT(h1 == rl::hash_ptr(p1, table_size));
+        RL_ASSERT(h2 == rl::hash_ptr(p2, table_size));
+        RL_ASSERT(rl::hash_ptr(&index, table_size) == rl::hash_ptr(&index,table_size));
+        RL_ASSERT(rl::hash_ptr(0, table_size) == rl::hash_ptr(0, table_size));
 
     }
 };

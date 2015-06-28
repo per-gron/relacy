@@ -341,7 +341,7 @@ struct cc_transitive_test : rl::test_suite<cc_transitive_test, 3>
         else
         {
             if (y.load(rl::memory_order_acquire, $))
-                assert(x.load(rl::memory_order_relaxed, $));
+                RL_ASSERT(x.load(rl::memory_order_relaxed, $));
         }
     }
 };
