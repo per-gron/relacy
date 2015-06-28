@@ -17,7 +17,7 @@
 #include "addr_hash.hpp"
 #include "futex.hpp"
 
-#include "../relacy/windows.h"
+#include "../relacy/stdlib/windows.hpp"
 #include "../relacy/stdlib/pthread.hpp"
 
 #include <cstdio>

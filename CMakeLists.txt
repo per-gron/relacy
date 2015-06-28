@@ -58,8 +58,7 @@ set(relacy_sources
   relacy/thread_local.hpp
   relacy/thread_local_ctx.hpp
   relacy/var.hpp
-  relacy/waitset.hpp
-  relacy/windows.h)
+  relacy/waitset.hpp)
 
 set(relacy_test_sources
   test/addr_hash.hpp

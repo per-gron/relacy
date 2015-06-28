@@ -1,6 +1,7 @@
 #pragma once
 
-#include "../relacy/windows.h"
+#include "../relacy/relacy.hpp"
+#include "../relacy/stdlib/windows.hpp"
 
 
 struct test_win_thread : rl::test_suite<test_win_thread, 1>
