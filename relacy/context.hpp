@@ -1230,5 +1230,5 @@ inline void operator delete [] (void* p) throw()
         (::free)(p);
 }
 
-#define RL_NEW_PROXY rl::new_proxy($) % new
-#define RL_DELETE_PROXY rl::delete_proxy($) , delete
+#define RL_NEW rl::new_proxy($) % new
+#define RL_DELETE rl::delete_proxy($) , delete

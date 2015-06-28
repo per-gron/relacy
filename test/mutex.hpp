@@ -90,9 +90,9 @@ struct test_mutex_destuction : rl::test_suite<test_mutex_destuction, 1, rl::test
 {
     void thread(unsigned)
     {
-        rl::mutex* m = RL_NEW_PROXY rl::mutex;
+        rl::mutex* m = RL_NEW rl::mutex;
         m->lock($);
-        RL_DELETE_PROXY m;
+        RL_DELETE m;
     }
 };
 
@@ -104,7 +104,7 @@ struct test_mutex_destuction2 : rl::test_suite<test_mutex_destuction2, 2, rl::te
 
     void before()
     {
-        m = RL_NEW_PROXY rl::mutex;
+        m = RL_NEW rl::mutex;
         f($) = 0;
     }
 
@@ -122,7 +122,7 @@ struct test_mutex_destuction2 : rl::test_suite<test_mutex_destuction2, 2, rl::te
         {
             while (0 == f($))
                 rl::yield(1, $);
-            RL_DELETE_PROXY m;
+            RL_DELETE m;
             f($) = 2;
         }
     }
@@ -212,9 +212,9 @@ struct test_mutex_leak : rl::test_suite<test_mutex_leak, 1, rl::test_result_reso
 {
     void thread(unsigned)
     {
-        char* p = RL_NEW_PROXY char [sizeof(rl::mutex)];
-        RL_NEW_PROXY (p) rl::mutex();
-        RL_DELETE_PROXY [] p;
+        char* p = RL_NEW char [sizeof(rl::mutex)];
+        RL_NEW (p) rl::mutex();
+        RL_DELETE [] p;
     }
 };
 

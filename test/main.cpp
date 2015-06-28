@@ -46,7 +46,7 @@ public:
 
     void enqueue(void* data)
     {
-        node_t* n = RL_NEW_PROXY node_t;
+        node_t* n = RL_NEW node_t;
         n->VAR(next) = 0;
         n->VAR(data) = data;
         bool was_empty = false;
@@ -83,7 +83,7 @@ public:
         pthread_mutex_unlock(&mtx);
 
         void* data = n->VAR(data);
-        RL_DELETE_PROXY n;
+        RL_DELETE n;
         return data;
     }
 
