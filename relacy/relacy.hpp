@@ -42,7 +42,4 @@
 #endif
 #define assert              RL_ASSERT
 
-#ifdef errno
-#undef errno
-#endif
-#define errno               (rl::get_errno())
+#define RL_ERRNO               (rl::get_errno())

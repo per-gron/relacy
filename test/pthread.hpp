@@ -253,7 +253,7 @@ struct test_pthread_sem : rl::test_suite<test_pthread_sem, 2>
             sem_post(&sem1);
             while (sem_trywait(&sem2))
             {
-                assert(errno == EINTR || errno == EAGAIN);
+                assert(RL_ERRNO == EINTR || RL_ERRNO == EAGAIN);
                 pthread_yield();
             }
             RL_ASSERT(VAR(data) == 2);
@@ -268,7 +268,7 @@ struct test_pthread_sem : rl::test_suite<test_pthread_sem, 2>
         else
         {
             while (sem_wait(&sem1))
-                assert(errno == EINTR);
+                assert(RL_ERRNO == EINTR);
             RL_ASSERT(VAR(data) == 1);
             VAR(data) = 2;
             sem_post(&sem2);
