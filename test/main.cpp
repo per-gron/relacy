@@ -1,7 +1,3 @@
-#include "stdafx.h"
-
-//#define RL_MSVC_OUTPUT
-
 #include "../relacy/relacy_std.hpp"
 #include "memory_order.hpp"
 #include "fence.hpp"
