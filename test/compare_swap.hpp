@@ -1,8 +1,6 @@
 #pragma once
 
-#include "../relacy/relacy_std.hpp"
-
-
+#include "../relacy/relacy.hpp"
 
 template<int T>
 struct cas_spurious_fail_test : rl::test_suite<cas_spurious_fail_test<T>, 1, rl::test_result_until_condition_hit>

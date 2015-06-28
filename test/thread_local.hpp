@@ -2,8 +2,6 @@
 
 #include "../relacy/relacy.hpp"
 
-
-
 struct tls_basic_test : rl::test_suite<tls_basic_test, 3>
 {
     rl::thread_local_var<unsigned> x;

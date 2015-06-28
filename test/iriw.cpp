@@ -1,33 +1,33 @@
-#include "../relacy/relacy_std.hpp"
+#include "../relacy/relacy.hpp"
 
 struct test : rl::test_suite<test, 4> {
-  std::atomic<int> x_;
-  std::atomic<int> y_;
+  rl::atomic<int> x_;
+  rl::atomic<int> y_;
   int r2x, r2y, r3x, r3y;
 
   void before() {
-    x_.store(0, std::memory_order_relaxed);
-    y_.store(0, std::memory_order_relaxed);
+    x_.store(0, rl::memory_order_relaxed);
+    y_.store(0, rl::memory_order_relaxed);
     r2x = r2y = r3x = r3y = 0;
   }
 
   void thread(unsigned thread_index) {
     switch (thread_index) {
       case 0:;
-        x_.store(1, std::memory_order_relaxed);
+        x_.store(1, rl::memory_order_relaxed);
         break;
       case 1:
-        y_.store(1, std::memory_order_relaxed);
+        y_.store(1, rl::memory_order_relaxed);
         break;
       case 2:
-        r2x = x_.load(std::memory_order_relaxed);
-        std::atomic_thread_fence(std::memory_order_seq_cst);
-        r2y = y_.load(std::memory_order_relaxed);
+        r2x = x_.load(rl::memory_order_relaxed);
+        rl::atomic_thread_fence(rl::memory_order_seq_cst);
+        r2y = y_.load(rl::memory_order_relaxed);
         break;
       case 3:
-        r3y = y_.load(std::memory_order_relaxed);
-        std::atomic_thread_fence(std::memory_order_seq_cst);
-        r3x = x_.load(std::memory_order_relaxed);
+        r3y = y_.load(rl::memory_order_relaxed);
+        rl::atomic_thread_fence(rl::memory_order_seq_cst);
+        r3x = x_.load(rl::memory_order_relaxed);
         break;
     }
   }

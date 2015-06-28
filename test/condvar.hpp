@@ -1,8 +1,6 @@
 #pragma once
 
-#include "../relacy/relacy_std.hpp"
-
-
+#include "../relacy/relacy.hpp"
 
 struct test_condvar : rl::test_suite<test_condvar, 2>
 {

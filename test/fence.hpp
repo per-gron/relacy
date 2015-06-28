@@ -1,7 +1,6 @@
 #pragma once
 
-#include "../relacy/relacy_std.hpp"
-
+#include "../relacy/relacy.hpp"
 
 template<int index, int mo_index>
 struct fence_synch_test : rl::test_suite<fence_synch_test<index, mo_index>, 2>

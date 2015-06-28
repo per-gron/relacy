@@ -1,8 +1,6 @@
 #pragma once
 
-#include "../relacy/relacy_std.hpp"
-
-
+#include "../relacy/relacy.hpp"
 
 struct test_event_auto : rl::test_suite<test_event_auto, 2>
 {

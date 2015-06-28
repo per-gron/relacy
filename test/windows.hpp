@@ -3,7 +3,6 @@
 #include "../relacy/relacy.hpp"
 #include "../relacy/stdlib/windows.hpp"
 
-
 struct test_win_thread : rl::test_suite<test_win_thread, 1>
 {
     static size_t const dynamic_thread_count = 2;

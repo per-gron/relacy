@@ -1,4 +1,4 @@
-#include "../relacy/relacy_std.hpp"
+#include "../relacy/relacy.hpp"
 #include "memory_order.hpp"
 #include "fence.hpp"
 #include "data_race.hpp"

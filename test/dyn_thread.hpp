@@ -3,8 +3,6 @@
 #include "../relacy/relacy.hpp"
 #include "../relacy/dyn_thread.hpp"
 
-
-
 struct dyn_thread_basic_test : rl::test_suite<dyn_thread_basic_test, 2>
 {
     static unsigned const dynamic_thread_count = 4;

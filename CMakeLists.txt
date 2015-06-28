@@ -37,7 +37,6 @@ set(relacy_sources
   relacy/random.hpp
   relacy/random_scheduler.hpp
   relacy/relacy.hpp
-  relacy/relacy_std.hpp
   relacy/rmw.hpp
   relacy/scheduler.hpp
   relacy/signature.hpp

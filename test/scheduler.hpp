@@ -1,8 +1,6 @@
 #pragma once
 
-#include "../relacy/relacy_std.hpp"
-
-
+#include "../relacy/relacy.hpp"
 
 struct livelock_test : rl::test_suite<livelock_test, 2, rl::test_result_livelock>
 {

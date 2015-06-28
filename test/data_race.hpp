@@ -1,9 +1,6 @@
 #pragma once
 
-#include "../relacy/relacy_std.hpp"
-
-
-
+#include "../relacy/relacy.hpp"
 
 struct race_ld_ld_test : rl::test_suite<race_ld_ld_test, 2>
 {

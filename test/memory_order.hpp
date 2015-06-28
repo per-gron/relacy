@@ -1,8 +1,6 @@
 #pragma once
 
-#include "../relacy/relacy_std.hpp"
-
-
+#include "../relacy/relacy.hpp"
 
 template<int index>
 struct order_relaxed_test : rl::test_suite<order_relaxed_test<index>, 2>

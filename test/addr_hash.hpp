@@ -1,8 +1,6 @@
 #pragma once
 
-#include "../relacy/relacy_std.hpp"
-
-
+#include "../relacy/relacy.hpp"
 
 struct test_addr_hash : rl::test_suite<test_addr_hash, 2>
 {

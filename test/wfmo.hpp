@@ -1,8 +1,6 @@
 #pragma once
 
-#include "../relacy/relacy_std.hpp"
-
-
+#include "../relacy/relacy.hpp"
 
 struct test_wfmo_all : rl::test_suite<test_wfmo_all, 2>
 {

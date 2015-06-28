@@ -1,9 +1,7 @@
 #pragma once
 
-#include "../relacy/relacy_std.hpp"
+#include "../relacy/relacy.hpp"
 #include "../relacy/stdlib/windows.hpp"
-
-
 
 struct test_semaphore : rl::test_suite<test_semaphore, 2>
 {
