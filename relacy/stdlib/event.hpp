@@ -45,6 +45,9 @@ public:
     {
     }
 
+    event_data_impl(const event_data_impl &) = delete;
+    event_data_impl &operator=(const event_data_impl &) = delete;
+
     ~event_data_impl()
     {
         //!!! detect destuction with waiters
@@ -279,8 +282,6 @@ private:
         (void)info;
         return &ws_;
     }
-
-    RL_NOCOPY(event_data_impl);
 };
 
 

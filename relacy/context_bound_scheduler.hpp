@@ -51,6 +51,9 @@ public:
     {
     }
 
+    context_bound_scheduler(const context_bound_scheduler &) = delete;
+    context_bound_scheduler &operator=(const context_bound_scheduler &) = delete;
+
     thread_id_t iteration_begin_impl()
     {
         switches_remain_ = this->params_.context_bound;
@@ -153,8 +156,6 @@ private:
             r *= x;
         return r;
     }
-
-    RL_NOCOPY(context_bound_scheduler);
 };
 
 

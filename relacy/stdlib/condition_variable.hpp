@@ -34,6 +34,9 @@ public:
     {
     }
 
+    mutex_wrapper_impl(const mutex_wrapper_impl &) = delete;
+    mutex_wrapper_impl &operator=(const mutex_wrapper_impl &) = delete;
+
 private:
     mutex_t& m_;
 
@@ -46,8 +49,6 @@ private:
     {
         m_.unlock(info);
     }
-
-    RL_NOCOPY(mutex_wrapper_impl);
 };
 
 struct pred_wrapper
@@ -65,6 +66,9 @@ public:
     {
     }
 
+    pred_wrapper_impl(const pred_wrapper_impl &) = delete;
+    pred_wrapper_impl &operator=(const pred_wrapper_impl &) = delete;
+
 private:
     mutable pred_t p_;
 
@@ -72,8 +76,6 @@ private:
     {
         return p_();
     }
-
-    RL_NOCOPY(pred_wrapper_impl);
 };
 
 
@@ -302,6 +304,9 @@ public:
         condvar<tag_t>::init(true, $);
     }
 
+    condition_variable_std(const condition_variable_std &) = delete;
+    condition_variable_std &operator=(const condition_variable_std &) = delete;
+
     ~condition_variable_std()
     {
         condvar<tag_t>::deinit($);
@@ -353,8 +358,6 @@ public:
     {
         return condvar<tag_t>::wait(lock, pred, true, info);
     }
-
-    RL_NOCOPY(condition_variable_std);
 };
 
 

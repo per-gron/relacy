@@ -61,6 +61,9 @@ public:
         stree_.reserve(128);
     }
 
+    tree_search_scheduler(const tree_search_scheduler &) = delete;
+    tree_search_scheduler &operator=(const tree_search_scheduler &) = delete;
+
     thread_id_t iteration_begin_impl()
     {
         stree_depth_ = 0;
@@ -364,8 +367,6 @@ private:
     {
         return *static_cast<derived_t*>(this);
     }
-
-    RL_NOCOPY(tree_search_scheduler);
 };
 
 
@@ -387,6 +388,9 @@ public:
     {
     }
 
+    full_search_scheduler(const full_search_scheduler &) = delete;
+    full_search_scheduler &operator=(const full_search_scheduler &) = delete;
+
     bool can_switch(thread_info_t& /*t*/)
     {
         return true;
@@ -406,8 +410,6 @@ public:
         }
         return total;
     }
-
-    RL_NOCOPY(full_search_scheduler);
 };
 
 

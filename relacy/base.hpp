@@ -28,12 +28,6 @@ size_t const subsequent_timed_wait_limit = 4;
 namespace rl
 {
 
-#define RL_NOCOPY(CLASS) \
-    private: \
-    CLASS(CLASS const&); \
-    CLASS& operator = (CLASS const&);
-/**/
-
 
 template<typename T = void>
 class nocopy

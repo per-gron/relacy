@@ -35,6 +35,9 @@ public:
     {
     }
 
+    random_scheduler(const random_scheduler &) = delete;
+    random_scheduler &operator=(const random_scheduler &) = delete;
+
     thread_id_t iteration_begin_impl()
     {
         rand_.seed(this->iter_);
@@ -127,8 +130,6 @@ public:
 
 private:
     random_generator rand_;
-
-    RL_NOCOPY(random_scheduler);
 };
 
 

@@ -106,6 +106,9 @@ public:
         foreach<thread_count>(shared_owner_, &assign_zero);
     }
 
+    generic_mutex_data_impl(const generic_mutex_data_impl &) = delete;
+    generic_mutex_data_impl &operator=(const generic_mutex_data_impl &) = delete;
+
     ~generic_mutex_data_impl()
     {
         context& c = ctx();
@@ -476,8 +479,6 @@ private:
     timestamp_t shared_owner_ [thread_count];
     unsigned shared_lock_count_;
     bool try_lock_failed_;
-
-    RL_NOCOPY(generic_mutex_data_impl);
 };
 
 

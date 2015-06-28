@@ -72,6 +72,9 @@ public:
         RL_VERIFY(max_count <= INT_MAX);
     }
 
+    sema_data_impl(const sema_data_impl &) = delete;
+    sema_data_impl &operator=(const sema_data_impl &) = delete;
+
     ~sema_data_impl()
     {
         //!!! detect destruction with waiters
@@ -267,8 +270,6 @@ private:
         (void)info;
         return &ws_;
     }
-
-    RL_NOCOPY(sema_data_impl);
 };
 
 

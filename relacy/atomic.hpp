@@ -204,6 +204,9 @@ public:
         }
     }
 
+    generic_atomic(const generic_atomic &) = delete;
+    generic_atomic &operator=(const generic_atomic &) = delete;
+
     ~generic_atomic()
     {
         context& c = ctx();
@@ -569,8 +572,6 @@ private:
 
         return prev_value;
     }
-
-    RL_NOCOPY(generic_atomic);
 };
 
 
@@ -584,6 +585,9 @@ public:
     atomic()
     {
     }
+
+    atomic(const atomic &) = delete;
+    atomic &operator=(const atomic &) = delete;
 
     /*explicit*/ atomic(T value)
     {
@@ -607,8 +611,6 @@ public:
 
     friend class atomic_proxy<T>;
     friend class atomic_proxy_const<T>;
-
-    RL_NOCOPY(atomic);
 };
 
 
