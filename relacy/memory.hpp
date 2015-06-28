@@ -9,6 +9,9 @@
 
 #pragma once
 
+#include <iostream>
+#include <map>
+
 #include "base.hpp"
 
 namespace rl

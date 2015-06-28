@@ -9,6 +9,15 @@
 
 #pragma once
 
+#include <deque>
+#include <memory>
+#include <set>
+#include <stack>
+#include <stdint.h>
+#include <stdlib.h>
+#include <queue>
+#include <vector>
+
 namespace rl
 {
 

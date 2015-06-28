@@ -9,7 +9,9 @@
 
 #pragma once
 
-#include "pch.hpp"
+#include <stddef.h>
+#include <stdint.h>
+
 #include "platform.hpp"
 
 namespace rl

@@ -32,7 +32,6 @@ set(relacy_sources
   relacy/history.hpp
   relacy/memory.hpp
   relacy/memory_order.hpp
-  relacy/pch.hpp
   relacy/platform.hpp
   relacy/random.hpp
   relacy/random_scheduler.hpp

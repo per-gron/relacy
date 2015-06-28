@@ -9,6 +9,8 @@
 
 #pragma once
 
+#include <iostream>
+
 #include "base.hpp"
 #include "test_result.hpp"
 

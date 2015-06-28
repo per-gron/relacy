@@ -9,6 +9,8 @@
 
 #pragma once
 
+#include <sstream>
+
 #include "base.hpp"
 
 

@@ -9,8 +9,16 @@
 
 #pragma once
 
-#include "pch.hpp"
+#ifndef _XOPEN_SOURCE
+#    define _XOPEN_SOURCE
+#endif
 
+#include <csetjmp>
+#include <cstdlib>
+#include <cstring>
+#include <iostream>
+#include <unistd.h>
+#include <ucontext.h>
 
 #if defined(RL_WIN) || defined(_CYGWIN)
 
@@ -108,6 +116,8 @@ void swapcontext(void*, void*) {}
 #endif
 
 #else
+
+#include <sys/times.h>
 
 inline unsigned get_tick_count()
 {
