@@ -14,7 +14,6 @@ add_definitions(
 )
 
 set(relacy_sources
-  relacy
   relacy/atomic.hpp
   relacy/atomic_events.hpp
   relacy/atomic_fence.hpp
@@ -35,7 +34,6 @@ set(relacy_sources
   relacy/memory_order.hpp
   relacy/pch.hpp
   relacy/platform.hpp
-  relacy/pthread.h
   relacy/random.hpp
   relacy/random_scheduler.hpp
   relacy/relacy.hpp

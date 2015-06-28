@@ -1,8 +1,7 @@
 #pragma once
 
-#include "../relacy/pthread.h"
-
-
+#include "../relacy/relacy.hpp"
+#include "../relacy/stdlib/pthread.hpp"
 
 struct test_futex : rl::test_suite<test_futex, 2>
 {

@@ -18,7 +18,7 @@
 #include "futex.hpp"
 
 #include "../relacy/windows.h"
-#include "../relacy/pthread.h"
+#include "../relacy/stdlib/pthread.hpp"
 
 #include <cstdio>
 #include <climits>
