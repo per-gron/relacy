@@ -25,15 +25,6 @@ size_t const subsequent_timed_wait_limit = 4;
 #   define RL_POSIX_API
 #endif
 
-#ifdef RL_WIN_MODE
-#   define RL_WIN_API
-#endif
-
-#ifdef RL_CPP_MODE
-#   define RL_CPP_API
-#   define RL_CPP_MM
-#endif
-
 namespace rl
 {
 

@@ -17,107 +17,9 @@
 #include <cstdlib>
 #include <cstring>
 #include <iostream>
+#include <sys/times.h>
 #include <unistd.h>
 #include <ucontext.h>
-
-#if defined(RL_WIN) || defined(_CYGWIN)
-
-typedef void* fiber_t;
-
-inline unsigned get_tick_count()
-{
-    return GetTickCount();
-}
-
-inline void set_low_thread_prio()
-{
-    SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_BELOW_NORMAL);
-}
-
-inline void create_main_fiber(fiber_t& fib)
-{
-    fib = ConvertThreadToFiber(0);
-    if (0 == fib)
-    {
-        unsigned long err = ::GetLastError(); (void)err;
-        throw std::logic_error("you must start simulation inside a thread (not a fiber)");
-    }
-}
-
-inline void delete_main_fiber(fiber_t& fib)
-{
-    (void)fib;
-    HMODULE lib = LoadLibraryW(L"kernel32.dll");
-    if (lib)
-    {
-        void* proc = (void*)GetProcAddress(lib, "ConvertFiberToThread");
-        if (proc)
-        {
-            typedef BOOL (WINAPI * ConvertFiberToThreadT)();
-            ConvertFiberToThreadT ConvertFiberToThread = (ConvertFiberToThreadT)proc;
-            ConvertFiberToThread();
-        }
-        FreeLibrary(lib);
-    }
-}
-
-inline void create_fiber(fiber_t& fib, void(*fiber_proc)(void*), void* ctx)
-{
-    size_t const stack_size = 64*1024;
-    fib = CreateFiberEx(4*1024, stack_size, 0, (LPFIBER_START_ROUTINE)fiber_proc, ctx);
-    if (fib == 0)
-        throw std::runtime_error("error creating fiber");
-}
-
-inline void delete_fiber(fiber_t& fib)
-{
-    DeleteFiber(fib);
-}
-
-inline void switch_to_fiber(fiber_t fib, fiber_t)
-{
-    SwitchToFiber(fib);
-}
-
-// work-around for some versions of cygwin
-extern "C" inline int __gxx_personality_v0()
-{
-    return 0;
-}
-
-#ifdef RL_WIN
-#else
-
-/*
-inline unsigned get_tick_count()
-{
-    return GetTickCount();
-}
-
-typedef void* fiber_t;
-
-struct ucontext_t
-{
-    struct stack_t
-    {
-        void* ss_sp;
-        size_t ss_size;
-    };
-    stack_t uc_stack;
-    void* uc_link;
-
-};
-void getcontext(void*) {}
-void makecontext(void*, void(*)(), int, void*) {}
-void swapcontext(void*, void*) {}
-
-*/
-
-#endif
-
-#else
-
-#include <sys/times.h>
 
 inline unsigned get_tick_count()
 {
@@ -236,9 +138,6 @@ inline void switch_to_fiber(fiber_t& fib, fiber_t& prv)
 }
 
 #endif
-
-#endif
-
 
 
 #ifdef _MSC_VER
