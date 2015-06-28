@@ -31,45 +31,6 @@ inline void set_low_thread_prio()
 {
 }
 
-#if 0
-
-typedef ucontext_t fiber_t;
-
-inline void create_main_fiber(fiber_t& fib)
-{
-    ucontext_t f = {};
-    fib = f;
-}
-
-inline void delete_main_fiber(fiber_t& fib)
-{
-    (void)fib;
-}
-
-inline void create_fiber(fiber_t& fib, void(*fiber_proc)(void*), void* ctx)
-{
-    size_t const stack_size = 64*1024;
-    getcontext(&fib);
-    fib.uc_stack.ss_sp = (::malloc)(stack_size);
-    fib.uc_stack.ss_size = stack_size;
-    fib.uc_link = 0;
-    typedef void(*fn_t)();
-    fn_t fn = (fn_t)fiber_proc;
-    makecontext(&fib, fn, 1, ctx);
-}
-
-inline void delete_fiber(fiber_t& fib)
-{
-    //(::free)(fib.uc_stack.ss_sp);
-}
-
-inline void switch_to_fiber(fiber_t& fib, fiber_t& prev)
-{
-    swapcontext(&prev, &fib);
-}
-
-#else
-
 struct fiber_t
 {
     ucontext_t  fib;
@@ -136,9 +97,6 @@ inline void switch_to_fiber(fiber_t& fib, fiber_t& prv)
     if (_setjmp(prv.jmp) == 0)
         _longjmp(fib.jmp, 1);
 }
-
-#endif
-
 
 #ifdef _MSC_VER
     typedef unsigned __int64 uint64_t;
