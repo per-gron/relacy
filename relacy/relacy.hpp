@@ -29,7 +29,4 @@
 #define TLS_T(T) rl::thread_local_var<T>
 #define VAR(x) x($)
 
-#define new                 RL_NEW_PROXY
-#define delete              RL_DELETE_PROXY
-
 #define RL_ERRNO               (rl::get_errno())
