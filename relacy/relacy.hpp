@@ -9,7 +9,6 @@
 
 #pragma once
 
-
 #include "base.hpp"
 #include "context.hpp"
 #include "context_base_impl.hpp"
@@ -32,9 +31,5 @@
 
 #define new                 RL_NEW_PROXY
 #define delete              RL_DELETE_PROXY
-#define malloc(sz)          rl::rl_malloc((sz), $)
-#define calloc(sz, cnt)     rl::rl_calloc((sz), (cnt), $)
-#define realloc(p, sz)      rl::rl_realloc((p), (sz), $)
-#define free(p)             rl::rl_free((p), $)
 
 #define RL_ERRNO               (rl::get_errno())
