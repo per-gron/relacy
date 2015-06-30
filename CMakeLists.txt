@@ -34,7 +34,9 @@ set(relacy_sources
   relacy/memory.hpp
   relacy/memory_order.cpp
   relacy/memory_order.hpp
+  relacy/mutex_wrapper.hpp
   relacy/platform.hpp
+  relacy/pred_wrapper.hpp
   relacy/random.hpp
   relacy/random_scheduler.hpp
   relacy/relacy.hpp

@@ -15,7 +15,9 @@
 #include "thread.hpp"
 #include "history.hpp"
 #include "memory.hpp"
+#include "mutex_wrapper.hpp"
 #include "test_result.hpp"
+#include "pred_wrapper.hpp"
 #include "slab_allocator.hpp"
 #include "test_params.hpp"
 #include "random.hpp"
@@ -31,9 +33,144 @@ namespace rl
 {
 
 template<thread_id_t thread_count> class generic_mutex_data_impl;
-template<thread_id_t thread_count> class condvar_data_impl;
 template<thread_id_t thread_count> class sema_data_impl;
 template<thread_id_t thread_count> class event_data_impl;
+
+struct condvar_data
+{
+    virtual void notify_one(debug_info_param info) = 0;
+    virtual void notify_all(debug_info_param info) = 0;
+    virtual sema_wakeup_reason wait(mutex_wrapper const& lock, bool is_timed, debug_info_param info) = 0;
+    virtual bool wait(mutex_wrapper const& lock, pred_wrapper const& pred, bool is_timed, debug_info_param info) = 0;
+    virtual ~condvar_data() {} // just to calm down gcc
+};
+
+class condvar_data_impl : public condvar_data
+{
+public:
+    condvar_data_impl(thread_id_t thread_count, bool allow_spurious_wakeups)
+        : ws_(thread_count)
+    {
+        spurious_wakeup_limit_ = 0;
+        if (allow_spurious_wakeups && ctx().is_random_sched())
+            spurious_wakeup_limit_ = 10;
+    }
+
+    ~condvar_data_impl()
+    {
+        //!!! detect destoy when there are blocked threads
+    }
+
+private:
+    waitset                ws_;
+    signature<0xc0ffe3ad>  sign_;
+    int                    spurious_wakeup_limit_;
+
+    struct event_t
+    {
+        enum type_e
+        {
+            type_notify_one,
+            type_notify_all,
+            type_wait_enter,
+            type_wait_exit,
+            type_wait_pred_enter,
+            type_wait_pred_exit,
+        };
+
+        condvar_data_impl const*    var_addr_;
+        type_e                      type_;
+        thread_id_t                 thread_count_;
+        unpark_reason               reason_;
+
+        void output(std::ostream& s) const
+        {
+            s << "<" << std::hex << var_addr_ << std::dec << "> cond_var: ";
+            switch (type_)
+            {
+            case type_notify_one:
+                s << "notify one total_blocked=" << thread_count_ << " unblocked=" << (thread_count_ ? 1 : 0);
+                break;
+            case type_notify_all:
+                s << "notify all unblocked=" << thread_count_;
+                break;
+            case type_wait_enter: s << "wait enter"; break;
+            case type_wait_exit:
+                s << "wait exit";
+                if (unpark_reason_normal == reason_)
+                    s << " due to notified";
+                else if (unpark_reason_timeout == reason_)
+                    s << " due to timeout";
+                else if (unpark_reason_spurious == reason_)
+                    s << " spuriously";
+                break;
+            case type_wait_pred_enter: s << "wait pred enter"; break;
+            case type_wait_pred_exit: s << "wait pred exit"; break;
+            }
+        }
+    };
+
+    virtual void notify_one(debug_info_param info)
+    {
+        context& c = ctx();
+        //??? do I need this scheduler call?
+        c.sched();
+        sign_.check(info);
+        RL_HIST(event_t) {this, event_t::type_notify_one, ws_.size()} RL_HIST_END();
+        ws_.unpark_one(c, info);
+    }
+
+    virtual void notify_all(debug_info_param info)
+    {
+        context& c = ctx();
+        //??? do I need this scheduler call?
+        c.sched();
+        sign_.check(info);
+        RL_HIST(event_t) {this, event_t::type_notify_all, ws_.size()} RL_HIST_END();
+        ws_.unpark_all(c, info);
+    }
+
+    virtual sema_wakeup_reason wait(mutex_wrapper const& lock, bool is_timed, debug_info_param info)
+    {
+        //!!! detect whether mutex is the same
+        context& c = ctx();
+        sign_.check(info);
+        RL_HIST(event_t) {this, event_t::type_wait_enter} RL_HIST_END();
+        lock.unlock(info);
+        sign_.check(info);
+        bool allow_spurious_wakeup = (spurious_wakeup_limit_ > 0);
+        unpark_reason reason = ws_.park_current(c, is_timed, allow_spurious_wakeup, false, info);
+        if (reason == unpark_reason_spurious)
+            spurious_wakeup_limit_ -= 1;
+        RL_HIST(event_t) {this, event_t::type_wait_exit, 0, reason} RL_HIST_END();
+        lock.lock(info);
+        sign_.check(info);
+        if (reason == unpark_reason_normal)
+            return sema_wakeup_reason_success;
+        else if (reason == unpark_reason_spurious)
+            return sema_wakeup_reason_spurious;
+        else //if (reason == unpark_reason_timeout)
+            return sema_wakeup_reason_timeout;
+    }
+
+    virtual bool wait(mutex_wrapper const& lock, pred_wrapper const& pred, bool is_timed, debug_info_param info)
+    {
+        context& c = ctx();
+        sign_.check(info);
+        RL_HIST(event_t) {this, event_t::type_wait_pred_enter} RL_HIST_END();
+        while (!pred.exec())
+        {
+            sema_wakeup_reason reason = wait(lock, is_timed, info);
+            if (reason == sema_wakeup_reason_timeout)
+            {
+                RL_HIST(event_t) {this, event_t::type_wait_pred_exit} RL_HIST_END();
+                return pred.exec();
+            }
+        }
+        RL_HIST(event_t) {this, event_t::type_wait_pred_exit} RL_HIST_END();
+        return true;
+    }
+};
 
 struct var_data_impl : var_data
 {
@@ -193,7 +330,7 @@ private:
     slab_allocator<atomic_data_impl<thread_count>>*        atomic_alloc_;
     slab_allocator<var_data_impl>*                         var_alloc_;
     slab_allocator<generic_mutex_data_impl<thread_count>>* mutex_alloc_;
-    slab_allocator<condvar_data_impl<thread_count>>*       condvar_alloc_;
+    slab_allocator<condvar_data_impl>*                     condvar_alloc_;
     slab_allocator<sema_data_impl<thread_count>>*          sema_alloc_;
     slab_allocator<event_data_impl<thread_count>>*         event_alloc_;
 
@@ -260,7 +397,7 @@ public:
         atomic_alloc_ = new slab_allocator<atomic_data_impl<thread_count>>();
         var_alloc_ = new slab_allocator<var_data_impl>();
         mutex_alloc_ = new slab_allocator<generic_mutex_data_impl<thread_count>>();
-        condvar_alloc_ = new slab_allocator<condvar_data_impl<thread_count>>();
+        condvar_alloc_ = new slab_allocator<condvar_data_impl>();
         sema_alloc_ = new slab_allocator<sema_data_impl<thread_count>>();
         event_alloc_ = new slab_allocator<event_data_impl<thread_count>>();
 
@@ -829,13 +966,13 @@ private:
 
     virtual condvar_data* condvar_ctor(bool allow_spurious_wakeups)
     {
-        return new (condvar_alloc_->alloc()) condvar_data_impl<thread_count>(allow_spurious_wakeups);
+        return new (condvar_alloc_->alloc()) condvar_data_impl(thread_count, allow_spurious_wakeups);
     }
 
     virtual void condvar_dtor(condvar_data* cv)
     {
-        condvar_data_impl<thread_count>* mm = static_cast<condvar_data_impl<thread_count>*>(cv);
-        mm->~condvar_data_impl<thread_count>();
+        condvar_data_impl* mm = static_cast<condvar_data_impl*>(cv);
+        mm->~condvar_data_impl();
         condvar_alloc_->free(mm);
     }
 
