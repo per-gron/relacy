@@ -29,12 +29,15 @@ set(relacy_sources
   relacy/foreach.hpp
   relacy/full_search_scheduler.hpp
   relacy/history.hpp
+  relacy/memory.cpp
   relacy/memory.hpp
+  relacy/memory_order.cpp
   relacy/memory_order.hpp
   relacy/platform.hpp
   relacy/random.hpp
   relacy/random_scheduler.hpp
   relacy/relacy.hpp
+  relacy/rmw.cpp
   relacy/rmw.hpp
   relacy/scheduler.hpp
   relacy/signature.hpp

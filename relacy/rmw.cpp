@@ -7,23 +7,24 @@
  *  terms of the license contained in the file LICENSE in this distribution.
  */
 
-#pragma once
-
-#include "base.hpp"
+#include "rmw.hpp"
 
 namespace rl
 {
 
-enum memory_order
+char const* format(rmw_type_e t)
 {
-    memory_order_relaxed,
-    memory_order_consume,
-    memory_order_acquire,
-    memory_order_release,
-    memory_order_acq_rel,
-    memory_order_seq_cst,
-};
-
-char const* format(memory_order mo);
+    switch (t)
+    {
+    case rmw_type_swap: return "exchange";
+    case rmw_type_add: return "fetch_add";
+    case rmw_type_sub: return "fetch_sub";
+    case rmw_type_and: return "fetch_and";
+    case rmw_type_or: return "fetch_or";
+    case rmw_type_xor: return "fetch_xor";
+    }
+    RL_VERIFY(!"invalid rmw type");
+    throw std::logic_error("invalid rmw type");
+}
 
 }
