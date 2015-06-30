@@ -28,6 +28,7 @@ set(relacy_sources
   relacy/dyn_thread_ctx.hpp
   relacy/foreach.hpp
   relacy/full_search_scheduler.hpp
+  relacy/history.cpp
   relacy/history.hpp
   relacy/memory.cpp
   relacy/memory.hpp
