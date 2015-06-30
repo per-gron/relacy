@@ -13,7 +13,6 @@
 #include "../context_base.hpp"
 #include "../mutex_wrapper.hpp"
 #include "../waitset.hpp"
-#include "../pred_wrapper.hpp"
 #include "../signature.hpp"
 
 
@@ -81,11 +80,11 @@ public:
         return impl_->wait(w, is_timed, info);
     }
 
-    template<typename lock_t, typename pred_t>
-    bool wait(mutex_wrapper const& lock, pred_wrapper const& pred, bool is_timed, debug_info_param info)
+    template<typename lock_t>
+    bool wait(mutex_wrapper const& lock, std::function<bool ()> const& pred, bool is_timed, debug_info_param info)
     {
         check(info);
-        return impl_->wait(mutex_wrapper_impl<lock_t>(lock), pred_wrapper_impl<pred_t>(pred), is_timed, info);
+        return impl_->wait(mutex_wrapper_impl<lock_t>(lock), pred, is_timed, info);
     }
 
 private:

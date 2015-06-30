@@ -18,7 +18,6 @@
 #include "memory.hpp"
 #include "mutex_wrapper.hpp"
 #include "test_result.hpp"
-#include "pred_wrapper.hpp"
 #include "slab_allocator.hpp"
 #include "test_params.hpp"
 #include "random.hpp"
@@ -748,7 +747,7 @@ struct condvar_data
     virtual void notify_one(debug_info_param info) = 0;
     virtual void notify_all(debug_info_param info) = 0;
     virtual sema_wakeup_reason wait(mutex_wrapper const& lock, bool is_timed, debug_info_param info) = 0;
-    virtual bool wait(mutex_wrapper const& lock, pred_wrapper const& pred, bool is_timed, debug_info_param info) = 0;
+    virtual bool wait(mutex_wrapper const& lock, std::function<bool ()> const& pred, bool is_timed, debug_info_param info) = 0;
     virtual ~condvar_data() {} // just to calm down gcc
 };
 
@@ -860,18 +859,18 @@ private:
             return sema_wakeup_reason_timeout;
     }
 
-    virtual bool wait(mutex_wrapper const& lock, pred_wrapper const& pred, bool is_timed, debug_info_param info)
+    virtual bool wait(mutex_wrapper const& lock, std::function<bool ()> const& pred, bool is_timed, debug_info_param info)
     {
         context& c = ctx();
         sign_.check(info);
         RL_HIST(event_t) {this, event_t::type_wait_pred_enter} RL_HIST_END();
-        while (!pred.exec())
+        while (!pred())
         {
             sema_wakeup_reason reason = wait(lock, is_timed, info);
             if (reason == sema_wakeup_reason_timeout)
             {
                 RL_HIST(event_t) {this, event_t::type_wait_pred_exit} RL_HIST_END();
-                return pred.exec();
+                return pred();
             }
         }
         RL_HIST(event_t) {this, event_t::type_wait_pred_exit} RL_HIST_END();
