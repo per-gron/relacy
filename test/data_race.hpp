@@ -80,9 +80,8 @@ struct race_seq_ld_ld_test : rl::test_suite<race_seq_ld_ld_test, 2>
         }
         else
         {
-            rl::backoff b;
             while (0 == a.load(rl::memory_order_relaxed, $))
-                b.yield($);
+                rl::yield(1, $);
             x($).load();
         }
     }
@@ -111,9 +110,8 @@ struct race_seq_ld_st_test : rl::test_suite<race_seq_ld_st_test, 2, rl::test_res
         }
         else
         {
-            rl::backoff b;
             while (0 == a.load(rl::memory_order_relaxed, $))
-                b.yield($);
+                rl::yield(1, $);
             x($).store(1);
         }
     }
@@ -141,9 +139,8 @@ struct race_seq_st_ld_test : rl::test_suite<race_seq_st_ld_test, 2, rl::test_res
         }
         else
         {
-            rl::backoff b;
             while (0 == a.load(rl::memory_order_relaxed, $))
-                b.yield($);
+                rl::yield(1, $);
             x($).load();
         }
     }
@@ -171,9 +168,8 @@ struct race_seq_st_st_test : rl::test_suite<race_seq_st_st_test, 2, rl::test_res
         }
         else
         {
-            rl::backoff b;
             while (0 == a.load(rl::memory_order_relaxed, $))
-                b.yield($);
+                rl::yield(1, $);
             VAR(x) = 1;
         }
     }
@@ -201,9 +197,8 @@ struct race_uninit_test : rl::test_suite<race_uninit_test, 2, rl::test_result_un
         }
         else
         {
-            rl::backoff b;
             while (0 == a.load(rl::memory_order_relaxed, $))
-                b.yield($);
+                rl::yield(1, $);
             x.load(rl::memory_order_seq_cst, $);
         }
     }
@@ -233,9 +228,8 @@ struct race_indirect_test : rl::test_suite<race_indirect_test, 2, rl::test_resul
         }
         else
         {
-            rl::backoff b;
             while (0 == a.load(rl::memory_order_acquire, $))
-                b.yield($);
+                rl::yield(1, $);
             (void)(int)x($);
             x($) = 2;
         }

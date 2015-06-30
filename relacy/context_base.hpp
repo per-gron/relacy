@@ -258,6 +258,10 @@ inline bool has_ctx()
     return context::has_instance();
 }
 
+inline void yield(unsigned count, debug_info_param info)
+{
+    ctx().yield(count, info);
+}
 
 inline int get_errno()
 {

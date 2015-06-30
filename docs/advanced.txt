@@ -39,9 +39,8 @@ struct race_seq_ld_ld_test : rl::test_suite<race_seq_ld_ld_test, 2>
         }
         else
         {
-            rl::backoff b;
             while (0 == a($).load(rl::memory_order_relaxed))
-                  b.yield($);
+                  rl::yield(1, $);
             x($).load();
         }
     }

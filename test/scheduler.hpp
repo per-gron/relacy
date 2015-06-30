@@ -46,7 +46,6 @@ struct yield_livelock_test : rl::test_suite<yield_livelock_test, 2, rl::test_res
     {
         if (0 == index)
         {
-            rl::backoff b;
             for (;;)
             {
                 int cmp = 0;
@@ -64,12 +63,11 @@ struct yield_livelock_test : rl::test_suite<yield_livelock_test, 2, rl::test_res
                         x($).store(0);
                     }
                 }
-                b.yield($);
+                rl::yield(1, $);
             }
         }
         else if (1 == index)
         {
-            rl::backoff b;
             for (;;)
             {
                 int cmp = 0;
@@ -87,7 +85,7 @@ struct yield_livelock_test : rl::test_suite<yield_livelock_test, 2, rl::test_res
                         y($).store(0);
                     }
                 }
-                b.yield($);
+                rl::yield(1, $);
             }
         }
     }

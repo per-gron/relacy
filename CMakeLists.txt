@@ -17,7 +17,6 @@ set(relacy_sources
   relacy/atomic.hpp
   relacy/atomic_events.hpp
   relacy/atomic_fence.hpp
-  relacy/backoff.hpp
   relacy/base.hpp
   relacy/context.hpp
   relacy/context_addr_hash.hpp
