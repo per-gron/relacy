@@ -35,6 +35,55 @@ template<thread_id_t thread_count> class condvar_data_impl;
 template<thread_id_t thread_count> class sema_data_impl;
 template<thread_id_t thread_count> class event_data_impl;
 
+struct var_data_impl : var_data
+{
+    rl_vector<timestamp_t> load_acq_rel_timestamp_;
+    rl_vector<timestamp_t> store_acq_rel_timestamp_;
+
+    var_data_impl(thread_id_t thread_count)
+        : load_acq_rel_timestamp_(thread_count)
+        , store_acq_rel_timestamp_(thread_count)
+    {
+    }
+
+    virtual void init(thread_info_base& th)
+    {
+        th.own_acq_rel_order_ += 1;
+        store_acq_rel_timestamp_[th.index_] = th.own_acq_rel_order_;
+    }
+
+    virtual bool store(thread_info_base& th)
+    {
+        const auto thread_count = store_acq_rel_timestamp_.size();
+        for (thread_id_t i = 0; i != thread_count; ++i)
+        {
+            if (th.acq_rel_order_[i] < store_acq_rel_timestamp_[i])
+                return false;
+            if (th.acq_rel_order_[i] < load_acq_rel_timestamp_[i])
+                return false;
+        }
+
+        th.own_acq_rel_order_ += 1;
+        store_acq_rel_timestamp_[th.index_] = th.own_acq_rel_order_;
+        return true;
+    }
+
+    virtual bool load(thread_info_base& th)
+    {
+        const auto thread_count = store_acq_rel_timestamp_.size();
+        for (thread_id_t i = 0; i != thread_count; ++i)
+        {
+            if (th.acq_rel_order_[i] < store_acq_rel_timestamp_[i])
+                return false;
+        }
+
+        th.own_acq_rel_order_ += 1;
+        load_acq_rel_timestamp_[th.index_] = th.own_acq_rel_order_;
+        return true;
+    }
+
+    virtual ~var_data_impl() {} // just to calm down gcc
+};
 
 struct park_event
 {
@@ -141,12 +190,12 @@ private:
         return *static_cast<thread_info<thread_count>*>(threadx_);
     }
 
-    slab_allocator<atomic_data_impl<thread_count> >*        atomic_alloc_;
-    slab_allocator<var_data_impl<thread_count> >*           var_alloc_;
-    slab_allocator<generic_mutex_data_impl<thread_count> >* mutex_alloc_;
-    slab_allocator<condvar_data_impl<thread_count> >*       condvar_alloc_;
-    slab_allocator<sema_data_impl<thread_count> >*          sema_alloc_;
-    slab_allocator<event_data_impl<thread_count> >*         event_alloc_;
+    slab_allocator<atomic_data_impl<thread_count>>*        atomic_alloc_;
+    slab_allocator<var_data_impl>*                         var_alloc_;
+    slab_allocator<generic_mutex_data_impl<thread_count>>* mutex_alloc_;
+    slab_allocator<condvar_data_impl<thread_count>>*       condvar_alloc_;
+    slab_allocator<sema_data_impl<thread_count>>*          sema_alloc_;
+    slab_allocator<event_data_impl<thread_count>>*         event_alloc_;
 
     virtual atomic_data* atomic_ctor(void* ctx)
     {
@@ -161,13 +210,13 @@ private:
 
     virtual var_data* var_ctor()
     {
-        return new (var_alloc_->alloc()) var_data_impl<thread_count> ();
+        return new (var_alloc_->alloc()) var_data_impl(thread_count);
     }
 
     virtual void var_dtor(var_data* data)
     {
-        static_cast<var_data_impl<thread_count>*>(data)->~var_data_impl<thread_count>();
-        var_alloc_->free(static_cast<var_data_impl<thread_count>*>(data));
+        static_cast<var_data_impl*>(data)->~var_data_impl();
+        var_alloc_->free(static_cast<var_data_impl*>(data));
     }
 
     virtual unpark_reason wfmo_park(void** ws,
@@ -208,12 +257,12 @@ public:
             throw std::logic_error("no threads created");
         }
 
-        atomic_alloc_ = new slab_allocator<atomic_data_impl<thread_count> >();
-        var_alloc_ = new slab_allocator<var_data_impl<thread_count> >();
-        mutex_alloc_ = new slab_allocator<generic_mutex_data_impl<thread_count> >();
-        condvar_alloc_ = new slab_allocator<condvar_data_impl<thread_count> >();
-        sema_alloc_ = new slab_allocator<sema_data_impl<thread_count> >();
-        event_alloc_ = new slab_allocator<event_data_impl<thread_count> >();
+        atomic_alloc_ = new slab_allocator<atomic_data_impl<thread_count>>();
+        var_alloc_ = new slab_allocator<var_data_impl>();
+        mutex_alloc_ = new slab_allocator<generic_mutex_data_impl<thread_count>>();
+        condvar_alloc_ = new slab_allocator<condvar_data_impl<thread_count>>();
+        sema_alloc_ = new slab_allocator<sema_data_impl<thread_count>>();
+        event_alloc_ = new slab_allocator<event_data_impl<thread_count>>();
 
         for (thread_id_t i = 0; i != thread_count; ++i)
         {
