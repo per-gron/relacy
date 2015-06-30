@@ -177,9 +177,9 @@ private:
                                     bool is_timed,
                                     debug_info_param info)
     {
-			  return waitset<thread_count>::park_current(*this,
-                                                         reinterpret_cast<waitset<thread_count>**>(ws),
-                                                         wo, count, wait_all, is_timed, true, info);
+			  return waitset::park_current(*this,
+                                           reinterpret_cast<waitset**>(ws),
+                                           wo, count, wait_all, is_timed, true, info);
     }
 
 public:

@@ -55,6 +55,7 @@ set(relacy_sources
   relacy/thread_local.hpp
   relacy/thread_local_ctx.hpp
   relacy/var.hpp
+  relacy/waitset.cpp
   relacy/waitset.hpp)
 
 set(relacy_test_sources
@@ -77,4 +78,4 @@ set(relacy_test_sources
   test/wfmo.hpp
   test/windows.hpp)
 
-add_executable(relacy_test ${relacy_test_sources})
+add_executable(relacy_test ${relacy_sources} ${relacy_test_sources})

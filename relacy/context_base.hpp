@@ -18,6 +18,7 @@
 #include "random.hpp"
 #include "foreach.hpp"
 #include "thread_base.hpp"
+#include "thread_local_ctx.hpp"
 #include "context_addr_hash.hpp"
 
 

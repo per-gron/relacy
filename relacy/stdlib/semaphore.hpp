@@ -68,6 +68,7 @@ public:
         : spurious_wakeups_(spurious_wakeups)
         , count_(initial_count)
         , max_count_(max_count)
+        , ws_(thread_count)
     {
         RL_VERIFY(max_count <= INT_MAX);
     }
@@ -250,7 +251,7 @@ private:
     bool const spurious_wakeups_;
     unsigned count_;
     unsigned const max_count_;
-    waitset<thread_count> ws_;
+    waitset ws_;
     sync_var<thread_count> sync_;
 
     virtual bool is_signaled(debug_info_param info)
