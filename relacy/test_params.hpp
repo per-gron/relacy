@@ -30,19 +30,7 @@ enum scheduler_type_e
     scheduler_type_count
 };
 
-inline char const* format(scheduler_type_e t)
-{
-    switch (t)
-    {
-    case sched_random: return "random scheduler";
-    case sched_bound: return "context bound scheduler";
-    case sched_full: return "full search scheduler";
-    default: break;
-    }
-    RL_VERIFY(false);
-    throw std::logic_error("invalid scheduler type");
-}
-
+char const* format(scheduler_type_e t);
 
 struct test_params
 {
@@ -64,21 +52,7 @@ struct test_params
     string                      test_name;
     string                      final_state;
 
-    test_params()
-    {
-        iteration_count         = 1000;
-        output_stream           = &std::cout;
-        progress_stream         = &std::cout;
-        progress_output_period  = 3;
-        collect_history         = false;
-        output_history          = false;
-        search_type             = random_scheduler_type;
-        context_bound           = 1;
-        execution_depth_limit   = 2000;
-
-        test_result             = test_result_success;
-        stop_iteration          = 0;
-    }
+    test_params();
 };
 
 }
