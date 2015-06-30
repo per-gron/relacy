@@ -31,6 +31,7 @@ struct thread_info : thread_info_base
 {
     thread_info(thread_id_t index = 0)
         : thread_info_base(index, acq_rel_order_)
+        , sync_object_(thread_count)
     {
     }
 
@@ -49,7 +50,7 @@ struct thread_info : thread_info_base
         saved_disable_preemption_ = -1;
     }
 
-    thread_sync_object<thread_count> sync_object_;
+    thread_sync_object sync_object_;
 
     timestamp_t acq_rel_order_ [thread_count];
     timestamp_t acquire_fence_order_ [thread_count];
