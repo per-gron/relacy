@@ -33,7 +33,7 @@ namespace rl
 {
 
 template<thread_id_t thread_count> class generic_mutex_data_impl;
-template<thread_id_t thread_count> class sema_data_impl;
+class sema_data_impl;
 template<thread_id_t thread_count> class event_data_impl;
 
 struct condvar_data
@@ -331,7 +331,7 @@ private:
     slab_allocator<var_data_impl>*                         var_alloc_;
     slab_allocator<generic_mutex_data_impl<thread_count>>* mutex_alloc_;
     slab_allocator<condvar_data_impl>*                     condvar_alloc_;
-    slab_allocator<sema_data_impl<thread_count>>*          sema_alloc_;
+    slab_allocator<sema_data_impl>*                        sema_alloc_;
     slab_allocator<event_data_impl<thread_count>>*         event_alloc_;
 
     virtual atomic_data* atomic_ctor(void* ctx)
@@ -398,7 +398,7 @@ public:
         var_alloc_ = new slab_allocator<var_data_impl>();
         mutex_alloc_ = new slab_allocator<generic_mutex_data_impl<thread_count>>();
         condvar_alloc_ = new slab_allocator<condvar_data_impl>();
-        sema_alloc_ = new slab_allocator<sema_data_impl<thread_count>>();
+        sema_alloc_ = new slab_allocator<sema_data_impl>();
         event_alloc_ = new slab_allocator<event_data_impl<thread_count>>();
 
         for (thread_id_t i = 0; i != thread_count; ++i)
@@ -978,13 +978,13 @@ private:
 
     virtual sema_data* sema_ctor(bool spurious_wakeups, unsigned initial_count, unsigned max_count)
     {
-        return new (sema_alloc_->alloc()) sema_data_impl<thread_count>(spurious_wakeups, initial_count, max_count);
+        return new (sema_alloc_->alloc()) sema_data_impl(thread_count, spurious_wakeups, initial_count, max_count);
     }
 
     virtual void sema_dtor(sema_data* cv)
     {
-        sema_data_impl<thread_count>* mm = static_cast<sema_data_impl<thread_count>*>(cv);
-        mm->~sema_data_impl<thread_count>();
+        sema_data_impl* mm = static_cast<sema_data_impl*>(cv);
+        mm->~sema_data_impl();
         sema_alloc_->free(mm);
     }
 
