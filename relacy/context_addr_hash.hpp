@@ -47,9 +47,9 @@ private:
         uintptr_t       ptr_;
         size_t          hash_;
     };
-    typedef map<void const*, size_t>::type  hash_map_t;
-    hash_map_t                              hash_map_;
-    size_t                                  hash_seq_;
+    typedef rl_map<void const*, size_t> hash_map_t;
+    hash_map_t                          hash_map_;
+    size_t                              hash_seq_;
 
     virtual size_t      get_addr_hash               (void const* p)
     {

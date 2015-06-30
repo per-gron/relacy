@@ -77,7 +77,7 @@ public:
         if (0 == pp)
             return true;
 
-        map<void*, size_t>::type::iterator iter = allocs_.find(pp);
+        rl_map<void*, size_t>::iterator iter = allocs_.find(pp);
         if (allocs_.end() == iter)
             return false;
 
@@ -111,8 +111,8 @@ public:
     void output_allocs(std::ostream& stream)
     {
         stream << "memory allocations:" << std::endl;
-        map<void*, size_t>::type::iterator iter = allocs_.begin();
-        map<void*, size_t>::type::iterator end = allocs_.end();
+        rl_map<void*, size_t>::iterator iter = allocs_.begin();
+        rl_map<void*, size_t>::iterator end = allocs_.end();
         for (; iter != end; ++iter)
         {
             stream << iter->first << " [" << (unsigned)iter->second << "]" << std::endl;
@@ -121,9 +121,9 @@ public:
     }
 
 private:
-    typedef stack<void*>::type              freelist_t;
+    typedef rl_stack<void*>                 freelist_t;
     typedef std::pair<size_t, freelist_t>   alloc_entry_t;
-    typedef vector<alloc_entry_t>::type     alloc_t;
+    typedef rl_vector<alloc_entry_t>        alloc_t;
 
     static size_t const deferred_count      = 64;
 
@@ -132,7 +132,7 @@ private:
     void* deferred_free_ [deferred_count];
     size_t deferred_free_size_ [deferred_count];
 
-    map<void*, size_t>::type allocs_;
+    rl_map<void*, size_t> allocs_;
 
     void free_impl(void* p, size_t size)
     {

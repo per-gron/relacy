@@ -109,34 +109,19 @@ struct raw_allocator : std::allocator<T>
 
 
 template<typename T>
-struct vector
-{
-    typedef std::vector<T, raw_allocator<T> > type;
-};
+using rl_vector = std::vector<T, raw_allocator<T>>;
 
 template<typename T>
-struct queue
-{
-    typedef std::queue<T, std::deque<T, raw_allocator<T> > > type;
-};
+using rl_queue = std::queue<T, std::deque<T, raw_allocator<T>>>;
 
 template<typename T>
-struct stack
-{
-    typedef std::stack<T, std::vector<T, raw_allocator<T> > > type;
-};
+using rl_stack = std::stack<T, std::vector<T, raw_allocator<T>>>;
 
 template<typename T>
-struct set
-{
-    typedef std::set<T, std::less<T>, raw_allocator<T> > type;
-};
+using rl_set = std::set<T, std::less<T>, raw_allocator<T>>;
 
 template<typename T, typename Y>
-struct map
-{
-    typedef std::map<T, Y, std::less<T>, raw_allocator<std::pair<T, Y> > > type;
-};
+using rl_map = std::map<T, Y, std::less<T>, raw_allocator<std::pair<T, Y>>>;
 
 typedef std::basic_string<char, std::char_traits<char>, raw_allocator<char> > string;
 typedef std::basic_ostringstream<char, std::char_traits<char>, raw_allocator<char> > ostringstream;

@@ -169,7 +169,7 @@ public:
     }
 
 private:
-    vector<history_entry>::type exec_history_;
+    rl_vector<history_entry>    exec_history_;
     thread_id_t                 thread_count_;
     std::ostream&               out_stream_;
 

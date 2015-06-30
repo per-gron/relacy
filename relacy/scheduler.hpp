@@ -59,7 +59,7 @@ public:
     {
         typedef typename derived_t::task_t      task_t;
         //CRITICAL_SECTION                        guard_;
-        queue<task_t>                           queue_;
+        rl_queue<task_t>                        queue_;
     };
 
     scheduler(test_params& params, shared_context_t& ctx, thread_id_t dynamic_thread_count)
@@ -244,7 +244,7 @@ protected:
     aligned<thread_info_t>          threads_ [thread_count];
     thread_info_t*                  thread_;
 
-    vector<thread_id_t>::type       running_threads;
+    rl_vector<thread_id_t>          running_threads;
     thread_id_t                     running_threads_count;
     thread_id_t                     finished_thread_count_;
 

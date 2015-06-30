@@ -355,7 +355,7 @@ protected:
         unsigned    pad_;
     };
 
-    typedef typename vector<stree_node>::type stree_t;
+    typedef rl_vector<stree_node> stree_t;
     stree_t         stree_;
     size_t          stree_depth_;
 

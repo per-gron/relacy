@@ -71,7 +71,7 @@ public:
     {
         size_t elem_size = sizeof(void*) + sizeof(type);
         elem_size = (elem_size + 15) & ~15;
-        set<void*>::type allocs;
+        rl_set<void*> allocs;
         char* pos = blocks_;
         while (pos)
         {
@@ -84,14 +84,14 @@ public:
             }
             pos = *reinterpret_cast<char**>(pos);
         }
-        set<void*>::type avail;
+        rl_set<void*> avail;
         type* pos2 = freelist_;
         while (pos2)
         {
             avail.insert(pos2);
             pos2 = *reinterpret_cast<type**>(pos2);
         }
-        vector<void*>::type diff;
+        rl_vector<void*> diff;
         std::set_difference(allocs.begin(), allocs.end(), avail.begin(), avail.end(), std::back_inserter(diff));
         for (size_t i = 0; i != diff.size(); ++i)
         {

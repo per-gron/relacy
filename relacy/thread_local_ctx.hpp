@@ -57,7 +57,7 @@ private:
         void            (*dtor_) (intptr_t);
     };
 
-    typename vector<entry>::type            entries_;
+    rl_vector<entry> entries_;
     using base_t::current_thread;
 
     virtual int         thread_local_alloc          (void (*dtor)(intptr_t))
