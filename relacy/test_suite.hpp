@@ -19,8 +19,12 @@ template<
     typename derived_t,
     thread_id_t static_thread_count_param,
     test_result_e result = test_result_success>
-struct test_suite : nocopy<>
+struct test_suite
 {
+    test_suite() = default;
+    test_suite(const test_suite &) = delete;
+    test_suite &operator=(const test_suite &) = delete;
+
     static thread_id_t const dynamic_thread_count = 0;
 
     struct params

@@ -16,13 +16,16 @@
 namespace rl
 {
 
-class generic_thread_local : nocopy<>
+class generic_thread_local
 {
 public:
     generic_thread_local()
         : index_(-1)
     {
     }
+
+    generic_thread_local(const generic_thread_local &) = delete;
+    generic_thread_local &operator=(const generic_thread_local &) = delete;
 
     ~generic_thread_local()
     {

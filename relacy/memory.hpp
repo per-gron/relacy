@@ -18,10 +18,13 @@ namespace rl
 {
 
 
-class memory_mgr : nocopy<>
+class memory_mgr
 {
 public:
     memory_mgr();
+
+    memory_mgr(const memory_mgr &) = delete;
+    memory_mgr &operator=(const memory_mgr &) = delete;
 
     ~memory_mgr();
 

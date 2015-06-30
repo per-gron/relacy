@@ -18,13 +18,16 @@ namespace rl
 {
 
 
-class dyn_thread : nocopy<>
+class dyn_thread
 {
 public:
     dyn_thread()
     {
         handle_ = 0;
     }
+
+    dyn_thread(const dyn_thread &) = delete;
+    dyn_thread &operator=(const dyn_thread &) = delete;
 
     void start(void*(*fn)(void*), void* arg)
     {

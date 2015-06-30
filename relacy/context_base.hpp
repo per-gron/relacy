@@ -90,9 +90,11 @@ long volatile context_holder<fake>::ctx_seq = 0;
 class context
     : public thread_local_context_iface
     , public context_addr_hash_iface
-    , nocopy<>
 {
 public:
+    context(const context &) = delete;
+    context &operator=(const context &) = delete;
+
     static context& instance()
     {
         RL_VERIFY(context_holder<>::instance_);
@@ -274,7 +276,7 @@ inline void set_errno(int value)
     return ctx().set_errno(value);
 }
 
-class preemption_disabler : nocopy<>
+class preemption_disabler
 {
 public:
     preemption_disabler(context& c)
@@ -282,6 +284,9 @@ public:
     {
         c_.disable_preemption();
     }
+
+    preemption_disabler(const preemption_disabler &) = delete;
+    preemption_disabler &operator=(const preemption_disabler &) = delete;
 
     ~preemption_disabler()
     {

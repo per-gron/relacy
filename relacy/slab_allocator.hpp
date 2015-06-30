@@ -16,7 +16,7 @@ namespace rl
 
 
 template<typename type>
-class slab_allocator : nocopy<>
+class slab_allocator
 {
 public:
     slab_allocator()
@@ -25,6 +25,9 @@ public:
         , alloc_count_()
     {
     }
+
+    slab_allocator(const slab_allocator &) = delete;
+    slab_allocator &operator=(const slab_allocator &) = delete;
 
     ~slab_allocator()
     {

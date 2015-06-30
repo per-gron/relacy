@@ -56,10 +56,13 @@ string strip_path(char const* filename);
 
 std::ostream& operator << (std::ostream& ss, debug_info_param info);
 
-class history_mgr : nocopy<>
+class history_mgr
 {
 public:
     history_mgr(std::ostream& stream, thread_id_t thread_count);
+
+    history_mgr(const history_mgr &) = delete;
+    history_mgr &operator=(const history_mgr &) = delete;
 
     ~history_mgr();
 

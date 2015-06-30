@@ -50,7 +50,7 @@ struct scheduler_thread_info
 
 
 template<typename derived_t, typename thread_info_type, thread_id_t thread_count>
-class scheduler : nocopy<>
+class scheduler
 {
 public:
     typedef thread_info_type                    thread_info_t;
@@ -74,6 +74,9 @@ public:
             threads_[i].index_ = i;
         }
     }
+
+    scheduler(const scheduler &) = delete;
+    scheduler &operator=(const scheduler &) = delete;
 
     thread_id_t iteration_begin(iteration_t iter)
     {

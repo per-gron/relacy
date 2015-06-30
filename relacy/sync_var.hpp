@@ -17,13 +17,16 @@ namespace rl
 
 
 template<thread_id_t thread_count>
-class sync_var : nocopy<>
+class sync_var
 {
 public:
     sync_var()
     {
         iteration_begin();
     }
+
+    sync_var(const sync_var &) = delete;
+    sync_var &operator=(const sync_var &) = delete;
 
     void iteration_begin()
     {

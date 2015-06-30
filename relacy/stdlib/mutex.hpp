@@ -24,8 +24,12 @@
 namespace rl
 {
 
-struct generic_mutex_data : nocopy<>
+struct generic_mutex_data
 {
+    generic_mutex_data() = default;
+    generic_mutex_data(const generic_mutex_data &) = delete;
+    generic_mutex_data &operator=(const generic_mutex_data &) = delete;
+
     virtual bool lock_exclusive(bool is_timed, debug_info_param info) = 0;
     virtual bool try_lock_exclusive(debug_info_param info) = 0;
     virtual void unlock_exclusive(debug_info_param info) = 0;
@@ -631,13 +635,16 @@ private:
 
 
 template<typename tag, bool is_recursive>
-class std_generic_mutex : generic_mutex<tag>, nocopy<>
+class std_generic_mutex : generic_mutex<tag>
 {
 public:
     std_generic_mutex()
     {
         generic_mutex<tag>::init(false, is_recursive, false, true, $);
     }
+
+    std_generic_mutex(const std_generic_mutex &) = delete;
+    std_generic_mutex &operator=(const std_generic_mutex &) = delete;
 
     ~std_generic_mutex()
     {

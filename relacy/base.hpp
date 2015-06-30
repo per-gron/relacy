@@ -29,17 +29,6 @@ namespace rl
 {
 
 
-template<typename T = void>
-class nocopy
-{
-    nocopy(nocopy const&);
-    nocopy& operator = (nocopy const&);
-
-protected:
-    nocopy() {}
-};
-
-
 template<size_t sz, size_t base = 4>
 struct align_pad
 {
