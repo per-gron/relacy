@@ -326,8 +326,6 @@ private:
 template<thread_id_t thread_count>
 struct var_data_impl : var_data
 {
-    typedef thread_info<thread_count> thread_info_t;
-
     timestamp_t load_acq_rel_timestamp_ [thread_count];
     timestamp_t store_acq_rel_timestamp_ [thread_count];
 
