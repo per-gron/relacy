@@ -16,11 +16,11 @@ namespace rl
 {
 
 
-template<thread_id_t thread_count>
 class sync_var
 {
 public:
-    sync_var()
+    sync_var(thread_id_t thread_count)
+        : order_(thread_count)
     {
         iteration_begin();
     }
@@ -30,32 +30,41 @@ public:
 
     void iteration_begin()
     {
-        foreach<thread_count>(order_, &assign_zero);
+        std::fill(order_.begin(), order_.end(), 0);
     }
 
     void acquire(thread_info_base* th)
     {
         th->own_acq_rel_order_ += 1;
-        foreach<thread_count>(th->acq_rel_order_, order_, &assign_max);
+        assign_max(th->acq_rel_order_, &order_[0], order_.size());
     }
 
     void release(thread_info_base* th)
     {
         th->own_acq_rel_order_ += 1;
-        foreach<thread_count>(order_, th->acq_rel_order_, &assign_max);
+        assign_max(&order_[0], th->acq_rel_order_, order_.size());
     }
 
     void acq_rel(thread_info_base* th)
     {
         th->own_acq_rel_order_ += 1;
         timestamp_t* acq_rel_order = th->acq_rel_order_;
-        timestamp_t* order = order_;
-        foreach<thread_count>(acq_rel_order, order, &assign_max);
-        foreach<thread_count>(order, acq_rel_order, &assign_max);
+        timestamp_t* order = &order_[0];
+        assign_max(acq_rel_order, order, order_.size());
+        assign_max(order, acq_rel_order, order_.size());
     }
 
 private:
-    timestamp_t order_ [thread_count];
+    template<typename T>
+    void assign_max(T *target, T *compare, size_t count) {
+        for (size_t i = 0; i < count; i++) {
+            if (compare[i] > target[i]) {
+                target[i] = compare[i];
+            }
+        }
+    }
+
+    rl_vector<timestamp_t> order_;
 };
 
 }

@@ -43,6 +43,7 @@ public:
         : manual_reset_(manual_reset)
         , state_(initial_state)
         , ws_(thread_count)
+        , sync_(thread_count)
     {
     }
 
@@ -59,7 +60,7 @@ private:
     bool const manual_reset_;
     bool state_;
     waitset ws_;
-    sync_var<thread_count> sync_;
+    sync_var sync_;
 
     struct state_event
     {
