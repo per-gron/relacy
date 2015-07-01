@@ -244,6 +244,14 @@ private:
     unsigned ctx_seq_;
 };
 
+template<typename event_t>
+void context::exec_log(debug_info_param info, event_t const& ev)
+{
+    RL_VERIFY(collecting_history());
+    disable_alloc_ += 1;
+    history_.exec_log(threadx_ ? threadx_->index_ : -1, info, ev, params_.output_history);
+    disable_alloc_ -= 1;
+}
 
 template<int fake>
 context* context_holder<fake>::instance_ = 0;

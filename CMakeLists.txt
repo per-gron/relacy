@@ -20,8 +20,8 @@ set(relacy_sources
   relacy/base.hpp
   relacy/context.hpp
   relacy/context_addr_hash.hpp
+  relacy/context_base.cpp
   relacy/context_base.hpp
-  relacy/context_base_impl.hpp
   relacy/context_bound_scheduler.hpp
   relacy/defs.hpp
   relacy/dyn_thread.hpp
@@ -48,6 +48,7 @@ set(relacy_sources
   relacy/stdlib/condition_variable.hpp
   relacy/stdlib/event.hpp
   relacy/stdlib/mutex.hpp
+  relacy/stdlib/pthread.cpp
   relacy/stdlib/pthread.hpp
   relacy/stdlib/semaphore.hpp
   relacy/stdlib/windows.hpp

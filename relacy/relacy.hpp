@@ -11,7 +11,6 @@
 
 #include "base.hpp"
 #include "context.hpp"
-#include "context_base_impl.hpp"
 #include "atomic_fence.hpp"
 #include "atomic.hpp"
 #include "var.hpp"
