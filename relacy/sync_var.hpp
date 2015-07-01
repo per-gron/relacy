@@ -33,15 +33,6 @@ public:
     void acq_rel(thread_info_base* th);
 
 private:
-    template<typename T>
-    void assign_max(T *target, T *compare, size_t count) {
-        for (size_t i = 0; i < count; i++) {
-            if (compare[i] > target[i]) {
-                target[i] = compare[i];
-            }
-        }
-    }
-
     rl_vector<timestamp_t> order_;
 };
 

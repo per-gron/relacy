@@ -112,15 +112,18 @@ RL_INLINE void assign(timestamp_t& elem1, timestamp_t& elem2)
     elem1 = elem2;
 }
 
-RL_INLINE void assign_max(timestamp_t& elem1, timestamp_t& elem2)
-{
-    if (elem2 > elem1)
-        elem1 = elem2;
-}
-
 RL_INLINE void plus_one(timestamp_t& elem)
 {
     elem += 1;
+}
+
+template<typename T>
+void assign_max(T *target, T *compare, size_t count) {
+    for (size_t i = 0; i < count; i++) {
+        if (compare[i] > target[i]) {
+            target[i] = compare[i];
+        }
+    }
 }
 
 }

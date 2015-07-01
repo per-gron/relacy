@@ -69,10 +69,10 @@ struct thread_info : thread_info_base
 
     void atomic_thread_fence_acquire()
     {
-        foreach<thread_count>(
+        assign_max(
             &acq_rel_order_[0],
             &acquire_fence_order_[0],
-            &assign_max);
+            acq_rel_order_.size());
     }
 
     void atomic_thread_fence_release()
@@ -93,10 +93,10 @@ struct thread_info : thread_info_base
     {
         atomic_thread_fence_acquire();
 
-        foreach<thread_count>(
+        assign_max(
             &acq_rel_order_[0],
             seq_cst_fence_order,
-            &assign_max);
+            acq_rel_order_.size());
 
         foreach<thread_count>(
             seq_cst_fence_order,
@@ -265,7 +265,10 @@ private:
 
         timestamp_t* acq_rel_order = (synch ? &acq_rel_order_[0] : &acquire_fence_order_[0]);
 
-        foreach<thread_count>(acq_rel_order, rec.acq_rel_order_, assign_max);
+        assign_max(
+            acq_rel_order,
+            rec.acq_rel_order_,
+            acq_rel_order_.size());
 
         return index;
     }
@@ -332,7 +335,7 @@ private:
         if (preserve)
         {
             foreach<thread_count>(rec.acq_rel_order_, prev.acq_rel_order_, assign);
-            foreach<thread_count>(rec.acq_rel_order_, acq_rel_order, assign_max);
+            assign_max(rec.acq_rel_order_, acq_rel_order, acq_rel_order_.size());
         }
         else
         {

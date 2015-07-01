@@ -9,6 +9,7 @@
 
 #include "sync_var.hpp"
 
+#include "foreach.hpp"
 #include "thread_base.hpp"
 
 namespace rl
