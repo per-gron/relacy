@@ -12,21 +12,6 @@
 namespace rl
 {
 
-/*
-void context::disable_history()
-{
-    RL_VERIFY(threadx_);
-    threadx_->disable_history_ += 1;
-}
-
-void context::enable_history()
-{
-    RL_VERIFY(threadx_);
-    RL_VERIFY(threadx_->disable_history_);
-    threadx_->disable_history_ -= 1;
-}
-*/
-
 void context::disable_preemption()
 {
     disable_preemption_ += 1;

@@ -63,7 +63,6 @@ public:
     int errno_;
     void* (*dynamic_thread_func_)(void*);
     void* dynamic_thread_param_;
-    //unsigned disable_history_;
 
     thread_info_base(thread_id_t index, timestamp_t* acq_rel_order)
         : index_(index)
