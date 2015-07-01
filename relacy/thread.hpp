@@ -11,7 +11,7 @@
 
 #include "base.hpp"
 #include "context_base.hpp"
-#include "dyn_thread_ctx.hpp"
+#include "thread_sync_object.hpp"
 #include "thread_base.hpp"
 #include "test_suite.hpp"
 #include "memory_order.hpp"

@@ -25,7 +25,6 @@ set(relacy_sources
   relacy/context_bound_scheduler.hpp
   relacy/defs.hpp
   relacy/dyn_thread.hpp
-  relacy/dyn_thread_ctx.hpp
   relacy/foreach.hpp
   relacy/full_search_scheduler.hpp
   relacy/generic_mutex_data.hpp
@@ -61,6 +60,7 @@ set(relacy_sources
   relacy/thread_base.hpp
   relacy/thread_local.hpp
   relacy/thread_local_ctx.hpp
+  relacy/thread_sync_object.hpp
   relacy/var.hpp
   relacy/waitset.cpp
   relacy/waitset.hpp)
