@@ -30,7 +30,7 @@ template<thread_id_t thread_count>
 struct thread_info : thread_info_base
 {
     thread_info(thread_id_t index = 0)
-        : thread_info_base(index, acq_rel_order_)
+        : thread_info_base(thread_count, index)
         , sync_object_(thread_count)
     {
     }
@@ -41,10 +41,7 @@ struct thread_info : thread_info_base
         last_yield_ = 0;
         dynamic_thread_func_ = 0;
         dynamic_thread_param_ = 0;
-        for (thread_id_t j = 0; j != thread_count; ++j)
-        {
-            acq_rel_order_[j] = 0;
-        }
+        std::fill(acq_rel_order_.begin(), acq_rel_order_.end(), 0);
         acq_rel_order_[index_] = 1;
         temp_switch_from_ = -1;
         saved_disable_preemption_ = -1;
@@ -52,7 +49,6 @@ struct thread_info : thread_info_base
 
     thread_sync_object sync_object_;
 
-    timestamp_t acq_rel_order_ [thread_count];
     timestamp_t acquire_fence_order_ [thread_count];
     timestamp_t release_fence_order_ [thread_count];
 
@@ -73,7 +69,7 @@ struct thread_info : thread_info_base
     void atomic_thread_fence_acquire()
     {
         foreach<thread_count>(
-            acq_rel_order_,
+            &acq_rel_order_[0],
             acquire_fence_order_,
             &assign_max);
     }
@@ -82,7 +78,7 @@ struct thread_info : thread_info_base
     {
         foreach<thread_count>(
             release_fence_order_,
-            acq_rel_order_,
+            &acq_rel_order_[0],
             &assign);
     }
 
@@ -97,13 +93,13 @@ struct thread_info : thread_info_base
         atomic_thread_fence_acquire();
 
         foreach<thread_count>(
-            acq_rel_order_,
+            &acq_rel_order_[0],
             seq_cst_fence_order,
             &assign_max);
 
         foreach<thread_count>(
             seq_cst_fence_order,
-            acq_rel_order_,
+            &acq_rel_order_[0],
             &assign);
 
         atomic_thread_fence_release();
@@ -266,7 +262,7 @@ private:
             || memory_order_acq_rel == mo
             || memory_order_seq_cst == mo);
 
-        timestamp_t* acq_rel_order = (synch ? acq_rel_order_ : acquire_fence_order_);
+        timestamp_t* acq_rel_order = (synch ? &acq_rel_order_[0] : acquire_fence_order_);
 
         foreach<thread_count>(acq_rel_order, rec.acq_rel_order_, assign_max);
 
@@ -330,7 +326,7 @@ private:
         bool const preserve =
             prev.busy_ && (rmw || (index_ == prev.thread_id_));
 
-        timestamp_t* acq_rel_order = (synch ? acq_rel_order_ : release_fence_order_);
+        timestamp_t* acq_rel_order = (synch ? &acq_rel_order_[0] : release_fence_order_);
 
         if (preserve)
         {

@@ -36,19 +36,19 @@ public:
     void acquire(thread_info_base* th)
     {
         th->own_acq_rel_order_ += 1;
-        assign_max(th->acq_rel_order_, &order_[0], order_.size());
+        assign_max(&th->acq_rel_order_[0], &order_[0], order_.size());
     }
 
     void release(thread_info_base* th)
     {
         th->own_acq_rel_order_ += 1;
-        assign_max(&order_[0], th->acq_rel_order_, order_.size());
+        assign_max(&order_[0], &th->acq_rel_order_[0], order_.size());
     }
 
     void acq_rel(thread_info_base* th)
     {
         th->own_acq_rel_order_ += 1;
-        timestamp_t* acq_rel_order = th->acq_rel_order_;
+        timestamp_t* acq_rel_order = &th->acq_rel_order_[0];
         timestamp_t* order = &order_[0];
         assign_max(acq_rel_order, order, order_.size());
         assign_max(order, acq_rel_order, order_.size());

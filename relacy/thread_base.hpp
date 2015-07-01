@@ -54,7 +54,7 @@ public:
     fiber_t fiber_;
     thread_id_t const index_;
     context* ctx_;
-    timestamp_t* const acq_rel_order_;
+    rl_vector<timestamp_t> acq_rel_order_;
     timestamp_t last_yield_;
     timestamp_t& own_acq_rel_order_;
     unpark_reason unpark_reason_;
@@ -64,10 +64,10 @@ public:
     void* (*dynamic_thread_func_)(void*);
     void* dynamic_thread_param_;
 
-    thread_info_base(thread_id_t index, timestamp_t* acq_rel_order)
+    thread_info_base(thread_id_t thread_count, thread_id_t index)
         : index_(index)
-        , acq_rel_order_(acq_rel_order)
-        , own_acq_rel_order_(acq_rel_order[index])
+        , acq_rel_order_(thread_count)
+        , own_acq_rel_order_(acq_rel_order_[index])
     {
     }
 
