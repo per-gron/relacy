@@ -32,6 +32,7 @@ struct thread_info : thread_info_base
     thread_info(thread_id_t index = 0)
         : thread_info_base(thread_count, index)
         , sync_object_(thread_count)
+        , acquire_fence_order_(thread_count)
     {
     }
 
@@ -49,7 +50,7 @@ struct thread_info : thread_info_base
 
     thread_sync_object sync_object_;
 
-    timestamp_t acquire_fence_order_ [thread_count];
+    rl_vector<timestamp_t> acquire_fence_order_;
     timestamp_t release_fence_order_ [thread_count];
 
     virtual void on_start()
@@ -70,7 +71,7 @@ struct thread_info : thread_info_base
     {
         foreach<thread_count>(
             &acq_rel_order_[0],
-            acquire_fence_order_,
+            &acquire_fence_order_[0],
             &assign_max);
     }
 
@@ -262,7 +263,7 @@ private:
             || memory_order_acq_rel == mo
             || memory_order_seq_cst == mo);
 
-        timestamp_t* acq_rel_order = (synch ? &acq_rel_order_[0] : acquire_fence_order_);
+        timestamp_t* acq_rel_order = (synch ? &acq_rel_order_[0] : &acquire_fence_order_[0]);
 
         foreach<thread_count>(acq_rel_order, rec.acq_rel_order_, assign_max);
 

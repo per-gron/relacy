@@ -1491,7 +1491,7 @@ public:
     RL_INLINE static void reset_thread(thread_info<thread_count>& ti)
     {
         foreach<thread_count>(
-            ti.acquire_fence_order_,
+            &ti.acquire_fence_order_[0],
             &assign_zero);
         foreach<thread_count>(
             ti.release_fence_order_,
