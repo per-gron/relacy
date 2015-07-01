@@ -107,11 +107,6 @@ RL_INLINE void assign(timestamp_t& elem)
     elem = value;
 }
 
-RL_INLINE void assign(timestamp_t& elem1, timestamp_t& elem2)
-{
-    elem1 = elem2;
-}
-
 RL_INLINE void plus_one(timestamp_t& elem)
 {
     elem += 1;

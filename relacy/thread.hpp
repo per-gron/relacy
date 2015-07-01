@@ -15,7 +15,6 @@
 #include "thread_base.hpp"
 #include "test_suite.hpp"
 #include "memory_order.hpp"
-#include "foreach.hpp"
 
 namespace rl
 {
@@ -77,10 +76,10 @@ struct thread_info : thread_info_base
 
     void atomic_thread_fence_release()
     {
-        foreach<thread_count>(
-            &release_fence_order_[0],
-            &acq_rel_order_[0],
-            &assign);
+        std::copy(
+            acq_rel_order_.begin(),
+            acq_rel_order_.end(),
+            release_fence_order_.begin());
     }
 
     void atomic_thread_fence_acq_rel()
@@ -98,10 +97,10 @@ struct thread_info : thread_info_base
             seq_cst_fence_order,
             acq_rel_order_.size());
 
-        foreach<thread_count>(
-            seq_cst_fence_order,
-            &acq_rel_order_[0],
-            &assign);
+        std::copy(
+            acq_rel_order_.begin(),
+            acq_rel_order_.end(),
+            seq_cst_fence_order);
 
         atomic_thread_fence_release();
     }
@@ -213,7 +212,7 @@ private:
                     break;
 
                 bool stop = false;
-                for (thread_id_t i = 0; i != thread_count; ++i)
+                for (thread_id_t i = 0; i != acq_rel_order_.size(); ++i)
                 {
                     timestamp_t acq_rel_order2 = acq_rel_order_[i];
                     if (acq_rel_order2 >= rec.last_seen_order_[i])
@@ -288,7 +287,10 @@ private:
         rec.seq_cst_ = false;
         rec.acq_rel_timestamp_ = 0;
 
-        foreach<thread_count>(rec.acq_rel_order_, assign_zero);
+        std::fill(
+            rec.acq_rel_order_,
+            rec.acq_rel_order_ + acq_rel_order_.size(),
+            0);
 
         return idx;
     }
@@ -315,7 +317,10 @@ private:
         own_acq_rel_order_ += 1;
         rec.acq_rel_timestamp_ = own_acq_rel_order_;
 
-        foreach<thread_count>(rec.last_seen_order_, assign<(timestamp_t)-1>);
+        std::fill(
+            rec.last_seen_order_,
+            rec.last_seen_order_ + acq_rel_order_.size(),
+            (timestamp_t)-1);
 
         rec.last_seen_order_[index_] = own_acq_rel_order_;
 
@@ -334,12 +339,18 @@ private:
 
         if (preserve)
         {
-            foreach<thread_count>(rec.acq_rel_order_, prev.acq_rel_order_, assign);
+            std::copy(
+                prev.acq_rel_order_,
+                prev.acq_rel_order_ + acq_rel_order_.size(),
+                rec.acq_rel_order_);
             assign_max(rec.acq_rel_order_, acq_rel_order, acq_rel_order_.size());
         }
         else
         {
-            foreach<thread_count>(rec.acq_rel_order_, acq_rel_order, assign);
+            std::copy(
+                acq_rel_order_.begin(),
+                acq_rel_order_.end(),
+                rec.acq_rel_order_);
         }
 
         return idx;
