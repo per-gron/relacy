@@ -960,32 +960,6 @@ struct yield_event
 };
 
 
-/*
-template<typename test_t, typename scheduler_t>
-struct context_persistent
-{
-    static thread_id_t const        thread_count = test_t::params::thread_count;
-    fiber_t                         fibers_ [thread_count];
-    memory_mgr                      memory_;
-
-    context_persistent()
-    {
-        for (thread_id_t i = 0; i != thread_count; ++i)
-        {
-            create_fiber(fibers_[i], &context_impl<test_t, scheduler_t>::fiber_proc, (void*)(intptr_t)i);
-        }
-    }
-
-    ~context_persistent()
-    {
-        for (thread_id_t i = 0; i != thread_count; ++i)
-        {
-            delete_fiber(fibers_[i]);
-        }
-    }
-};
-*/
-
 
 template<typename test_t, typename scheduler_t>
 class context_impl
@@ -1115,7 +1089,6 @@ public:
 
         for (thread_id_t i = 0; i != thread_count; ++i)
         {
-            //threads_[i].fiber_ = persistent.fibers_[i];
             create_fiber(threads_[i].fiber_, &context_impl::fiber_proc, (void*)(intptr_t)i);
         }
 
@@ -1742,19 +1715,6 @@ test_result_e run_test(test_params& params, std::ostream& oss, bool second)
     typedef typename sched_t::shared_context_t shared_context_t;
     //typedef thread_params_t<test_t, sched_t> params_t;
 
-    //bool destroy_persistent = false;
-    //context_persistent<test_t, sched_t>* persistent = 0;
-    //if (persistent_ptr == 0)
-    //{
-    //    persistent = new context_persistent<test_t, sched_t>;
-    //    persistent_ptr = persistent;
-    //}
-    //else
-    //{
-    //    persistent = static_cast<context_persistent<test_t, sched_t>*>(persistent_ptr);
-    //    destroy_persistent = true;
-    //}
-
     shared_context_t sctx;
     test_result_e res;
 
@@ -1790,12 +1750,6 @@ test_result_e run_test(test_params& params, std::ostream& oss, bool second)
     //    return test_result_success;
     //}
 
-    //if (destroy_persistent)
-    //{
-    //    delete persistent;
-    //    persistent_ptr = 0;
-    //}
-
     return res;
 }
 
@@ -1810,8 +1764,6 @@ bool simulate(test_params& params)
     *params.output_stream << params.test_name << std::endl;
 
     unsigned start_time = get_tick_count();
-
-    //void* persistent = 0;
 
     ostringstream oss;
     //istringstream iss (params.initial_state);
