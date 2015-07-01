@@ -51,6 +51,7 @@ set(relacy_sources
   relacy/stdlib/pthread.cpp
   relacy/stdlib/pthread.hpp
   relacy/stdlib/semaphore.hpp
+  relacy/stdlib/windows.cpp
   relacy/stdlib/windows.hpp
   relacy/sync_var.hpp
   relacy/test_params.cpp
