@@ -60,6 +60,7 @@ set(relacy_sources
   relacy/thread_base.hpp
   relacy/thread_local.hpp
   relacy/thread_local_ctx.hpp
+  relacy/thread_sync_object.cpp
   relacy/thread_sync_object.hpp
   relacy/var.hpp
   relacy/waitset.cpp
