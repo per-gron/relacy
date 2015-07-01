@@ -10,49 +10,27 @@
 #pragma once
 
 #include "base.hpp"
-#include "foreach.hpp"
 
 namespace rl
 {
 
+class thread_info_base;
 
 class sync_var
 {
 public:
-    sync_var(thread_id_t thread_count)
-        : order_(thread_count)
-    {
-        iteration_begin();
-    }
+    sync_var(thread_id_t thread_count);
 
     sync_var(const sync_var &) = delete;
     sync_var &operator=(const sync_var &) = delete;
 
-    void iteration_begin()
-    {
-        std::fill(order_.begin(), order_.end(), 0);
-    }
+    void iteration_begin();
 
-    void acquire(thread_info_base* th)
-    {
-        th->own_acq_rel_order_ += 1;
-        assign_max(&th->acq_rel_order_[0], &order_[0], order_.size());
-    }
+    void acquire(thread_info_base* th);
 
-    void release(thread_info_base* th)
-    {
-        th->own_acq_rel_order_ += 1;
-        assign_max(&order_[0], &th->acq_rel_order_[0], order_.size());
-    }
+    void release(thread_info_base* th);
 
-    void acq_rel(thread_info_base* th)
-    {
-        th->own_acq_rel_order_ += 1;
-        timestamp_t* acq_rel_order = &th->acq_rel_order_[0];
-        timestamp_t* order = &order_[0];
-        assign_max(acq_rel_order, order, order_.size());
-        assign_max(order, acq_rel_order, order_.size());
-    }
+    void acq_rel(thread_info_base* th);
 
 private:
     template<typename T>

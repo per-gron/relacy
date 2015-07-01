@@ -53,6 +53,7 @@ set(relacy_sources
   relacy/stdlib/semaphore.hpp
   relacy/stdlib/windows.cpp
   relacy/stdlib/windows.hpp
+  relacy/sync_var.cpp
   relacy/sync_var.hpp
   relacy/test_params.cpp
   relacy/test_params.hpp
