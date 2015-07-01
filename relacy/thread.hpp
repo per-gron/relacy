@@ -33,6 +33,7 @@ struct thread_info : thread_info_base
         : thread_info_base(thread_count, index)
         , sync_object_(thread_count)
         , acquire_fence_order_(thread_count)
+        , release_fence_order_(thread_count)
     {
     }
 
@@ -49,9 +50,8 @@ struct thread_info : thread_info_base
     }
 
     thread_sync_object sync_object_;
-
     rl_vector<timestamp_t> acquire_fence_order_;
-    timestamp_t release_fence_order_ [thread_count];
+    rl_vector<timestamp_t> release_fence_order_;
 
     virtual void on_start()
     {
@@ -78,7 +78,7 @@ struct thread_info : thread_info_base
     void atomic_thread_fence_release()
     {
         foreach<thread_count>(
-            release_fence_order_,
+            &release_fence_order_[0],
             &acq_rel_order_[0],
             &assign);
     }
@@ -327,7 +327,7 @@ private:
         bool const preserve =
             prev.busy_ && (rmw || (index_ == prev.thread_id_));
 
-        timestamp_t* acq_rel_order = (synch ? &acq_rel_order_[0] : release_fence_order_);
+        timestamp_t* acq_rel_order = (synch ? &acq_rel_order_[0] : &release_fence_order_[0]);
 
         if (preserve)
         {

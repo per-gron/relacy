@@ -1490,12 +1490,8 @@ public:
 
     RL_INLINE static void reset_thread(thread_info<thread_count>& ti)
     {
-        foreach<thread_count>(
-            &ti.acquire_fence_order_[0],
-            &assign_zero);
-        foreach<thread_count>(
-            ti.release_fence_order_,
-            &assign_zero);
+        std::fill(ti.acquire_fence_order_.begin(), ti.acquire_fence_order_.end(), 0);
+        std::fill(ti.release_fence_order_.begin(), ti.release_fence_order_.end(), 0);
     }
 
     void iteration(iteration_t iter)
