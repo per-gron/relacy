@@ -10,6 +10,7 @@
 #pragma once
 
 #include <deque>
+#include <iostream>
 #include <memory>
 #include <set>
 #include <stack>
