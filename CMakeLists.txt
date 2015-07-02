@@ -27,6 +27,7 @@ set(relacy_sources
   relacy/data/atomic_data.hpp
   relacy/data/condvar_data.cpp
   relacy/data/condvar_data.hpp
+  relacy/data/event_data.cpp
   relacy/data/event_data.hpp
   relacy/data/generic_mutex_data.hpp
   relacy/data/thread_info.hpp
