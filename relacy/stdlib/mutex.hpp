@@ -9,15 +9,15 @@
 
 #pragma once
 
+#include "../atomic.hpp"
 #include "../base.hpp"
 #include "../context.hpp"
+#include "../data/thread_info.hpp"
+#include "../foreach.hpp"
 #include "../generic_mutex_data.hpp"
-#include "../thread.hpp"
-#include "../atomic.hpp"
-#include "../waitset.hpp"
 #include "../signature.hpp"
 #include "../sync_var.hpp"
-#include "../foreach.hpp"
+#include "../waitset.hpp"
 #include "semaphore.hpp"
 
 

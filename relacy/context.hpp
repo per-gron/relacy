@@ -10,18 +10,18 @@
 #pragma once
 
 #include "base.hpp"
-#include "thread_local_ctx.hpp"
 #include "context_base.hpp"
+#include "data/thread_info.hpp"
+#include "foreach.hpp"
 #include "generic_mutex_data.hpp"
-#include "thread.hpp"
 #include "history.hpp"
 #include "memory.hpp"
 #include "mutex_wrapper.hpp"
-#include "test_result.hpp"
+#include "random.hpp"
 #include "slab_allocator.hpp"
 #include "test_params.hpp"
-#include "random.hpp"
-#include "foreach.hpp"
+#include "test_result.hpp"
+#include "thread_local_ctx.hpp"
 
 #include "random_scheduler.hpp"
 #include "full_search_scheduler.hpp"
