@@ -9,9 +9,9 @@
 
 #pragma once
 
-#include "atomic_data.hpp"
 #include "base.hpp"
 #include "context.hpp"
+#include "data/atomic_data.hpp"
 #include "memory_order.hpp"
 #include "signature.hpp"
 #include "atomic_events.hpp"

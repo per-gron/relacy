@@ -9,9 +9,9 @@
 
 #pragma once
 
-#include "atomic_data.hpp"
 #include "base.hpp"
 #include "context_base.hpp"
+#include "data/atomic_data.hpp"
 #include "thread_sync_object.hpp"
 #include "thread_base.hpp"
 #include "test_suite.hpp"

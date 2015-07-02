@@ -9,9 +9,9 @@
 
 #pragma once
 
-#include "defs.hpp"
-#include "sync_var.hpp"
-#include "waitset.hpp"
+#include "../defs.hpp"
+#include "../sync_var.hpp"
+#include "../waitset.hpp"
 
 namespace rl
 {

@@ -7,8 +7,6 @@
  *  terms of the license contained in the file LICENSE in this distribution.
  */
 
-#pragma once
-
 #include "atomic_data.hpp"
 
 namespace rl

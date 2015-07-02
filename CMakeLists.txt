@@ -15,8 +15,6 @@ add_definitions(
 
 set(relacy_sources
   relacy/atomic.hpp
-  relacy/atomic_data.cpp
-  relacy/atomic_data.hpp
   relacy/atomic_events.hpp
   relacy/atomic_fence.hpp
   relacy/base.hpp
@@ -25,6 +23,8 @@ set(relacy_sources
   relacy/context_base.cpp
   relacy/context_base.hpp
   relacy/context_bound_scheduler.hpp
+  relacy/data/atomic_data.cpp
+  relacy/data/atomic_data.hpp
   relacy/defs.hpp
   relacy/dyn_thread.hpp
   relacy/foreach.hpp
