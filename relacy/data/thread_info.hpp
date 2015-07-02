@@ -25,370 +25,79 @@ struct var_data;
 struct atomic_data_impl;
 struct var_data_impl;
 
-
 struct thread_info : thread_info_base
 {
-    thread_info(thread_id_t thread_count = 0, thread_id_t index = 0)
-        : thread_info_base(thread_count, index)
-        , sync_object_(thread_count)
-        , acquire_fence_order_(thread_count)
-        , release_fence_order_(thread_count)
-    {
-    }
+    thread_info(thread_id_t thread_count = 0, thread_id_t index = 0);
 
-    void iteration_begin()
-    {
-        sync_object_.iteration_begin();
-        last_yield_ = 0;
-        dynamic_thread_func_ = 0;
-        dynamic_thread_param_ = 0;
-        std::fill(acq_rel_order_.begin(), acq_rel_order_.end(), 0);
-        acq_rel_order_[index_] = 1;
-        temp_switch_from_ = -1;
-        saved_disable_preemption_ = -1;
-    }
+    thread_info(thread_info const&) = delete;
+    thread_info& operator = (thread_info const&) = delete;
+
+    void iteration_begin();
 
     thread_sync_object sync_object_;
     rl_vector<timestamp_t> acquire_fence_order_;
     rl_vector<timestamp_t> release_fence_order_;
 
-    virtual void on_start()
-    {
-        RL_VERIFY(temp_switch_from_ == -1);
-        RL_VERIFY(saved_disable_preemption_ == -1);
-        sync_object_.on_start();
-    }
+    virtual void on_start();
 
-    virtual void on_finish()
-    {
-        RL_VERIFY(temp_switch_from_ == -1);
-        RL_VERIFY(saved_disable_preemption_ == -1);
-        sync_object_.on_finish();
-    }
+    virtual void on_finish();
 
-    void atomic_thread_fence_acquire()
-    {
-        assign_max(
-            &acq_rel_order_[0],
-            &acquire_fence_order_[0],
-            acq_rel_order_.size());
-    }
+    void atomic_thread_fence_acquire();
 
-    void atomic_thread_fence_release()
-    {
-        std::copy(
-            acq_rel_order_.begin(),
-            acq_rel_order_.end(),
-            release_fence_order_.begin());
-    }
+    void atomic_thread_fence_release();
 
-    void atomic_thread_fence_acq_rel()
-    {
-        atomic_thread_fence_acquire();
-        atomic_thread_fence_release();
-    }
+    void atomic_thread_fence_acq_rel();
 
-    void atomic_thread_fence_seq_cst(timestamp_t* seq_cst_fence_order)
-    {
-        atomic_thread_fence_acquire();
+    void atomic_thread_fence_seq_cst(timestamp_t* seq_cst_fence_order);
 
-        assign_max(
-            &acq_rel_order_[0],
-            seq_cst_fence_order,
-            acq_rel_order_.size());
-
-        std::copy(
-            acq_rel_order_.begin(),
-            acq_rel_order_.end(),
-            seq_cst_fence_order);
-
-        atomic_thread_fence_release();
-    }
-
-    virtual ~thread_info() {} // just to calm down gcc
+    virtual ~thread_info(); // just to calm down gcc
 
 private:
-    thread_info(thread_info const&);
-    thread_info& operator = (thread_info const&);
+    virtual unsigned atomic_load_relaxed(atomic_data* RL_RESTRICT data);
 
-    virtual unsigned atomic_load_relaxed(atomic_data* RL_RESTRICT data)
-    {
-        return atomic_load<memory_order_relaxed, false>(data);
-    }
+    virtual unsigned atomic_load_acquire(atomic_data* RL_RESTRICT data);
 
-    virtual unsigned atomic_load_acquire(atomic_data* RL_RESTRICT data)
-    {
-        return atomic_load<memory_order_acquire, false>(data);
-    }
+    virtual unsigned atomic_load_seq_cst(atomic_data* RL_RESTRICT data);
 
-    virtual unsigned atomic_load_seq_cst(atomic_data* RL_RESTRICT data)
-    {
-        return atomic_load<memory_order_seq_cst, false>(data);
-    }
+    virtual unsigned atomic_load_relaxed_rmw(atomic_data* RL_RESTRICT data);
 
-    virtual unsigned atomic_load_relaxed_rmw(atomic_data* RL_RESTRICT data)
-    {
-        return atomic_load<memory_order_relaxed, true>(data);
-    }
+    virtual unsigned atomic_load_acquire_rmw(atomic_data* RL_RESTRICT data);
 
-    virtual unsigned atomic_load_acquire_rmw(atomic_data* RL_RESTRICT data)
-    {
-        return atomic_load<memory_order_acquire, true>(data);
-    }
+    virtual unsigned atomic_load_seq_cst_rmw(atomic_data* RL_RESTRICT data);
 
-    virtual unsigned atomic_load_seq_cst_rmw(atomic_data* RL_RESTRICT data)
-    {
-        return atomic_load<memory_order_seq_cst, true>(data);
-    }
+    virtual unsigned atomic_store_relaxed(atomic_data* RL_RESTRICT data);
 
-    virtual unsigned atomic_store_relaxed(atomic_data* RL_RESTRICT data)
-    {
-        return atomic_store<memory_order_relaxed, false>(data);
-    }
+    virtual unsigned atomic_store_release(atomic_data* RL_RESTRICT data);
 
-    virtual unsigned atomic_store_release(atomic_data* RL_RESTRICT data)
-    {
-        return atomic_store<memory_order_release, false>(data);
-    }
+    virtual unsigned atomic_store_seq_cst(atomic_data* RL_RESTRICT data);
 
-    virtual unsigned atomic_store_seq_cst(atomic_data* RL_RESTRICT data)
-    {
-        return atomic_store<memory_order_seq_cst, false>(data);
-    }
+    virtual unsigned atomic_rmw_relaxed(atomic_data* RL_RESTRICT data, bool& aba);
 
-    virtual unsigned atomic_rmw_relaxed(atomic_data* RL_RESTRICT data, bool& aba)
-    {
-        return atomic_rmw<memory_order_relaxed>(data, aba);
-    }
+    virtual unsigned atomic_rmw_acquire(atomic_data* RL_RESTRICT data, bool& aba);
 
-    virtual unsigned atomic_rmw_acquire(atomic_data* RL_RESTRICT data, bool& aba)
-    {
-        return atomic_rmw<memory_order_acquire>(data, aba);
-    }
+    virtual unsigned atomic_rmw_release(atomic_data* RL_RESTRICT data, bool& aba);
 
-    virtual unsigned atomic_rmw_release(atomic_data* RL_RESTRICT data, bool& aba)
-    {
-        return atomic_rmw<memory_order_release>(data, aba);
-    }
+    virtual unsigned atomic_rmw_acq_rel(atomic_data* RL_RESTRICT data, bool& aba);
 
-    virtual unsigned atomic_rmw_acq_rel(atomic_data* RL_RESTRICT data, bool& aba)
-    {
-        return atomic_rmw<memory_order_acq_rel>(data, aba);
-    }
-
-    virtual unsigned atomic_rmw_seq_cst(atomic_data* RL_RESTRICT data, bool& aba)
-    {
-        return atomic_rmw<memory_order_seq_cst>(data, aba);
-    }
+    virtual unsigned atomic_rmw_seq_cst(atomic_data* RL_RESTRICT data, bool& aba);
 
     template<memory_order mo, bool rmw>
-    unsigned get_load_index(atomic_data_impl& var)
-    {
-        typedef atomic_data_impl::history_record history_t;
-
-        unsigned index = var.current_index_;
-        context& c = ctx();
-
-        if (false == val(rmw))
-        {
-            size_t const limit = c.is_random_sched() ? atomic_history_size  - 1: 1;
-            for (size_t i = 0; i != limit; ++i, --index)
-            {
-                history_t const& rec = var.history_[index % atomic_history_size];
-                if (false == rec.busy_)
-                    return (unsigned)-1; // access to unitialized var
-
-                history_t const& prev = var.history_[(index - 1) % atomic_history_size];
-                if (prev.busy_ && prev.last_seen_order_[index_] <= last_yield_)
-                    break;
-
-                if (memory_order_seq_cst == val(mo) && rec.seq_cst_)
-                    break;
-
-                timestamp_t acq_rel_order =
-                    acq_rel_order_[rec.thread_id_];
-
-                if (acq_rel_order >= rec.acq_rel_timestamp_)
-                    break;
-
-                bool stop = false;
-                for (thread_id_t i = 0; i != acq_rel_order_.size(); ++i)
-                {
-                    timestamp_t acq_rel_order2 = acq_rel_order_[i];
-                    if (acq_rel_order2 >= rec.last_seen_order_[i])
-                    {
-                        stop = true;
-                        break;
-                    }
-                }
-                if (stop)
-                    break;
-
-                if (0 == c.rand(2, sched_type_atomic_load))
-                    break;
-            }
-        }
-
-        if (false == var.history_[index % atomic_history_size].busy_)
-            return (unsigned)-1;
-
-        return index;
-    }
+    unsigned get_load_index(atomic_data_impl& var);
 
     template<memory_order mo, bool rmw>
-    unsigned atomic_load(atomic_data* RL_RESTRICT data)
-    {
-        RL_VERIFY(memory_order_release != mo || rmw);
-        RL_VERIFY(memory_order_acq_rel != mo || rmw);
+    unsigned atomic_load(atomic_data* RL_RESTRICT data);
 
-        atomic_data_impl& var = *static_cast<atomic_data_impl*>(data);
-
-        typedef atomic_data_impl::history_record history_t;
-
-        unsigned index = get_load_index<mo, rmw>(var);
-        if ((unsigned)-1 == index)
-            return (unsigned)-1;
-
-        index %= atomic_history_size;
-        history_t& rec = var.history_[index];
-        RL_VERIFY(rec.busy_);
-
-        own_acq_rel_order_ += 1;
-        rec.last_seen_order_[index_] = own_acq_rel_order_;
-
-        bool const synch =
-            (memory_order_acquire == mo
-            || memory_order_acq_rel == mo
-            || memory_order_seq_cst == mo);
-
-        timestamp_t* acq_rel_order = (synch ? &acq_rel_order_[0] : &acquire_fence_order_[0]);
-
-        assign_max(
-            acq_rel_order,
-            &rec.acq_rel_order_[0],
-            acq_rel_order_.size());
-
-        return index;
-    }
-
-    virtual unsigned atomic_init(atomic_data* RL_RESTRICT data)
-    {
-        atomic_data_impl& var = *static_cast<atomic_data_impl*>(data);
-
-        typedef atomic_data_impl::history_record history_t;
-
-        unsigned const idx = ++var.current_index_ % atomic_history_size;
-        history_t& rec = var.history_[idx];
-
-        rec.busy_ = true;
-        rec.thread_id_ = index_;
-        rec.seq_cst_ = false;
-        rec.acq_rel_timestamp_ = 0;
-
-        std::fill(
-            rec.acq_rel_order_.begin(),
-            rec.acq_rel_order_.end(),
-            0);
-
-        return idx;
-    }
+    virtual unsigned atomic_init(atomic_data* RL_RESTRICT data);
 
     template<memory_order mo, bool rmw>
-    unsigned atomic_store(atomic_data* RL_RESTRICT data)
-    {
-        RL_VERIFY(memory_order_consume != mo || rmw);
-        RL_VERIFY(memory_order_acquire != mo || rmw);
-        RL_VERIFY(memory_order_acq_rel != mo || rmw);
-
-        atomic_data_impl& var = *static_cast<atomic_data_impl*>(data);
-
-        typedef atomic_data_impl::history_record history_t;
-
-        unsigned const idx = ++var.current_index_ % atomic_history_size;
-        history_t& rec = var.history_[idx];
-
-        rec.busy_ = true;
-        rec.thread_id_ = index_;
-        rec.seq_cst_ = (memory_order_seq_cst == mo);
-
-        own_acq_rel_order_ += 1;
-        rec.acq_rel_timestamp_ = own_acq_rel_order_;
-
-        std::fill(
-            rec.last_seen_order_.begin(),
-            rec.last_seen_order_.end(),
-            (timestamp_t)-1);
-
-        rec.last_seen_order_[index_] = own_acq_rel_order_;
-
-        unsigned const prev_idx = (var.current_index_ - 1) % atomic_history_size;
-        history_t& prev = var.history_[prev_idx];
-
-        bool const synch =
-            (memory_order_release == mo
-            || memory_order_acq_rel == mo
-            || memory_order_seq_cst == mo);
-
-        bool const preserve =
-            prev.busy_ && (rmw || (index_ == prev.thread_id_));
-
-        timestamp_t* acq_rel_order = (synch ? &acq_rel_order_[0] : &release_fence_order_[0]);
-
-        if (preserve)
-        {
-            std::copy(
-                prev.acq_rel_order_.begin(),
-                prev.acq_rel_order_.end(),
-                rec.acq_rel_order_.begin());
-            assign_max(&rec.acq_rel_order_[0], acq_rel_order, acq_rel_order_.size());
-        }
-        else
-        {
-            std::copy(
-                acq_rel_order_.begin(),
-                acq_rel_order_.end(),
-                rec.acq_rel_order_.begin());
-        }
-
-        return idx;
-    }
+    unsigned atomic_store(atomic_data* RL_RESTRICT data);
 
     template<memory_order mo>
-    unsigned atomic_rmw(atomic_data* RL_RESTRICT data, bool& aba)
-    {
-        atomic_data_impl& var = *static_cast<atomic_data_impl*>(data);
-        timestamp_t const last_seen = var.history_[var.current_index_ % atomic_history_size].last_seen_order_[index_];
-        aba = (last_seen > own_acq_rel_order_);
-        atomic_load<mo, true>(data);
-        unsigned result = atomic_store<mo, true>(data);
+    unsigned atomic_rmw(atomic_data* RL_RESTRICT data, bool& aba);
 
-        return result;
-    }
+    virtual unpark_reason atomic_wait(atomic_data* RL_RESTRICT data, bool is_timed, bool allow_spurious_wakeup, debug_info_param info);
 
-    virtual unpark_reason atomic_wait(atomic_data* RL_RESTRICT data, bool is_timed, bool allow_spurious_wakeup, debug_info_param info)
-    {
-        context& c = ctx();
-        atomic_data_impl& var = *static_cast<atomic_data_impl*>(data);
-        unpark_reason const res = var.futex_ws_.park_current(c, is_timed, allow_spurious_wakeup, false, info);
-        if (res == unpark_reason_normal)
-            var.futex_sync_.acquire(this);
-        return res;
-    }
-
-    virtual thread_id_t atomic_wake(atomic_data* RL_RESTRICT data, thread_id_t count, debug_info_param info)
-    {
-        context& c = ctx();
-        atomic_data_impl& var = *static_cast<atomic_data_impl*>(data);
-        thread_id_t unblocked = 0;
-        for (; count != 0; count -= 1, unblocked += 1)
-        {
-            if (var.futex_ws_.unpark_one(c, info) == false)
-                break;
-        }
-        if (unblocked != 0)
-            var.futex_sync_.release(this);
-        return unblocked;
-    }
+    virtual thread_id_t atomic_wake(atomic_data* RL_RESTRICT data, thread_id_t count, debug_info_param info);
 };
 
 }
