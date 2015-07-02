@@ -49,7 +49,10 @@ struct align_pad
 
 template<typename T>
 struct aligned : T, align_pad<sizeof(T)>::type
-{};
+{
+    template<typename... Args>
+    aligned(Args&& ...args) : T(std::forward<Args>(args)...) {}
+};
 
 template<typename T>
 T val(T x)

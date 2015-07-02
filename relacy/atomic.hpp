@@ -668,6 +668,8 @@ struct atomic_data_impl : atomic_data
 
     struct history_record
     {
+        history_record(thread_id_t count) {}
+
         timestamp_t acq_rel_order_ [thread_count];
         timestamp_t last_seen_order_ [thread_count];
 
@@ -678,7 +680,7 @@ struct atomic_data_impl : atomic_data
     };
 
     static size_t const history_size = atomic_history_size;
-    aligned<history_record> history_ [history_size];
+    rl_vector<aligned<history_record>> history_;
     unsigned current_index_;
     waitset futex_ws_;
     sync_var futex_sync_;
@@ -687,6 +689,11 @@ struct atomic_data_impl : atomic_data
         : futex_ws_(thread_count)
         , futex_sync_(thread_count)
     {
+        history_.reserve(history_size);
+        for (thread_id_t i = 0; i < history_size; i++) {
+            history_.emplace_back(thread_count);
+        }
+
         current_index_ = 0;
         history_record& rec = history_[0];
         history_[atomic_history_size - 1].busy_ = false;
