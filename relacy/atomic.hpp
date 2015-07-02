@@ -668,10 +668,12 @@ struct atomic_data_impl : atomic_data
 
     struct history_record
     {
-        history_record(thread_id_t count) {}
+        history_record(thread_id_t th_count)
+            : acq_rel_order_(th_count)
+            , last_seen_order_(th_count) {}
 
-        timestamp_t acq_rel_order_ [thread_count];
-        timestamp_t last_seen_order_ [thread_count];
+        rl_vector<timestamp_t> acq_rel_order_;
+        rl_vector<timestamp_t> last_seen_order_;
 
         bool busy_;
         bool seq_cst_;
@@ -717,8 +719,8 @@ struct atomic_data_impl : atomic_data
         th.own_acq_rel_order_ += 1;
         rec.acq_rel_timestamp_ = th.own_acq_rel_order_;
 
-        foreach<thread_count>(rec.acq_rel_order_, assign_zero);
-        foreach<thread_count>(rec.last_seen_order_, assign<(timestamp_t)-1>);
+        std::fill(rec.acq_rel_order_.begin(), rec.acq_rel_order_.end(), 0);
+        std::fill(rec.last_seen_order_.begin(), rec.last_seen_order_.end(), (timestamp_t)-1);
         rec.last_seen_order_[th.index_] = th.own_acq_rel_order_;
     }
 };

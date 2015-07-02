@@ -266,7 +266,7 @@ private:
 
         assign_max(
             acq_rel_order,
-            rec.acq_rel_order_,
+            &rec.acq_rel_order_[0],
             acq_rel_order_.size());
 
         return index;
@@ -288,8 +288,8 @@ private:
         rec.acq_rel_timestamp_ = 0;
 
         std::fill(
-            rec.acq_rel_order_,
-            rec.acq_rel_order_ + acq_rel_order_.size(),
+            rec.acq_rel_order_.begin(),
+            rec.acq_rel_order_.end(),
             0);
 
         return idx;
@@ -318,8 +318,8 @@ private:
         rec.acq_rel_timestamp_ = own_acq_rel_order_;
 
         std::fill(
-            rec.last_seen_order_,
-            rec.last_seen_order_ + acq_rel_order_.size(),
+            rec.last_seen_order_.begin(),
+            rec.last_seen_order_.end(),
             (timestamp_t)-1);
 
         rec.last_seen_order_[index_] = own_acq_rel_order_;
@@ -340,17 +340,17 @@ private:
         if (preserve)
         {
             std::copy(
-                prev.acq_rel_order_,
-                prev.acq_rel_order_ + acq_rel_order_.size(),
-                rec.acq_rel_order_);
-            assign_max(rec.acq_rel_order_, acq_rel_order, acq_rel_order_.size());
+                prev.acq_rel_order_.begin(),
+                prev.acq_rel_order_.end(),
+                rec.acq_rel_order_.begin());
+            assign_max(&rec.acq_rel_order_[0], acq_rel_order, acq_rel_order_.size());
         }
         else
         {
             std::copy(
                 acq_rel_order_.begin(),
                 acq_rel_order_.end(),
-                rec.acq_rel_order_);
+                rec.acq_rel_order_.begin());
         }
 
         return idx;
