@@ -26,7 +26,6 @@ struct atomic_data_impl;
 struct var_data_impl;
 
 
-template<thread_id_t thread_count_param>
 struct thread_info : thread_info_base
 {
     thread_info(thread_id_t thread_count = 0, thread_id_t index = 0)

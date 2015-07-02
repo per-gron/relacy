@@ -1000,11 +1000,11 @@ private:
     bool                            first_thread_;
     timestamp_t                     seq_cst_fence_order_ [thread_count];
 
-    aligned<thread_info<thread_count> > threads_ [thread_count];
+    aligned<thread_info> threads_ [thread_count];
 
-    thread_info<thread_count>& threadi()
+    thread_info& threadi()
     {
-        return *static_cast<thread_info<thread_count>*>(threadx_);
+        return *static_cast<thread_info*>(threadx_);
     }
 
     slab_allocator<atomic_data_impl>*        atomic_alloc_;
@@ -1083,7 +1083,7 @@ public:
 
         for (thread_id_t i = 0; i != thread_count; ++i)
         {
-            new (&threads_[i]) thread_info<thread_count>(thread_count, i);
+            new (&threads_[i]) thread_info(thread_count, i);
             threads_[i].ctx_ = this;
         }
 
@@ -1488,7 +1488,7 @@ public:
         return test_result_success;
     }
 
-    RL_INLINE static void reset_thread(thread_info<thread_count>& ti)
+    RL_INLINE static void reset_thread(thread_info& ti)
     {
         std::fill(ti.acquire_fence_order_.begin(), ti.acquire_fence_order_.end(), 0);
         std::fill(ti.release_fence_order_.begin(), ti.release_fence_order_.end(), 0);
