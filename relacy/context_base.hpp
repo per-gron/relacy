@@ -10,6 +10,7 @@
 #pragma once
 
 #include "base.hpp"
+#include "data/atomic_data.hpp"
 #include "data/thread_info_base.hpp"
 #include "history.hpp"
 #include "memory.hpp"
@@ -49,7 +50,6 @@ namespace rl
 
 class thread_info_base;
 
-struct atomic_data {};
 struct var_data
 {
     virtual void init(thread_info_base& th) = 0;

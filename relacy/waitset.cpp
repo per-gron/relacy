@@ -9,6 +9,7 @@
 
 #include "waitset.hpp"
 
+#include "context_base.hpp"
 #include "stdlib/semaphore.hpp"
 
 namespace rl

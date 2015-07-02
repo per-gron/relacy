@@ -16,6 +16,8 @@
 namespace rl
 {
 
+struct atomic_data {};
+
 struct atomic_data_impl : atomic_data
 {
     struct history_record
