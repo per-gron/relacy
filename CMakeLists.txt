@@ -25,13 +25,13 @@ set(relacy_sources
   relacy/context_bound_scheduler.hpp
   relacy/data/atomic_data.cpp
   relacy/data/atomic_data.hpp
+  relacy/data/generic_mutex_data.hpp
   relacy/data/thread_info.hpp
   relacy/data/thread_info_base.hpp
   relacy/defs.hpp
   relacy/dyn_thread.hpp
   relacy/foreach.hpp
   relacy/full_search_scheduler.hpp
-  relacy/generic_mutex_data.hpp
   relacy/history.cpp
   relacy/history.hpp
   relacy/memory.cpp
