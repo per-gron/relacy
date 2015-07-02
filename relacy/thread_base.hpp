@@ -14,12 +14,7 @@
 namespace rl
 {
 
-
 struct atomic_data;
-struct var_data;
-template<thread_id_t thread_count> struct atomic_data_impl;
-struct var_data_impl;
-
 
 class thread_info_base
 {

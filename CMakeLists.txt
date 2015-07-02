@@ -15,6 +15,7 @@ add_definitions(
 
 set(relacy_sources
   relacy/atomic.hpp
+  relacy/atomic_data.hpp
   relacy/atomic_events.hpp
   relacy/atomic_fence.hpp
   relacy/base.hpp

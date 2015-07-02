@@ -9,6 +9,7 @@
 
 #pragma once
 
+#include "atomic_data.hpp"
 #include "base.hpp"
 #include "context.hpp"
 #include "memory_order.hpp"
@@ -16,7 +17,6 @@
 #include "atomic_events.hpp"
 #include "waitset.hpp"
 #include "rmw.hpp"
-
 
 namespace rl
 {
@@ -657,54 +657,5 @@ typedef atomic<size_t> atomic_size_t;
 typedef atomic<ptrdiff_t> atomic_ptrdiff_t;
 //typedef atomic<intmax_t> atomic_intmax_t;
 //typedef atomic<uintmax_t> atomic_uintmax_t;
-
-
-
-
-template<thread_id_t thread_count_template>
-struct atomic_data_impl : atomic_data
-{
-    typedef thread_info<thread_count_template> thread_info_t;
-
-    struct history_record
-    {
-        history_record(thread_id_t thread_count)
-            : acq_rel_order_(thread_count)
-            , last_seen_order_(thread_count) {}
-
-        rl_vector<timestamp_t> acq_rel_order_;
-        rl_vector<timestamp_t> last_seen_order_;
-
-        bool busy_;
-        bool seq_cst_;
-        thread_id_t thread_id_;
-        timestamp_t acq_rel_timestamp_;
-    };
-
-    static size_t const history_size = atomic_history_size;
-    rl_vector<aligned<history_record>> history_;
-    unsigned current_index_;
-    waitset futex_ws_;
-    sync_var futex_sync_;
-
-    atomic_data_impl(thread_id_t thread_count)
-        : futex_ws_(thread_count)
-        , futex_sync_(thread_count)
-    {
-        history_.reserve(history_size);
-        for (thread_id_t i = 0; i < history_size; i++) {
-            history_.emplace_back(thread_count);
-        }
-
-        current_index_ = 0;
-        history_record& rec = history_[0];
-        history_[atomic_history_size - 1].busy_ = false;
-
-        rec.busy_ = false;
-        rec.seq_cst_ = false;
-        rec.thread_id_ = (thread_id_t)-1;
-    }
-};
-
 
 }

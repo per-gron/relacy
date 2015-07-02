@@ -1007,22 +1007,22 @@ private:
         return *static_cast<thread_info<thread_count>*>(threadx_);
     }
 
-    slab_allocator<atomic_data_impl<thread_count>>*  atomic_alloc_;
-    slab_allocator<var_data_impl>*                   var_alloc_;
-    slab_allocator<generic_mutex_data_impl>*         mutex_alloc_;
-    slab_allocator<condvar_data_impl>*               condvar_alloc_;
-    slab_allocator<sema_data_impl>*                  sema_alloc_;
-    slab_allocator<event_data_impl>*                 event_alloc_;
+    slab_allocator<atomic_data_impl>*        atomic_alloc_;
+    slab_allocator<var_data_impl>*           var_alloc_;
+    slab_allocator<generic_mutex_data_impl>* mutex_alloc_;
+    slab_allocator<condvar_data_impl>*       condvar_alloc_;
+    slab_allocator<sema_data_impl>*          sema_alloc_;
+    slab_allocator<event_data_impl>*         event_alloc_;
 
     virtual atomic_data* atomic_ctor(void* ctx)
     {
-        return new (atomic_alloc_->alloc(ctx)) atomic_data_impl<thread_count>(thread_count);
+        return new (atomic_alloc_->alloc(ctx)) atomic_data_impl(thread_count);
     }
 
     virtual void atomic_dtor(atomic_data* data)
     {
-        static_cast<atomic_data_impl<thread_count>*>(data)->~atomic_data_impl<thread_count>();
-        atomic_alloc_->free(static_cast<atomic_data_impl<thread_count>*>(data));
+        static_cast<atomic_data_impl*>(data)->~atomic_data_impl();
+        atomic_alloc_->free(static_cast<atomic_data_impl*>(data));
     }
 
     virtual var_data* var_ctor()
@@ -1074,7 +1074,7 @@ public:
             throw std::logic_error("no threads created");
         }
 
-        atomic_alloc_ = new slab_allocator<atomic_data_impl<thread_count>>();
+        atomic_alloc_ = new slab_allocator<atomic_data_impl>();
         var_alloc_ = new slab_allocator<var_data_impl>();
         mutex_alloc_ = new slab_allocator<generic_mutex_data_impl>();
         condvar_alloc_ = new slab_allocator<condvar_data_impl>();
