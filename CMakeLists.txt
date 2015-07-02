@@ -62,6 +62,7 @@ set(relacy_sources
   relacy/stdlib/mutex.hpp
   relacy/stdlib/pthread.cpp
   relacy/stdlib/pthread.hpp
+  relacy/stdlib/semaphore.cpp
   relacy/stdlib/semaphore.hpp
   relacy/stdlib/windows.cpp
   relacy/stdlib/windows.hpp
