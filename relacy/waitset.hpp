@@ -10,9 +10,9 @@
 #pragma once
 
 #include "base.hpp"
-#include "defs.hpp"
-#include "thread_base.hpp"
 #include "context_base.hpp"
+#include "data/thread_info_base.hpp"
+#include "defs.hpp"
 
 namespace rl
 {

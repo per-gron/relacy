@@ -12,8 +12,8 @@
 #include "base.hpp"
 #include "context_base.hpp"
 #include "data/atomic_data.hpp"
+#include "data/thread_info_base.hpp"
 #include "thread_sync_object.hpp"
-#include "thread_base.hpp"
 #include "test_suite.hpp"
 #include "memory_order.hpp"
 

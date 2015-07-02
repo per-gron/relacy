@@ -25,6 +25,7 @@ set(relacy_sources
   relacy/context_bound_scheduler.hpp
   relacy/data/atomic_data.cpp
   relacy/data/atomic_data.hpp
+  relacy/data/thread_info_base.hpp
   relacy/defs.hpp
   relacy/dyn_thread.hpp
   relacy/foreach.hpp
@@ -62,7 +63,6 @@ set(relacy_sources
   relacy/test_result.hpp
   relacy/test_suite.hpp
   relacy/thread.hpp
-  relacy/thread_base.hpp
   relacy/thread_local.hpp
   relacy/thread_local_ctx.hpp
   relacy/thread_sync_object.cpp

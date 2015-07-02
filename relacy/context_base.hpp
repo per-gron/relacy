@@ -10,6 +10,7 @@
 #pragma once
 
 #include "base.hpp"
+#include "data/thread_info_base.hpp"
 #include "history.hpp"
 #include "memory.hpp"
 #include "test_result.hpp"
@@ -17,7 +18,6 @@
 #include "test_params.hpp"
 #include "random.hpp"
 #include "foreach.hpp"
-#include "thread_base.hpp"
 #include "thread_local_ctx.hpp"
 #include "context_addr_hash.hpp"
 
