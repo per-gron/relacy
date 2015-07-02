@@ -49,19 +49,11 @@ namespace rl
 {
 
 class thread_info_base;
-
-struct var_data
-{
-    virtual void init(thread_info_base& th) = 0;
-    virtual bool store(thread_info_base& th) = 0;
-    virtual bool load(thread_info_base& th) = 0;
-    virtual ~var_data() {} // just to calm down gcc
-};
-
 struct generic_mutex_data;
 struct condvar_data;
 struct sema_data;
 struct event_data;
+struct var_data;
 
 
 struct user_msg_event

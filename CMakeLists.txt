@@ -30,6 +30,7 @@ set(relacy_sources
   relacy/data/generic_mutex_data.hpp
   relacy/data/thread_info.hpp
   relacy/data/thread_info_base.hpp
+  relacy/data/var_data.cpp
   relacy/data/var_data.hpp
   relacy/defs.hpp
   relacy/dyn_thread.hpp
