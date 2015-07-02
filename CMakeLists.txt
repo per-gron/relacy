@@ -25,6 +25,7 @@ set(relacy_sources
   relacy/context_bound_scheduler.hpp
   relacy/data/atomic_data.cpp
   relacy/data/atomic_data.hpp
+  relacy/data/event_data.hpp
   relacy/data/generic_mutex_data.hpp
   relacy/data/thread_info.hpp
   relacy/data/thread_info_base.hpp
