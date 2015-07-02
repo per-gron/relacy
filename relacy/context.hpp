@@ -1016,7 +1016,7 @@ private:
 
     virtual atomic_data* atomic_ctor(void* ctx)
     {
-        return new (atomic_alloc_->alloc(ctx)) atomic_data_impl<thread_count> ();
+        return new (atomic_alloc_->alloc(ctx)) atomic_data_impl<thread_count>(thread_count);
     }
 
     virtual void atomic_dtor(atomic_data* data)

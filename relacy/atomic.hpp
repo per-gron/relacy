@@ -661,16 +661,16 @@ typedef atomic<ptrdiff_t> atomic_ptrdiff_t;
 
 
 
-template<thread_id_t thread_count>
+template<thread_id_t thread_count_template>
 struct atomic_data_impl : atomic_data
 {
-    typedef thread_info<thread_count> thread_info_t;
+    typedef thread_info<thread_count_template> thread_info_t;
 
     struct history_record
     {
-        history_record(thread_id_t th_count)
-            : acq_rel_order_(th_count)
-            , last_seen_order_(th_count) {}
+        history_record(thread_id_t thread_count)
+            : acq_rel_order_(thread_count)
+            , last_seen_order_(thread_count) {}
 
         rl_vector<timestamp_t> acq_rel_order_;
         rl_vector<timestamp_t> last_seen_order_;
@@ -687,7 +687,7 @@ struct atomic_data_impl : atomic_data
     waitset futex_ws_;
     sync_var futex_sync_;
 
-    atomic_data_impl()
+    atomic_data_impl(thread_id_t thread_count)
         : futex_ws_(thread_count)
         , futex_sync_(thread_count)
     {
@@ -703,25 +703,6 @@ struct atomic_data_impl : atomic_data
         rec.busy_ = false;
         rec.seq_cst_ = false;
         rec.thread_id_ = (thread_id_t)-1;
-    }
-
-    atomic_data_impl(thread_info_t& th)
-        : futex_ws_(thread_count)
-    {
-        current_index_ = 0;
-        history_[atomic_history_size - 1].busy_ = false;
-
-        history_record& rec = history_[0];
-        rec.busy_ = true;
-        rec.seq_cst_ = false;
-        rec.thread_id_ = th.index_;
-
-        th.own_acq_rel_order_ += 1;
-        rec.acq_rel_timestamp_ = th.own_acq_rel_order_;
-
-        std::fill(rec.acq_rel_order_.begin(), rec.acq_rel_order_.end(), 0);
-        std::fill(rec.last_seen_order_.begin(), rec.last_seen_order_.end(), (timestamp_t)-1);
-        rec.last_seen_order_[th.index_] = th.own_acq_rel_order_;
     }
 };
 
