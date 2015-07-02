@@ -11,12 +11,17 @@
 
 #include "base.hpp"
 #include "test_result.hpp"
-#include "context_base.hpp"
 
 
 namespace rl
 {
 
+namespace detail
+{
+
+RL_NOINLINE void fail(const void *address, debug_info_param info);
+
+}
 
 template<unsigned magic>
 class signature
@@ -49,29 +54,12 @@ public:
         }
         else
         {
-            fail(info);
+            detail::fail(this, info);
         }
     }
 
 private:
     unsigned magic_;
-
-    struct fault_event
-    {
-        void const* addr_;
-        void output(std::ostream& s) const
-        {
-            s << "<" << std::hex << addr_ << std::dec << ">"
-                << " access to freed memory";
-        }
-    };
-
-    RL_NOINLINE void fail(debug_info_param info) const
-    {
-        context& c = ctx();
-        RL_HIST(fault_event) {this} RL_HIST_END();
-        rl::ctx().fail_test("access to freed memory", test_result_access_to_freed_memory, info);
-    }
 };
 
 }

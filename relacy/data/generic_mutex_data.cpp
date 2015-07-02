@@ -9,6 +9,8 @@
 
 #include "generic_mutex_data.hpp"
 
+#include "../context_base.hpp"
+
 namespace rl
 {
 

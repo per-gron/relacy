@@ -56,6 +56,7 @@ set(relacy_sources
   relacy/rmw.cpp
   relacy/rmw.hpp
   relacy/scheduler.hpp
+  relacy/signature.cpp
   relacy/signature.hpp
   relacy/slab_allocator.hpp
   relacy/stdlib
