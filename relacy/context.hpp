@@ -1083,7 +1083,7 @@ public:
 
         for (thread_id_t i = 0; i != thread_count; ++i)
         {
-            new (&threads_[i]) thread_info<thread_count> (i);
+            new (&threads_[i]) thread_info<thread_count>(thread_count, i);
             threads_[i].ctx_ = this;
         }
 
