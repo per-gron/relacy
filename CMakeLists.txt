@@ -31,6 +31,8 @@ set(relacy_sources
   relacy/data/event_data.hpp
   relacy/data/generic_mutex_data.cpp
   relacy/data/generic_mutex_data.hpp
+  relacy/data/sema_data.cpp
+  relacy/data/sema_data.hpp
   relacy/data/thread_info.cpp
   relacy/data/thread_info.hpp
   relacy/data/thread_info_base.hpp
