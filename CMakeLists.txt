@@ -38,6 +38,7 @@ set(relacy_sources
   relacy/data/var_data.cpp
   relacy/data/var_data.hpp
   relacy/defs.hpp
+  relacy/dyn_thread.cpp
   relacy/dyn_thread.hpp
   relacy/foreach.hpp
   relacy/full_search_scheduler.hpp

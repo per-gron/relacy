@@ -7,29 +7,29 @@
  *  terms of the license contained in the file LICENSE in this distribution.
  */
 
-#pragma once
+#include "dyn_thread.hpp"
 
-#include "base.hpp"
-#include "stdlib/waitable_object.hpp"
-
+#include "context_base.hpp"
 
 namespace rl
 {
 
-class dyn_thread
+dyn_thread::dyn_thread()
 {
-public:
-    dyn_thread();
+    handle_ = 0;
+}
 
-    dyn_thread(const dyn_thread &) = delete;
-    dyn_thread &operator=(const dyn_thread &) = delete;
+void dyn_thread::start(void*(*fn)(void*), void* arg)
+{
+    RL_VERIFY(handle_ == 0);
+    handle_ = ctx().create_thread(fn, arg);
+}
 
-    void start(void*(*fn)(void*), void* arg);
-
-    void join();
-
-private:
-    win_waitable_object* handle_;
-};
+void dyn_thread::join()
+{
+    RL_VERIFY(handle_);
+    handle_->wait(false, false, $);
+    handle_ = 0;
+}
 
 }
