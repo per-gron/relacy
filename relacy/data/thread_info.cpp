@@ -19,7 +19,9 @@ namespace rl
 typedef atomic_data::history_record history_t;
 
 thread_info::thread_info(thread_id_t thread_count, thread_id_t index)
-    : thread_info_base(thread_count, index)
+    : index_(index)
+    , acq_rel_order_(thread_count)
+    , own_acq_rel_order_(acq_rel_order_[index])
     , sync_object_(thread_count)
     , acquire_fence_order_(thread_count)
     , release_fence_order_(thread_count)
@@ -50,6 +52,24 @@ void thread_info::on_finish()
     RL_VERIFY(temp_switch_from_ == -1);
     RL_VERIFY(saved_disable_preemption_ == -1);
     sync_object_.on_finish();
+}
+
+unsigned thread_info::thread_info::atomic_init(atomic_data* RL_RESTRICT data)
+{
+    unsigned const idx = ++data->current_index_ % atomic_history_size;
+    history_t& rec = data->history_[idx];
+
+    rec.busy_ = true;
+    rec.thread_id_ = index_;
+    rec.seq_cst_ = false;
+    rec.acq_rel_timestamp_ = 0;
+
+    std::fill(
+        rec.acq_rel_order_.begin(),
+        rec.acq_rel_order_.end(),
+        0);
+
+    return idx;
 }
 
 void thread_info::atomic_thread_fence_acquire()
@@ -89,10 +109,6 @@ void thread_info::atomic_thread_fence_seq_cst(timestamp_t* seq_cst_fence_order)
         seq_cst_fence_order);
 
     atomic_thread_fence_release();
-}
-
-thread_info::~thread_info()
-{
 }
 
 unsigned thread_info::atomic_load_relaxed(atomic_data* RL_RESTRICT data)
@@ -249,22 +265,27 @@ unsigned thread_info::atomic_load(atomic_data* RL_RESTRICT data)
     return index;
 }
 
-unsigned thread_info::thread_info::atomic_init(atomic_data* RL_RESTRICT data)
+unpark_reason thread_info::atomic_wait(atomic_data* RL_RESTRICT data, bool is_timed, bool allow_spurious_wakeup, debug_info_param info)
 {
-    unsigned const idx = ++data->current_index_ % atomic_history_size;
-    history_t& rec = data->history_[idx];
+    context& c = ctx();
+    unpark_reason const res = data->futex_ws_.park_current(c, is_timed, allow_spurious_wakeup, false, info);
+    if (res == unpark_reason_normal)
+        data->futex_sync_.acquire(this);
+    return res;
+}
 
-    rec.busy_ = true;
-    rec.thread_id_ = index_;
-    rec.seq_cst_ = false;
-    rec.acq_rel_timestamp_ = 0;
-
-    std::fill(
-        rec.acq_rel_order_.begin(),
-        rec.acq_rel_order_.end(),
-        0);
-
-    return idx;
+thread_id_t thread_info::atomic_wake(atomic_data* RL_RESTRICT data, thread_id_t count, debug_info_param info)
+{
+    context& c = ctx();
+    thread_id_t unblocked = 0;
+    for (; count != 0; count -= 1, unblocked += 1)
+    {
+        if (data->futex_ws_.unpark_one(c, info) == false)
+            break;
+    }
+    if (unblocked != 0)
+        data->futex_sync_.release(this);
+    return unblocked;
 }
 
 template<memory_order mo, bool rmw>
@@ -332,29 +353,6 @@ unsigned thread_info::atomic_rmw(atomic_data* RL_RESTRICT data, bool& aba)
     unsigned result = atomic_store<mo, true>(data);
 
     return result;
-}
-
-unpark_reason thread_info::atomic_wait(atomic_data* RL_RESTRICT data, bool is_timed, bool allow_spurious_wakeup, debug_info_param info)
-{
-    context& c = ctx();
-    unpark_reason const res = data->futex_ws_.park_current(c, is_timed, allow_spurious_wakeup, false, info);
-    if (res == unpark_reason_normal)
-        data->futex_sync_.acquire(this);
-    return res;
-}
-
-thread_id_t thread_info::atomic_wake(atomic_data* RL_RESTRICT data, thread_id_t count, debug_info_param info)
-{
-    context& c = ctx();
-    thread_id_t unblocked = 0;
-    for (; count != 0; count -= 1, unblocked += 1)
-    {
-        if (data->futex_ws_.unpark_one(c, info) == false)
-            break;
-    }
-    if (unblocked != 0)
-        data->futex_sync_.release(this);
-    return unblocked;
 }
 
 }

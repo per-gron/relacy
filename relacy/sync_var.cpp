@@ -26,19 +26,19 @@ void sync_var::iteration_begin()
     std::fill(order_.begin(), order_.end(), 0);
 }
 
-void sync_var::acquire(thread_info_base* th)
+void sync_var::acquire(thread_info* th)
 {
     th->own_acq_rel_order_ += 1;
     assign_max(&th->acq_rel_order_[0], &order_[0], order_.size());
 }
 
-void sync_var::release(thread_info_base* th)
+void sync_var::release(thread_info* th)
 {
     th->own_acq_rel_order_ += 1;
     assign_max(&order_[0], &th->acq_rel_order_[0], order_.size());
 }
 
-void sync_var::acq_rel(thread_info_base* th)
+void sync_var::acq_rel(thread_info* th)
 {
     th->own_acq_rel_order_ += 1;
     timestamp_t* acq_rel_order = &th->acq_rel_order_[0];

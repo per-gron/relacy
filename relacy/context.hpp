@@ -394,7 +394,7 @@ public:
 
     virtual void fiber_proc_impl(int thread_index)
     {
-        thread_info_base* param = &threads_[thread_index];
+        thread_info* param = &threads_[thread_index];
         debug_info info = $;
         for (;;)
         {

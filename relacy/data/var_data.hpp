@@ -17,9 +17,9 @@ namespace rl
 
 struct var_data
 {
-    virtual void init(thread_info_base& th) = 0;
-    virtual bool store(thread_info_base& th) = 0;
-    virtual bool load(thread_info_base& th) = 0;
+    virtual void init(thread_info& th) = 0;
+    virtual bool store(thread_info& th) = 0;
+    virtual bool load(thread_info& th) = 0;
     virtual ~var_data() {} // just to calm down gcc
 };
 
@@ -30,11 +30,11 @@ struct var_data_impl : var_data
 
     var_data_impl(thread_id_t thread_count);
 
-    virtual void init(thread_info_base& th);
+    virtual void init(thread_info& th);
 
-    virtual bool store(thread_info_base& th);
+    virtual bool store(thread_info& th);
 
-    virtual bool load(thread_info_base& th);
+    virtual bool load(thread_info& th);
 
     virtual ~var_data_impl(); // just to calm down gcc
 };

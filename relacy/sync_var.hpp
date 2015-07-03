@@ -14,7 +14,7 @@
 namespace rl
 {
 
-class thread_info_base;
+class thread_info;
 
 class sync_var
 {
@@ -26,11 +26,11 @@ public:
 
     void iteration_begin();
 
-    void acquire(thread_info_base* th);
+    void acquire(thread_info* th);
 
-    void release(thread_info_base* th);
+    void release(thread_info* th);
 
-    void acq_rel(thread_info_base* th);
+    void acq_rel(thread_info* th);
 
 private:
     rl_vector<timestamp_t> order_;

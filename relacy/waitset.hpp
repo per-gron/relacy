@@ -16,7 +16,7 @@ namespace rl
 {
 
 class context;
-struct thread_info_base;
+struct thread_info;
 
 class waitset
 {
@@ -49,7 +49,7 @@ public:
 private:
     struct thread_desc
     {
-        thread_info_base*       th_;
+        thread_info*            th_;
         unsigned                count_;     // 0 - wfso, !0 - wfmo
         waitset**               ws_;        // 0 - wfso, !0 - wfmo
         win_waitable_object**   wo_;        // 0 - wfso, !0 - wfmo
@@ -62,9 +62,9 @@ private:
 
     bool try_remove(context& c, thread_id_t const idx, debug_info_param info);
 
-    void remove(thread_info_base* th);
+    void remove(thread_info* th);
 
-    static void remove(thread_info_base* th, waitset** ws, unsigned count);
+    static void remove(thread_info* th, waitset** ws, unsigned count);
 };
 
 }

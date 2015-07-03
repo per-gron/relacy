@@ -28,7 +28,7 @@ unpark_reason waitset::park_current(context& c,
                                     debug_info_param info)
 {
     RL_VERIFY(size_ < set_.size());
-    thread_info_base* th = c.threadx_;
+    thread_info* th = c.threadx_;
     thread_desc desc = {th, 0, 0, 0, false, do_switch};
     set_[size_] = desc;
     size_ += 1;
@@ -56,7 +56,7 @@ unpark_reason waitset::park_current(context& c,
                                     bool do_switch,
                                     debug_info_param info)
 {
-    thread_info_base* th = c.threadx_;
+    thread_info* th = c.threadx_;
     thread_desc desc = {th, (unsigned)count, ws, wo, wait_all, do_switch};
     for (unsigned wsi = 0; wsi != count; ++wsi)
     {
@@ -143,7 +143,7 @@ bool waitset::try_remove(context& c,
     return true;
 }
 
-void waitset::remove(thread_info_base* th)
+void waitset::remove(thread_info* th)
 {
     thread_id_t size = size_;
     thread_id_t i = 0;
@@ -160,7 +160,7 @@ void waitset::remove(thread_info_base* th)
     size_ -= 1;
 }
 
-void waitset::remove(thread_info_base* th, waitset** ws, unsigned count)
+void waitset::remove(thread_info* th, waitset** ws, unsigned count)
 {
     for (unsigned wsi = 0; wsi != count; ++wsi)
     {

@@ -48,7 +48,6 @@
 namespace rl
 {
 
-class thread_info_base;
 struct generic_mutex_data;
 struct condvar_data;
 struct sema_data;
@@ -159,7 +158,7 @@ public:
     int get_errno();
     void set_errno(int value);
 
-    thread_info_base* threadx_;
+    thread_info* threadx_;
     timestamp_t* seq_cst_fence_order_;
 
     bool invariant_executing;

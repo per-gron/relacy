@@ -229,10 +229,10 @@ public:
 
         switch (mo)
         {
-        case memory_order_relaxed: return load_impl<memory_order_relaxed, &thread_info_base::atomic_load_relaxed>(info);
-        case memory_order_consume: return load_impl<memory_order_consume, &thread_info_base::atomic_load_acquire>(info);
-        case memory_order_acquire: return load_impl<memory_order_acquire, &thread_info_base::atomic_load_acquire>(info);
-        case memory_order_seq_cst: return load_impl<memory_order_seq_cst, &thread_info_base::atomic_load_seq_cst>(info);
+        case memory_order_relaxed: return load_impl<memory_order_relaxed, &thread_info::atomic_load_relaxed>(info);
+        case memory_order_consume: return load_impl<memory_order_consume, &thread_info::atomic_load_acquire>(info);
+        case memory_order_acquire: return load_impl<memory_order_acquire, &thread_info::atomic_load_acquire>(info);
+        case memory_order_seq_cst: return load_impl<memory_order_seq_cst, &thread_info::atomic_load_seq_cst>(info);
         default: break;
         }
 
@@ -248,9 +248,9 @@ public:
 
         switch (mo)
         {
-        case memory_order_relaxed: return store_impl<memory_order_relaxed, &thread_info_base::atomic_store_relaxed>(v, info);
-        case memory_order_release: return store_impl<memory_order_release, &thread_info_base::atomic_store_release>(v, info);
-        case memory_order_seq_cst: return store_impl< memory_order_seq_cst, &thread_info_base::atomic_store_seq_cst>(v, info);
+        case memory_order_relaxed: return store_impl<memory_order_relaxed, &thread_info::atomic_store_relaxed>(v, info);
+        case memory_order_release: return store_impl<memory_order_release, &thread_info::atomic_store_release>(v, info);
+        case memory_order_seq_cst: return store_impl< memory_order_seq_cst, &thread_info::atomic_store_seq_cst>(v, info);
         default: break;
         }
 
@@ -287,12 +287,12 @@ public:
     {
         switch (mo)
         {
-        case memory_order_relaxed: return compare_swap_impl<spurious_failures, memory_order_relaxed, &thread_info_base::atomic_rmw_relaxed, memory_order_relaxed, &thread_info_base::atomic_load_relaxed_rmw>(cmp, xchg, info);
-        case memory_order_consume: return compare_swap_impl<spurious_failures, memory_order_consume, &thread_info_base::atomic_rmw_acquire, memory_order_consume, &thread_info_base::atomic_load_acquire_rmw>(cmp, xchg, info);
-        case memory_order_acquire: return compare_swap_impl<spurious_failures, memory_order_acquire, &thread_info_base::atomic_rmw_acquire, memory_order_acquire, &thread_info_base::atomic_load_acquire_rmw>(cmp, xchg, info);
-        case memory_order_release: return compare_swap_impl<spurious_failures, memory_order_release, &thread_info_base::atomic_rmw_release, memory_order_relaxed, &thread_info_base::atomic_load_relaxed_rmw>(cmp, xchg, info);
-        case memory_order_acq_rel: return compare_swap_impl<spurious_failures, memory_order_acq_rel, &thread_info_base::atomic_rmw_acq_rel, memory_order_acquire, &thread_info_base::atomic_load_acquire_rmw>(cmp, xchg, info);
-        case memory_order_seq_cst: return compare_swap_impl<spurious_failures, memory_order_seq_cst, &thread_info_base::atomic_rmw_seq_cst, memory_order_seq_cst, &thread_info_base::atomic_load_seq_cst_rmw>(cmp, xchg, info);
+        case memory_order_relaxed: return compare_swap_impl<spurious_failures, memory_order_relaxed, &thread_info::atomic_rmw_relaxed, memory_order_relaxed, &thread_info::atomic_load_relaxed_rmw>(cmp, xchg, info);
+        case memory_order_consume: return compare_swap_impl<spurious_failures, memory_order_consume, &thread_info::atomic_rmw_acquire, memory_order_consume, &thread_info::atomic_load_acquire_rmw>(cmp, xchg, info);
+        case memory_order_acquire: return compare_swap_impl<spurious_failures, memory_order_acquire, &thread_info::atomic_rmw_acquire, memory_order_acquire, &thread_info::atomic_load_acquire_rmw>(cmp, xchg, info);
+        case memory_order_release: return compare_swap_impl<spurious_failures, memory_order_release, &thread_info::atomic_rmw_release, memory_order_relaxed, &thread_info::atomic_load_relaxed_rmw>(cmp, xchg, info);
+        case memory_order_acq_rel: return compare_swap_impl<spurious_failures, memory_order_acq_rel, &thread_info::atomic_rmw_acq_rel, memory_order_acquire, &thread_info::atomic_load_acquire_rmw>(cmp, xchg, info);
+        case memory_order_seq_cst: return compare_swap_impl<spurious_failures, memory_order_seq_cst, &thread_info::atomic_rmw_seq_cst, memory_order_seq_cst, &thread_info::atomic_load_seq_cst_rmw>(cmp, xchg, info);
         }
 
         RL_VERIFY(false);
@@ -308,15 +308,15 @@ public:
         case memory_order_relaxed:
             {
                 RL_VERIFY(memory_order_relaxed == failure_mo);
-                return compare_swap_impl<spurious_failures, memory_order_relaxed, &thread_info_base::atomic_rmw_relaxed, memory_order_relaxed, &thread_info_base::atomic_load_relaxed_rmw>(cmp, xchg, info);
+                return compare_swap_impl<spurious_failures, memory_order_relaxed, &thread_info::atomic_rmw_relaxed, memory_order_relaxed, &thread_info::atomic_load_relaxed_rmw>(cmp, xchg, info);
             }
         case memory_order_consume:
             {
                 RL_VERIFY(memory_order_relaxed == failure_mo || memory_order_consume == failure_mo);
                 switch (failure_mo)
                 {
-                case memory_order_relaxed: return compare_swap_impl<spurious_failures, memory_order_consume, &thread_info_base::atomic_rmw_acquire, memory_order_relaxed, &thread_info_base::atomic_load_relaxed_rmw>(cmp, xchg, info);
-                case memory_order_consume: return compare_swap_impl<spurious_failures, memory_order_consume, &thread_info_base::atomic_rmw_acquire, memory_order_consume, &thread_info_base::atomic_load_acquire_rmw>(cmp, xchg, info);
+                case memory_order_relaxed: return compare_swap_impl<spurious_failures, memory_order_consume, &thread_info::atomic_rmw_acquire, memory_order_relaxed, &thread_info::atomic_load_relaxed_rmw>(cmp, xchg, info);
+                case memory_order_consume: return compare_swap_impl<spurious_failures, memory_order_consume, &thread_info::atomic_rmw_acquire, memory_order_consume, &thread_info::atomic_load_acquire_rmw>(cmp, xchg, info);
                 default: RL_VERIFY(false); return false;
                 }
             }
@@ -325,25 +325,25 @@ public:
                 RL_VERIFY(memory_order_relaxed == failure_mo || memory_order_consume == failure_mo || memory_order_acquire == failure_mo);
                 switch (failure_mo)
                 {
-                case memory_order_relaxed: return compare_swap_impl<spurious_failures, memory_order_acquire, &thread_info_base::atomic_rmw_acquire, memory_order_relaxed, &thread_info_base::atomic_load_relaxed_rmw>(cmp, xchg, info);
-                case memory_order_consume: return compare_swap_impl<spurious_failures, memory_order_acquire, &thread_info_base::atomic_rmw_acquire, memory_order_consume, &thread_info_base::atomic_load_acquire_rmw>(cmp, xchg, info);
-                case memory_order_acquire: return compare_swap_impl<spurious_failures, memory_order_acquire, &thread_info_base::atomic_rmw_acquire, memory_order_acquire, &thread_info_base::atomic_load_acquire_rmw>(cmp, xchg, info);
+                case memory_order_relaxed: return compare_swap_impl<spurious_failures, memory_order_acquire, &thread_info::atomic_rmw_acquire, memory_order_relaxed, &thread_info::atomic_load_relaxed_rmw>(cmp, xchg, info);
+                case memory_order_consume: return compare_swap_impl<spurious_failures, memory_order_acquire, &thread_info::atomic_rmw_acquire, memory_order_consume, &thread_info::atomic_load_acquire_rmw>(cmp, xchg, info);
+                case memory_order_acquire: return compare_swap_impl<spurious_failures, memory_order_acquire, &thread_info::atomic_rmw_acquire, memory_order_acquire, &thread_info::atomic_load_acquire_rmw>(cmp, xchg, info);
                 default: RL_VERIFY(false); return false;
                 }
             }
         case memory_order_release:
             {
                 RL_VERIFY(memory_order_relaxed == failure_mo);
-                return compare_swap_impl<spurious_failures, memory_order_release, &thread_info_base::atomic_rmw_release, memory_order_relaxed, &thread_info_base::atomic_load_relaxed_rmw>(cmp, xchg, info);
+                return compare_swap_impl<spurious_failures, memory_order_release, &thread_info::atomic_rmw_release, memory_order_relaxed, &thread_info::atomic_load_relaxed_rmw>(cmp, xchg, info);
             }
         case memory_order_acq_rel:
             {
                 RL_VERIFY(memory_order_relaxed == failure_mo || memory_order_consume == failure_mo || memory_order_acquire == failure_mo);
                 switch (failure_mo)
                 {
-                case memory_order_relaxed: return compare_swap_impl<spurious_failures, memory_order_acq_rel, &thread_info_base::atomic_rmw_acq_rel, memory_order_relaxed, &thread_info_base::atomic_load_relaxed_rmw>(cmp, xchg, info);
-                case memory_order_consume: return compare_swap_impl<spurious_failures, memory_order_acq_rel, &thread_info_base::atomic_rmw_acq_rel, memory_order_consume, &thread_info_base::atomic_load_acquire_rmw>(cmp, xchg, info);
-                case memory_order_acquire: return compare_swap_impl<spurious_failures, memory_order_acq_rel, &thread_info_base::atomic_rmw_acq_rel, memory_order_acquire, &thread_info_base::atomic_load_acquire_rmw>(cmp, xchg, info);
+                case memory_order_relaxed: return compare_swap_impl<spurious_failures, memory_order_acq_rel, &thread_info::atomic_rmw_acq_rel, memory_order_relaxed, &thread_info::atomic_load_relaxed_rmw>(cmp, xchg, info);
+                case memory_order_consume: return compare_swap_impl<spurious_failures, memory_order_acq_rel, &thread_info::atomic_rmw_acq_rel, memory_order_consume, &thread_info::atomic_load_acquire_rmw>(cmp, xchg, info);
+                case memory_order_acquire: return compare_swap_impl<spurious_failures, memory_order_acq_rel, &thread_info::atomic_rmw_acq_rel, memory_order_acquire, &thread_info::atomic_load_acquire_rmw>(cmp, xchg, info);
                 default: RL_VERIFY(false); return false;
                 }
             }
@@ -352,10 +352,10 @@ public:
                 RL_VERIFY(memory_order_relaxed == failure_mo || memory_order_consume == failure_mo || memory_order_acquire == failure_mo || memory_order_seq_cst == failure_mo);
                 switch (failure_mo)
                 {
-                case memory_order_relaxed: return compare_swap_impl<spurious_failures, memory_order_seq_cst, &thread_info_base::atomic_rmw_seq_cst, memory_order_relaxed, &thread_info_base::atomic_load_relaxed_rmw>(cmp, xchg, info);
-                case memory_order_consume: return compare_swap_impl<spurious_failures, memory_order_seq_cst, &thread_info_base::atomic_rmw_seq_cst, memory_order_consume, &thread_info_base::atomic_load_acquire_rmw>(cmp, xchg, info);
-                case memory_order_acquire: return compare_swap_impl<spurious_failures, memory_order_seq_cst, &thread_info_base::atomic_rmw_seq_cst, memory_order_acquire, &thread_info_base::atomic_load_acquire_rmw>(cmp, xchg, info);
-                case memory_order_seq_cst: return compare_swap_impl<spurious_failures, memory_order_seq_cst, &thread_info_base::atomic_rmw_seq_cst, memory_order_seq_cst, &thread_info_base::atomic_load_seq_cst_rmw>(cmp, xchg, info);
+                case memory_order_relaxed: return compare_swap_impl<spurious_failures, memory_order_seq_cst, &thread_info::atomic_rmw_seq_cst, memory_order_relaxed, &thread_info::atomic_load_relaxed_rmw>(cmp, xchg, info);
+                case memory_order_consume: return compare_swap_impl<spurious_failures, memory_order_seq_cst, &thread_info::atomic_rmw_seq_cst, memory_order_consume, &thread_info::atomic_load_acquire_rmw>(cmp, xchg, info);
+                case memory_order_acquire: return compare_swap_impl<spurious_failures, memory_order_seq_cst, &thread_info::atomic_rmw_seq_cst, memory_order_acquire, &thread_info::atomic_load_acquire_rmw>(cmp, xchg, info);
+                case memory_order_seq_cst: return compare_swap_impl<spurious_failures, memory_order_seq_cst, &thread_info::atomic_rmw_seq_cst, memory_order_seq_cst, &thread_info::atomic_load_seq_cst_rmw>(cmp, xchg, info);
                 default: RL_VERIFY(false); return false;
                 }
             }
@@ -401,12 +401,12 @@ public:
     {
         switch (mo)
         {
-        case memory_order_relaxed: return rmw_impl<Y, memory_order_relaxed, &thread_info_base::atomic_rmw_relaxed>(rmw_type_t<type>(), op, info);
-        case memory_order_consume: return rmw_impl<Y, memory_order_consume, &thread_info_base::atomic_rmw_acquire>(rmw_type_t<type>(), op, info);
-        case memory_order_acquire: return rmw_impl<Y, memory_order_acquire, &thread_info_base::atomic_rmw_acquire>(rmw_type_t<type>(), op, info);
-        case memory_order_release: return rmw_impl<Y, memory_order_release, &thread_info_base::atomic_rmw_release>(rmw_type_t<type>(), op, info);
-        case memory_order_acq_rel: return rmw_impl<Y, memory_order_acq_rel, &thread_info_base::atomic_rmw_acq_rel>(rmw_type_t<type>(), op, info);
-        case memory_order_seq_cst: return rmw_impl<Y, memory_order_seq_cst, &thread_info_base::atomic_rmw_seq_cst>(rmw_type_t<type>(), op, info);
+        case memory_order_relaxed: return rmw_impl<Y, memory_order_relaxed, &thread_info::atomic_rmw_relaxed>(rmw_type_t<type>(), op, info);
+        case memory_order_consume: return rmw_impl<Y, memory_order_consume, &thread_info::atomic_rmw_acquire>(rmw_type_t<type>(), op, info);
+        case memory_order_acquire: return rmw_impl<Y, memory_order_acquire, &thread_info::atomic_rmw_acquire>(rmw_type_t<type>(), op, info);
+        case memory_order_release: return rmw_impl<Y, memory_order_release, &thread_info::atomic_rmw_release>(rmw_type_t<type>(), op, info);
+        case memory_order_acq_rel: return rmw_impl<Y, memory_order_acq_rel, &thread_info::atomic_rmw_acq_rel>(rmw_type_t<type>(), op, info);
+        case memory_order_seq_cst: return rmw_impl<Y, memory_order_seq_cst, &thread_info::atomic_rmw_seq_cst>(rmw_type_t<type>(), op, info);
         }
 
         RL_VERIFY(false);
@@ -434,7 +434,7 @@ private:
     bool initialized_;
     bool already_failed_;
 
-    template<memory_order mo, unsigned (thread_info_base::*impl)(atomic_data* RL_RESTRICT data)>
+    template<memory_order mo, unsigned (thread_info::*impl)(atomic_data* RL_RESTRICT data)>
     T load_impl(debug_info_param info) const
     {
         context& c = ctx();
@@ -466,7 +466,7 @@ private:
         }
     }
 
-    template<memory_order mo, unsigned (thread_info_base::*impl)(atomic_data* RL_RESTRICT data)>
+    template<memory_order mo, unsigned (thread_info::*impl)(atomic_data* RL_RESTRICT data)>
     void store_impl(T v, debug_info_param info)
     {
         context& c = ctx();
@@ -484,7 +484,7 @@ private:
         RL_HIST(atomic_store_event<T>) {this, prev, v, mo} RL_HIST_END();
     }
 
-    template<bool spurious_failures, memory_order mo, unsigned (thread_info_base::*impl)(atomic_data* RL_RESTRICT data, bool&), memory_order failure_mo, unsigned (thread_info_base::*failure_impl)(atomic_data* RL_RESTRICT data)>
+    template<bool spurious_failures, memory_order mo, unsigned (thread_info::*impl)(atomic_data* RL_RESTRICT data, bool&), memory_order failure_mo, unsigned (thread_info::*failure_impl)(atomic_data* RL_RESTRICT data)>
     bool compare_swap_impl(T& cmp, T xchg, debug_info_param info)
     {
         context& c = ctx();
@@ -544,7 +544,7 @@ private:
         return success;
     }
 
-    template<typename Y, memory_order mo, unsigned (thread_info_base::*impl)(atomic_data* RL_RESTRICT data, bool&), rmw_type_e type>
+    template<typename Y, memory_order mo, unsigned (thread_info::*impl)(atomic_data* RL_RESTRICT data, bool&), rmw_type_e type>
     T rmw_impl(rmw_type_t<type>, Y op, debug_info_param info)
     {
         context& c = ctx();
