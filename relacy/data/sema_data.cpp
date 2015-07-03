@@ -14,7 +14,7 @@
 namespace rl
 {
 
-sema_data_impl::sema_data_impl(
+sema_data::sema_data(
     thread_id_t thread_count,
     bool spurious_wakeups,
     unsigned initial_count,
@@ -28,12 +28,12 @@ sema_data_impl::sema_data_impl(
     RL_VERIFY(max_count <= INT_MAX);
 }
 
-sema_data_impl::~sema_data_impl()
+sema_data::~sema_data()
 {
     //!!! detect destruction with waiters
 }
 
-void sema_data_impl::wait_event::output(std::ostream& s) const
+void sema_data::wait_event::output(std::ostream& s) const
 {
     s << "<" << std::hex << addr_ << std::dec << "> semaphore: ";
     if (try_wait_)
@@ -55,7 +55,7 @@ void sema_data_impl::wait_event::output(std::ostream& s) const
     s << "new_count=" << count_;
 }
 
-void sema_data_impl::post_event::output(std::ostream& s) const
+void sema_data::post_event::output(std::ostream& s) const
 {
     s << "<" << std::hex << addr_ << std::dec << "> semaphore: ";
     if (result_)
@@ -68,13 +68,13 @@ void sema_data_impl::post_event::output(std::ostream& s) const
     s << " unblocked=" << unblocked_;
 }
 
-void sema_data_impl::get_value_event::output(std::ostream& s) const
+void sema_data::get_value_event::output(std::ostream& s) const
 {
     s << "<" << std::hex << addr_ << std::dec << "> semaphore: ";
     s << "get_value count=" << count_;
 }
 
-sema_wakeup_reason sema_data_impl::wait(
+sema_wakeup_reason sema_data::wait(
     bool try_wait,
     bool is_timed,
     debug_info_param info)
@@ -132,7 +132,7 @@ sema_wakeup_reason sema_data_impl::wait(
     return reason;
 }
 
-bool sema_data_impl::post(unsigned count, unsigned& prev_count, debug_info_param info)
+bool sema_data::post(unsigned count, unsigned& prev_count, debug_info_param info)
 {
     context& c = ctx();
     c.sched();
@@ -161,7 +161,7 @@ bool sema_data_impl::post(unsigned count, unsigned& prev_count, debug_info_param
     return result;
 }
 
-int sema_data_impl::get_value(debug_info_param info)
+int sema_data::get_value(debug_info_param info)
 {
     context& c = ctx();
     c.sched();
@@ -175,19 +175,19 @@ int sema_data_impl::get_value(debug_info_param info)
     return result;
 }
 
-bool sema_data_impl::is_signaled(debug_info_param info)
+bool sema_data::is_signaled(debug_info_param info)
 {
     (void)info;
     return count_ > 0;
 }
 
-void sema_data_impl::memory_acquire(debug_info_param info)
+void sema_data::memory_acquire(debug_info_param info)
 {
     (void)info;
     sync_.acquire(ctx().threadx_);
 }
 
-void* sema_data_impl::prepare_wait(debug_info_param info)
+void* sema_data::prepare_wait(debug_info_param info)
 {
     (void)info;
     return &ws_;

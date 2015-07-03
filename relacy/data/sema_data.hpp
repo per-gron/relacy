@@ -25,34 +25,22 @@ enum sema_wakeup_reason
     sema_wakeup_reason_spurious,
 };
 
-
-struct sema_data
-{
-    virtual sema_wakeup_reason wait(bool try_wait, bool is_timed, debug_info_param info) = 0;
-    virtual bool post(unsigned count, unsigned& prev_count, debug_info_param info) = 0;
-    virtual int get_value(debug_info_param info) = 0;
-    virtual bool is_signaled(debug_info_param info) = 0;
-    virtual void memory_acquire(debug_info_param info) = 0;
-    virtual void* prepare_wait(debug_info_param info) = 0;
-    virtual ~sema_data() {} // just to calm down gcc
-};
-
-class sema_data_impl : public sema_data
+class sema_data
 {
 public:
-    sema_data_impl(thread_id_t thread_count,
+    sema_data(thread_id_t thread_count,
                    bool spurious_wakeups,
                    unsigned initial_count,
                    unsigned max_count);
 
-    sema_data_impl(const sema_data_impl &) = delete;
-    sema_data_impl &operator=(const sema_data_impl &) = delete;
+    sema_data(const sema_data &) = delete;
+    sema_data &operator=(const sema_data &) = delete;
 
-    ~sema_data_impl();
+    ~sema_data();
 
     struct wait_event
     {
-        sema_data_impl*         addr_;
+        sema_data*         addr_;
         bool                    try_wait_;
         bool                    is_timed_;
         unsigned                count_;
@@ -63,7 +51,7 @@ public:
 
     struct post_event
     {
-        sema_data_impl*         addr_;
+        sema_data*         addr_;
         unsigned                value_;
         unsigned                count_;
         bool                    result_;
@@ -74,19 +62,25 @@ public:
 
     struct get_value_event
     {
-        sema_data_impl* addr_;
+        sema_data* addr_;
         unsigned count_;
 
         void output(std::ostream& s) const;
     };
 
-    virtual sema_wakeup_reason wait(bool try_wait,
+    sema_wakeup_reason wait(bool try_wait,
                                     bool is_timed,
                                     debug_info_param info);
 
-    virtual bool post(unsigned count, unsigned& prev_count, debug_info_param info);
+    bool post(unsigned count, unsigned& prev_count, debug_info_param info);
 
-    virtual int get_value(debug_info_param info);
+    int get_value(debug_info_param info);
+
+    bool is_signaled(debug_info_param info);
+
+    void memory_acquire(debug_info_param info);
+
+    void* prepare_wait(debug_info_param info);
 
 private:
     signature<0xaabb6634> sign_;
@@ -95,12 +89,6 @@ private:
     unsigned const max_count_;
     waitset ws_;
     sync_var sync_;
-
-    virtual bool is_signaled(debug_info_param info);
-
-    virtual void memory_acquire(debug_info_param info);
-
-    virtual void* prepare_wait(debug_info_param info);
 };
 
 }
