@@ -19,9 +19,6 @@ namespace rl
 
 class context;
 struct atomic_data;
-struct var_data;
-struct atomic_data;
-struct var_data_impl;
 
 struct thread_info
 {

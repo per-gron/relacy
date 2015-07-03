@@ -115,7 +115,7 @@ private:
     }
 
     slab_allocator<atomic_data>*        atomic_alloc_;
-    slab_allocator<var_data_impl>*      var_alloc_;
+    slab_allocator<var_data>*           var_alloc_;
     slab_allocator<generic_mutex_data>* mutex_alloc_;
     slab_allocator<condvar_data>*       condvar_alloc_;
     slab_allocator<sema_data>*          sema_alloc_;
@@ -134,13 +134,13 @@ private:
 
     virtual var_data* var_ctor()
     {
-        return new (var_alloc_->alloc()) var_data_impl(thread_count);
+        return new (var_alloc_->alloc()) var_data(thread_count);
     }
 
     virtual void var_dtor(var_data* data)
     {
-        static_cast<var_data_impl*>(data)->~var_data_impl();
-        var_alloc_->free(static_cast<var_data_impl*>(data));
+        static_cast<var_data*>(data)->~var_data();
+        var_alloc_->free(static_cast<var_data*>(data));
     }
 
     virtual unpark_reason wfmo_park(void** ws,
@@ -182,7 +182,7 @@ public:
         }
 
         atomic_alloc_ = new slab_allocator<atomic_data>();
-        var_alloc_ = new slab_allocator<var_data_impl>();
+        var_alloc_ = new slab_allocator<var_data>();
         mutex_alloc_ = new slab_allocator<generic_mutex_data>();
         condvar_alloc_ = new slab_allocator<condvar_data>();
         sema_alloc_ = new slab_allocator<sema_data>();
