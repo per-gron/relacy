@@ -18,21 +18,20 @@
 namespace rl
 {
 
-struct condvar_data
-{
-    virtual void notify_one(debug_info_param info) = 0;
-    virtual void notify_all(debug_info_param info) = 0;
-    virtual sema_wakeup_reason wait(mutex_wrapper const& lock, bool is_timed, debug_info_param info) = 0;
-    virtual bool wait(mutex_wrapper const& lock, std::function<bool ()> const& pred, bool is_timed, debug_info_param info) = 0;
-    virtual ~condvar_data() {} // just to calm down gcc
-};
-
-class condvar_data_impl : public condvar_data
+class condvar_data
 {
 public:
-    condvar_data_impl(thread_id_t thread_count, bool allow_spurious_wakeups);
+    condvar_data(thread_id_t thread_count, bool allow_spurious_wakeups);
 
-    ~condvar_data_impl();
+    ~condvar_data();
+
+    void notify_one(debug_info_param info);
+
+    void notify_all(debug_info_param info);
+
+    sema_wakeup_reason wait(mutex_wrapper const& lock, bool is_timed, debug_info_param info);
+
+    bool wait(mutex_wrapper const& lock, std::function<bool ()> const& pred, bool is_timed, debug_info_param info);
 
 private:
     waitset                ws_;
@@ -51,21 +50,13 @@ private:
             type_wait_pred_exit,
         };
 
-        condvar_data_impl const*    var_addr_;
-        type_e                      type_;
-        thread_id_t                 thread_count_;
-        unpark_reason               reason_;
+        condvar_data const* var_addr_;
+        type_e              type_;
+        thread_id_t         thread_count_;
+        unpark_reason       reason_;
 
         void output(std::ostream& s) const;
     };
-
-    virtual void notify_one(debug_info_param info);
-
-    virtual void notify_all(debug_info_param info);
-
-    virtual sema_wakeup_reason wait(mutex_wrapper const& lock, bool is_timed, debug_info_param info);
-
-    virtual bool wait(mutex_wrapper const& lock, std::function<bool ()> const& pred, bool is_timed, debug_info_param info);
 };
 
 }

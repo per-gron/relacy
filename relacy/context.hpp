@@ -117,7 +117,7 @@ private:
     slab_allocator<atomic_data>*             atomic_alloc_;
     slab_allocator<var_data_impl>*           var_alloc_;
     slab_allocator<generic_mutex_data_impl>* mutex_alloc_;
-    slab_allocator<condvar_data_impl>*       condvar_alloc_;
+    slab_allocator<condvar_data>*            condvar_alloc_;
     slab_allocator<sema_data_impl>*          sema_alloc_;
     slab_allocator<event_data_impl>*         event_alloc_;
 
@@ -184,7 +184,7 @@ public:
         atomic_alloc_ = new slab_allocator<atomic_data>();
         var_alloc_ = new slab_allocator<var_data_impl>();
         mutex_alloc_ = new slab_allocator<generic_mutex_data_impl>();
-        condvar_alloc_ = new slab_allocator<condvar_data_impl>();
+        condvar_alloc_ = new slab_allocator<condvar_data>();
         sema_alloc_ = new slab_allocator<sema_data_impl>();
         event_alloc_ = new slab_allocator<event_data_impl>();
 
@@ -748,13 +748,13 @@ private:
 
     virtual condvar_data* condvar_ctor(bool allow_spurious_wakeups)
     {
-        return new (condvar_alloc_->alloc()) condvar_data_impl(thread_count, allow_spurious_wakeups);
+        return new (condvar_alloc_->alloc()) condvar_data(thread_count, allow_spurious_wakeups);
     }
 
     virtual void condvar_dtor(condvar_data* cv)
     {
-        condvar_data_impl* mm = static_cast<condvar_data_impl*>(cv);
-        mm->~condvar_data_impl();
+        condvar_data* mm = static_cast<condvar_data*>(cv);
+        mm->~condvar_data();
         condvar_alloc_->free(mm);
     }
 
