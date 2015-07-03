@@ -15,26 +15,11 @@
 #include "../sync_var.hpp"
 #include "../waitset.hpp"
 #include "../signature.hpp"
+#include "waitable_object.hpp"
 
 
 namespace rl
 {
-
-struct win_object
-{
-    virtual void deinit(debug_info_param info) = 0;
-    virtual ~win_object() {}
-};
-
-struct win_waitable_object : win_object
-{
-    virtual sema_wakeup_reason wait(bool try_wait, bool is_timed, debug_info_param info) = 0;
-    virtual bool signal(debug_info_param info) = 0;
-
-    virtual bool is_signaled(debug_info_param info) = 0;
-    virtual void memory_acquire(debug_info_param info) = 0;
-    virtual void* prepare_wait(debug_info_param info) = 0;
-};
 
 template<typename tag_t>
 class semaphore : public win_waitable_object

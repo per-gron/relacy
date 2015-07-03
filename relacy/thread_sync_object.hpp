@@ -10,10 +10,10 @@
 #pragma once
 
 #include "base.hpp"
-#include "waitset.hpp"
+#include "data/sema_data.hpp"
+#include "stdlib/waitable_object.hpp"
 #include "sync_var.hpp"
-#include "stdlib/semaphore.hpp"
-
+#include "waitset.hpp"
 
 namespace rl
 {
