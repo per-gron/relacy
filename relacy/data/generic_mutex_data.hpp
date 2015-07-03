@@ -17,26 +17,7 @@
 namespace rl
 {
 
-struct generic_mutex_data
-{
-    generic_mutex_data() = default;
-    generic_mutex_data(const generic_mutex_data &) = delete;
-    generic_mutex_data &operator=(const generic_mutex_data &) = delete;
-
-    virtual bool lock_exclusive(bool is_timed, debug_info_param info) = 0;
-    virtual bool try_lock_exclusive(debug_info_param info) = 0;
-    virtual void unlock_exclusive(debug_info_param info) = 0;
-    virtual void lock_shared(debug_info_param info) = 0;
-    virtual bool try_lock_shared(debug_info_param info) = 0;
-    virtual void unlock_shared(debug_info_param info) = 0;
-    virtual void unlock_exclusive_or_shared(debug_info_param info) = 0;
-    virtual bool is_signaled(debug_info_param info) = 0;
-    virtual void memory_acquire(debug_info_param info) = 0;
-    virtual void* prepare_wait(debug_info_param info) = 0;
-    virtual ~generic_mutex_data() {} // just to calm down gcc
-};
-
-class generic_mutex_data_impl : public generic_mutex_data
+class generic_mutex_data
 {
 public:
     struct event_t
@@ -59,38 +40,38 @@ public:
             type_destroying_owned_mutex,
         };
 
-        generic_mutex_data_impl const* var_addr_;
+        generic_mutex_data const* var_addr_;
         type_e type_;
 
         void output(std::ostream& s) const;
     };
 
-    generic_mutex_data_impl(thread_id_t thread_count, bool is_rw, bool is_exclusive_recursive, bool is_shared_recursive, bool failing_try_lock);
+    generic_mutex_data(thread_id_t thread_count, bool is_rw, bool is_exclusive_recursive, bool is_shared_recursive, bool failing_try_lock);
 
-    generic_mutex_data_impl(const generic_mutex_data_impl &) = delete;
-    generic_mutex_data_impl &operator=(const generic_mutex_data_impl &) = delete;
+    generic_mutex_data(const generic_mutex_data &) = delete;
+    generic_mutex_data &operator=(const generic_mutex_data &) = delete;
 
-    ~generic_mutex_data_impl();
+    ~generic_mutex_data();
 
-    virtual bool lock_exclusive(bool is_timed, debug_info_param info);
+    bool lock_exclusive(bool is_timed, debug_info_param info);
 
-    virtual bool try_lock_exclusive(debug_info_param info);
+    bool try_lock_exclusive(debug_info_param info);
 
-    virtual void unlock_exclusive(debug_info_param info);
+    void unlock_exclusive(debug_info_param info);
 
-    virtual void lock_shared(debug_info_param info);
+    void lock_shared(debug_info_param info);
 
-    virtual bool try_lock_shared(debug_info_param info);
+    bool try_lock_shared(debug_info_param info);
 
-    virtual void unlock_shared(debug_info_param info);
+    void unlock_shared(debug_info_param info);
 
-    virtual void unlock_exclusive_or_shared(debug_info_param info);
+    void unlock_exclusive_or_shared(debug_info_param info);
 
-    virtual bool is_signaled(debug_info_param info);
+    bool is_signaled(debug_info_param info);
 
-    virtual void memory_acquire(debug_info_param info);
+    void memory_acquire(debug_info_param info);
 
-    virtual void* prepare_wait(debug_info_param info);
+    void* prepare_wait(debug_info_param info);
 
 private:
     static thread_id_t const state_shared = (thread_id_t)-1;

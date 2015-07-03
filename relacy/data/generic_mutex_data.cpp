@@ -14,7 +14,7 @@
 namespace rl
 {
 
-void generic_mutex_data_impl::event_t::output(std::ostream& s) const
+void generic_mutex_data::event_t::output(std::ostream& s) const
 {
     s << "<" << std::hex << var_addr_ << std::dec << "> mutex: ";
     switch (type_)
@@ -36,7 +36,7 @@ void generic_mutex_data_impl::event_t::output(std::ostream& s) const
     }
 }
 
-generic_mutex_data_impl::generic_mutex_data_impl(thread_id_t thread_count, bool is_rw, bool is_exclusive_recursive, bool is_shared_recursive, bool failing_try_lock)
+generic_mutex_data::generic_mutex_data(thread_id_t thread_count, bool is_rw, bool is_exclusive_recursive, bool is_shared_recursive, bool failing_try_lock)
     : is_rw_(is_rw)
     , is_exclusive_recursive_(is_exclusive_recursive)
     , is_shared_recursive_(is_shared_recursive)
@@ -55,7 +55,7 @@ generic_mutex_data_impl::generic_mutex_data_impl(thread_id_t thread_count, bool 
     RL_VERIFY(false == c.invariant_executing);
 }
 
-generic_mutex_data_impl::~generic_mutex_data_impl()
+generic_mutex_data::~generic_mutex_data()
 {
     context& c = ctx();
     RL_VERIFY(false == c.invariant_executing);
@@ -69,7 +69,7 @@ generic_mutex_data_impl::~generic_mutex_data_impl()
     }
 }
 
-bool generic_mutex_data_impl::lock_exclusive(bool is_timed, debug_info_param info)
+bool generic_mutex_data::lock_exclusive(bool is_timed, debug_info_param info)
 {
     context& c = ctx();
     c.sched();
@@ -128,7 +128,7 @@ bool generic_mutex_data_impl::lock_exclusive(bool is_timed, debug_info_param inf
     }
 }
 
-bool generic_mutex_data_impl::try_lock_exclusive(debug_info_param info)
+bool generic_mutex_data::try_lock_exclusive(debug_info_param info)
 {
     context& c = ctx();
     c.sched();
@@ -189,7 +189,7 @@ bool generic_mutex_data_impl::try_lock_exclusive(debug_info_param info)
     }
 }
 
-void generic_mutex_data_impl::unlock_exclusive(debug_info_param info)
+void generic_mutex_data::unlock_exclusive(debug_info_param info)
 {
     context& c = ctx();
     c.sched();
@@ -222,7 +222,7 @@ void generic_mutex_data_impl::unlock_exclusive(debug_info_param info)
     RL_HIST(event_t) {this, event_t::type_unlock} RL_HIST_END();
 }
 
-void generic_mutex_data_impl::lock_shared(debug_info_param info)
+void generic_mutex_data::lock_shared(debug_info_param info)
 {
     RL_VERIFY(is_rw_);
     context& c = ctx();
@@ -278,7 +278,7 @@ void generic_mutex_data_impl::lock_shared(debug_info_param info)
     }
 }
 
-bool generic_mutex_data_impl::try_lock_shared(debug_info_param info)
+bool generic_mutex_data::try_lock_shared(debug_info_param info)
 {
     RL_VERIFY(is_rw_);
     context& c = ctx();
@@ -340,7 +340,7 @@ bool generic_mutex_data_impl::try_lock_shared(debug_info_param info)
     }
 }
 
-void generic_mutex_data_impl::unlock_shared(debug_info_param info)
+void generic_mutex_data::unlock_shared(debug_info_param info)
 {
     RL_VERIFY(is_rw_);
     context& c = ctx();
@@ -382,7 +382,7 @@ void generic_mutex_data_impl::unlock_shared(debug_info_param info)
     RL_HIST(event_t) {this, event_t::type_unlock_shared} RL_HIST_END();
 }
 
-void generic_mutex_data_impl::unlock_exclusive_or_shared(debug_info_param info)
+void generic_mutex_data::unlock_exclusive_or_shared(debug_info_param info)
 {
     if (exclusive_owner_ == ctx().threadx_->index_)
         unlock_exclusive(info);
@@ -390,19 +390,19 @@ void generic_mutex_data_impl::unlock_exclusive_or_shared(debug_info_param info)
         unlock_shared(info);
 }
 
-bool generic_mutex_data_impl::is_signaled(debug_info_param info)
+bool generic_mutex_data::is_signaled(debug_info_param info)
 {
     (void)info;
     return (exclusive_owner_ == state_free);
 }
 
-void generic_mutex_data_impl::memory_acquire(debug_info_param info)
+void generic_mutex_data::memory_acquire(debug_info_param info)
 {
     (void)info;
     sync_.acquire(ctx().threadx_);
 }
 
-void* generic_mutex_data_impl::prepare_wait(debug_info_param info)
+void* generic_mutex_data::prepare_wait(debug_info_param info)
 {
     (void)info;
     return &exclusive_waitset_;
