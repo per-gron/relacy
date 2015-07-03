@@ -25,7 +25,7 @@ struct context_addr_hash_iface
 
 
 
-template<typename base_t, thread_id_t thread_count>
+template<typename base_t>
 class context_addr_hash_impl : protected base_t
 {
 public:
