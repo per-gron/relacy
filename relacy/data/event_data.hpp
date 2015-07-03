@@ -18,30 +18,29 @@
 namespace rl
 {
 
-struct event_data
-{
-    virtual void set(debug_info_param info) = 0;
-    virtual void reset(debug_info_param info) = 0;
-    virtual void pulse(debug_info_param info) = 0;
-    virtual sema_wakeup_reason wait(bool try_wait, bool is_timed, debug_info_param info) = 0;
-    virtual bool is_signaled(debug_info_param info) = 0;
-    virtual void memory_acquire(debug_info_param info) = 0;
-    virtual void* prepare_wait(debug_info_param info) = 0;
-    virtual ~event_data() {} // just to calm down gcc
-};
-
-
-
-
-class event_data_impl : public event_data
+class event_data
 {
 public:
-    event_data_impl(thread_id_t thread_count, bool manual_reset, bool initial_state);
+    event_data(thread_id_t thread_count, bool manual_reset, bool initial_state);
 
-    event_data_impl(const event_data_impl &) = delete;
-    event_data_impl &operator=(const event_data_impl &) = delete;
+    event_data(const event_data &) = delete;
+    event_data &operator=(const event_data &) = delete;
 
-    ~event_data_impl();
+    ~event_data();
+
+    void set(debug_info_param info);
+
+    void reset(debug_info_param info);
+
+    void pulse(debug_info_param info);
+
+    sema_wakeup_reason wait(bool try_wait, bool is_timed, debug_info_param info);
+
+    bool is_signaled(debug_info_param info);
+
+    void memory_acquire(debug_info_param info);
+
+    void* prepare_wait(debug_info_param info);
 
 private:
     signature<0xdada1234> sign_;
@@ -59,7 +58,7 @@ private:
             type_pulse,
         };
 
-        event_data_impl* addr_;
+        event_data* addr_;
         type type_;
         bool initial_state_;
         bool final_state_;
@@ -68,15 +67,9 @@ private:
         void output(std::ostream& s) const;
     };
 
-    virtual void set(debug_info_param info);
-
-    virtual void reset(debug_info_param info);
-
-    virtual void pulse(debug_info_param info);
-
     struct wait_event
     {
-        event_data_impl* addr_;
+        event_data* addr_;
         bool try_wait_;
         bool is_timed_;
         bool initial_state_;
@@ -85,14 +78,6 @@ private:
 
         void output(std::ostream& s) const;
     };
-
-    virtual sema_wakeup_reason wait(bool try_wait, bool is_timed, debug_info_param info);
-
-    virtual bool is_signaled(debug_info_param info);
-
-    virtual void memory_acquire(debug_info_param info);
-
-    virtual void* prepare_wait(debug_info_param info);
 };
 
 }

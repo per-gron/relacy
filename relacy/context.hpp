@@ -119,7 +119,7 @@ private:
     slab_allocator<generic_mutex_data_impl>* mutex_alloc_;
     slab_allocator<condvar_data>*            condvar_alloc_;
     slab_allocator<sema_data_impl>*          sema_alloc_;
-    slab_allocator<event_data_impl>*         event_alloc_;
+    slab_allocator<event_data>*              event_alloc_;
 
     virtual atomic_data* atomic_ctor(void* ctx)
     {
@@ -186,7 +186,7 @@ public:
         mutex_alloc_ = new slab_allocator<generic_mutex_data_impl>();
         condvar_alloc_ = new slab_allocator<condvar_data>();
         sema_alloc_ = new slab_allocator<sema_data_impl>();
-        event_alloc_ = new slab_allocator<event_data_impl>();
+        event_alloc_ = new slab_allocator<event_data>();
 
         for (thread_id_t i = 0; i != thread_count; ++i)
         {
@@ -772,13 +772,13 @@ private:
 
     virtual event_data* event_ctor(bool manual_reset, bool initial_state)
     {
-        return new (event_alloc_->alloc()) event_data_impl(thread_count, manual_reset, initial_state);
+        return new (event_alloc_->alloc()) event_data(thread_count, manual_reset, initial_state);
     }
 
     virtual void event_dtor(event_data* cv)
     {
-        event_data_impl* mm = static_cast<event_data_impl*>(cv);
-        mm->~event_data_impl();
+        event_data* mm = static_cast<event_data*>(cv);
+        mm->~event_data();
         event_alloc_->free(mm);
     }
 

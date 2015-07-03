@@ -12,7 +12,7 @@
 namespace rl
 {
 
-event_data_impl::event_data_impl(thread_id_t thread_count, bool manual_reset, bool initial_state)
+event_data::event_data(thread_id_t thread_count, bool manual_reset, bool initial_state)
     : manual_reset_(manual_reset)
     , state_(initial_state)
     , ws_(thread_count)
@@ -20,27 +20,12 @@ event_data_impl::event_data_impl(thread_id_t thread_count, bool manual_reset, bo
 {
 }
 
-event_data_impl::~event_data_impl()
+event_data::~event_data()
 {
     //!!! detect destuction with waiters
 }
 
-void event_data_impl::state_event::output(std::ostream& s) const
-{
-    s << "<" << std::hex << addr_ << std::dec << "> event: ";
-    if (type_set == type_)
-        s << "set ";
-    else if (type_reset == type_)
-        s << "reset ";
-    else
-        s << "pulse ";
-    s << "initial_state=" << initial_state_
-        << " final_state=" << final_state_;
-    if (type_reset != type_)
-        s << " unblocked=" << unblocked_;
-}
-
-void event_data_impl::set(debug_info_param info)
+void event_data::set(debug_info_param info)
 {
     context& c = ctx();
     c.sched();
@@ -73,7 +58,7 @@ void event_data_impl::set(debug_info_param info)
     RL_HIST(state_event) {this, state_event::type_set, initial_state, state_, unblocked} RL_HIST_END();
 }
 
-void event_data_impl::reset(debug_info_param info)
+void event_data::reset(debug_info_param info)
 {
     context& c = ctx();
     c.sched();
@@ -91,7 +76,7 @@ void event_data_impl::reset(debug_info_param info)
     RL_HIST(state_event) {this, state_event::type_reset, initial_state, state_, 0} RL_HIST_END();
 }
 
-void event_data_impl::pulse(debug_info_param info)
+void event_data::pulse(debug_info_param info)
 {
     context& c = ctx();
     c.sched();
@@ -116,30 +101,7 @@ void event_data_impl::pulse(debug_info_param info)
     RL_HIST(state_event) {this, state_event::type_pulse, state_, state_, unblocked} RL_HIST_END();
 }
 
-void event_data_impl::wait_event::output(std::ostream& s) const
-{
-    s << "<" << std::hex << addr_ << std::dec << "> event: ";
-    if (try_wait_)
-        s << "try_wait ";
-    else if (is_timed_)
-        s << "timed wait ";
-    else
-        s << "wait ";
-
-    if (reason_ == sema_wakeup_reason_success)
-        s << "succeeded ";
-    else if (reason_ == sema_wakeup_reason_failed)
-        s << "failed ";
-    else if (reason_ == sema_wakeup_reason_timeout)
-        s << "timed out ";
-    else if (reason_ == sema_wakeup_reason_spurious)
-        s << "spuriously failed ";
-
-    s << "initial_state=" << initial_state_
-        << " final_state=" << final_state_;
-}
-
-sema_wakeup_reason event_data_impl::wait(bool try_wait, bool is_timed, debug_info_param info)
+sema_wakeup_reason event_data::wait(bool try_wait, bool is_timed, debug_info_param info)
 {
     context& c = ctx();
     c.sched();
@@ -203,22 +165,60 @@ sema_wakeup_reason event_data_impl::wait(bool try_wait, bool is_timed, debug_inf
     return reason;
 }
 
-bool event_data_impl::is_signaled(debug_info_param info)
+bool event_data::is_signaled(debug_info_param info)
 {
     (void)info;
     return state_;
 }
 
-void event_data_impl::memory_acquire(debug_info_param info)
+void event_data::memory_acquire(debug_info_param info)
 {
     (void)info;
     sync_.acquire(ctx().threadx_);
 }
 
-void* event_data_impl::prepare_wait(debug_info_param info)
+void* event_data::prepare_wait(debug_info_param info)
 {
     (void)info;
     return &ws_;
+}
+
+void event_data::state_event::output(std::ostream& s) const
+{
+    s << "<" << std::hex << addr_ << std::dec << "> event: ";
+    if (type_set == type_)
+        s << "set ";
+    else if (type_reset == type_)
+        s << "reset ";
+    else
+        s << "pulse ";
+    s << "initial_state=" << initial_state_
+        << " final_state=" << final_state_;
+    if (type_reset != type_)
+        s << " unblocked=" << unblocked_;
+}
+
+void event_data::wait_event::output(std::ostream& s) const
+{
+    s << "<" << std::hex << addr_ << std::dec << "> event: ";
+    if (try_wait_)
+        s << "try_wait ";
+    else if (is_timed_)
+        s << "timed wait ";
+    else
+        s << "wait ";
+
+    if (reason_ == sema_wakeup_reason_success)
+        s << "succeeded ";
+    else if (reason_ == sema_wakeup_reason_failed)
+        s << "failed ";
+    else if (reason_ == sema_wakeup_reason_timeout)
+        s << "timed out ";
+    else if (reason_ == sema_wakeup_reason_spurious)
+        s << "spuriously failed ";
+
+    s << "initial_state=" << initial_state_
+        << " final_state=" << final_state_;
 }
 
 }
