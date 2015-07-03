@@ -9,6 +9,10 @@
 
 #include "thread_info.hpp"
 
+#include "../context_base.hpp"
+#include "../foreach.hpp"
+#include "atomic_data.hpp"
+
 namespace rl
 {
 

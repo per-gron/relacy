@@ -11,7 +11,7 @@
 
 #include "base.hpp"
 #include "data/atomic_data.hpp"
-#include "data/thread_info_base.hpp"
+#include "data/thread_info.hpp"
 #include "history.hpp"
 #include "memory.hpp"
 #include "test_result.hpp"

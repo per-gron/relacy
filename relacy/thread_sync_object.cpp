@@ -9,6 +9,9 @@
 
 #include "thread_sync_object.hpp"
 
+#include "context_base.hpp"
+#include "data/atomic_data.hpp"
+
 namespace rl
 {
 
