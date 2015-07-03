@@ -20,7 +20,7 @@ namespace rl
 class context;
 struct atomic_data;
 struct var_data;
-struct atomic_data_impl;
+struct atomic_data;
 struct var_data_impl;
 
 class thread_info_base
@@ -135,7 +135,7 @@ private:
     virtual unsigned atomic_rmw_seq_cst(atomic_data* RL_RESTRICT data, bool& aba);
 
     template<memory_order mo, bool rmw>
-    unsigned get_load_index(atomic_data_impl& var);
+    unsigned get_load_index(atomic_data& var);
 
     template<memory_order mo, bool rmw>
     unsigned atomic_load(atomic_data* RL_RESTRICT data);

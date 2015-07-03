@@ -16,9 +16,7 @@
 namespace rl
 {
 
-struct atomic_data {};
-
-struct atomic_data_impl : atomic_data
+struct atomic_data
 {
     struct history_record
     {
@@ -39,7 +37,7 @@ struct atomic_data_impl : atomic_data
     waitset futex_ws_;
     sync_var futex_sync_;
 
-    atomic_data_impl(thread_id_t thread_count);
+    atomic_data(thread_id_t thread_count);
 };
 
 }

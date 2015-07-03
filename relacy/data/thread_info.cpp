@@ -16,6 +16,8 @@
 namespace rl
 {
 
+typedef atomic_data::history_record history_t;
+
 thread_info::thread_info(thread_id_t thread_count, thread_id_t index)
     : thread_info_base(thread_count, index)
     , sync_object_(thread_count)
@@ -164,10 +166,8 @@ unsigned thread_info::atomic_rmw_seq_cst(atomic_data* RL_RESTRICT data, bool& ab
 }
 
 template<memory_order mo, bool rmw>
-unsigned thread_info::get_load_index(atomic_data_impl& var)
+unsigned thread_info::get_load_index(atomic_data& var)
 {
-    typedef atomic_data_impl::history_record history_t;
-
     unsigned index = var.current_index_;
     context& c = ctx();
 
@@ -223,16 +223,12 @@ unsigned thread_info::atomic_load(atomic_data* RL_RESTRICT data)
     RL_VERIFY(memory_order_release != mo || rmw);
     RL_VERIFY(memory_order_acq_rel != mo || rmw);
 
-    atomic_data_impl& var = *static_cast<atomic_data_impl*>(data);
-
-    typedef atomic_data_impl::history_record history_t;
-
-    unsigned index = get_load_index<mo, rmw>(var);
+    unsigned index = get_load_index<mo, rmw>(*data);
     if ((unsigned)-1 == index)
         return (unsigned)-1;
 
     index %= atomic_history_size;
-    history_t& rec = var.history_[index];
+    history_t& rec = data->history_[index];
     RL_VERIFY(rec.busy_);
 
     own_acq_rel_order_ += 1;
@@ -255,12 +251,8 @@ unsigned thread_info::atomic_load(atomic_data* RL_RESTRICT data)
 
 unsigned thread_info::thread_info::atomic_init(atomic_data* RL_RESTRICT data)
 {
-    atomic_data_impl& var = *static_cast<atomic_data_impl*>(data);
-
-    typedef atomic_data_impl::history_record history_t;
-
-    unsigned const idx = ++var.current_index_ % atomic_history_size;
-    history_t& rec = var.history_[idx];
+    unsigned const idx = ++data->current_index_ % atomic_history_size;
+    history_t& rec = data->history_[idx];
 
     rec.busy_ = true;
     rec.thread_id_ = index_;
@@ -282,12 +274,8 @@ unsigned thread_info::atomic_store(atomic_data* RL_RESTRICT data)
     RL_VERIFY(memory_order_acquire != mo || rmw);
     RL_VERIFY(memory_order_acq_rel != mo || rmw);
 
-    atomic_data_impl& var = *static_cast<atomic_data_impl*>(data);
-
-    typedef atomic_data_impl::history_record history_t;
-
-    unsigned const idx = ++var.current_index_ % atomic_history_size;
-    history_t& rec = var.history_[idx];
+    unsigned const idx = ++data->current_index_ % atomic_history_size;
+    history_t& rec = data->history_[idx];
 
     rec.busy_ = true;
     rec.thread_id_ = index_;
@@ -303,8 +291,8 @@ unsigned thread_info::atomic_store(atomic_data* RL_RESTRICT data)
 
     rec.last_seen_order_[index_] = own_acq_rel_order_;
 
-    unsigned const prev_idx = (var.current_index_ - 1) % atomic_history_size;
-    history_t& prev = var.history_[prev_idx];
+    unsigned const prev_idx = (data->current_index_ - 1) % atomic_history_size;
+    history_t& prev = data->history_[prev_idx];
 
     bool const synch =
         (memory_order_release == mo
@@ -338,8 +326,7 @@ unsigned thread_info::atomic_store(atomic_data* RL_RESTRICT data)
 template<memory_order mo>
 unsigned thread_info::atomic_rmw(atomic_data* RL_RESTRICT data, bool& aba)
 {
-    atomic_data_impl& var = *static_cast<atomic_data_impl*>(data);
-    timestamp_t const last_seen = var.history_[var.current_index_ % atomic_history_size].last_seen_order_[index_];
+    timestamp_t const last_seen = data->history_[data->current_index_ % atomic_history_size].last_seen_order_[index_];
     aba = (last_seen > own_acq_rel_order_);
     atomic_load<mo, true>(data);
     unsigned result = atomic_store<mo, true>(data);
@@ -350,25 +337,23 @@ unsigned thread_info::atomic_rmw(atomic_data* RL_RESTRICT data, bool& aba)
 unpark_reason thread_info::atomic_wait(atomic_data* RL_RESTRICT data, bool is_timed, bool allow_spurious_wakeup, debug_info_param info)
 {
     context& c = ctx();
-    atomic_data_impl& var = *static_cast<atomic_data_impl*>(data);
-    unpark_reason const res = var.futex_ws_.park_current(c, is_timed, allow_spurious_wakeup, false, info);
+    unpark_reason const res = data->futex_ws_.park_current(c, is_timed, allow_spurious_wakeup, false, info);
     if (res == unpark_reason_normal)
-        var.futex_sync_.acquire(this);
+        data->futex_sync_.acquire(this);
     return res;
 }
 
 thread_id_t thread_info::atomic_wake(atomic_data* RL_RESTRICT data, thread_id_t count, debug_info_param info)
 {
     context& c = ctx();
-    atomic_data_impl& var = *static_cast<atomic_data_impl*>(data);
     thread_id_t unblocked = 0;
     for (; count != 0; count -= 1, unblocked += 1)
     {
-        if (var.futex_ws_.unpark_one(c, info) == false)
+        if (data->futex_ws_.unpark_one(c, info) == false)
             break;
     }
     if (unblocked != 0)
-        var.futex_sync_.release(this);
+        data->futex_sync_.release(this);
     return unblocked;
 }
 

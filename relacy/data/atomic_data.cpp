@@ -12,11 +12,11 @@
 namespace rl
 {
 
-atomic_data_impl::history_record::history_record(thread_id_t thread_count)
+atomic_data::history_record::history_record(thread_id_t thread_count)
     : acq_rel_order_(thread_count)
     , last_seen_order_(thread_count) {}
 
-atomic_data_impl::atomic_data_impl(thread_id_t thread_count)
+atomic_data::atomic_data(thread_id_t thread_count)
     : futex_ws_(thread_count)
     , futex_sync_(thread_count)
 {
