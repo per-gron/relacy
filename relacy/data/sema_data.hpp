@@ -69,8 +69,8 @@ public:
     };
 
     sema_wakeup_reason wait(bool try_wait,
-                                    bool is_timed,
-                                    debug_info_param info);
+                            bool is_timed,
+                            debug_info_param info);
 
     bool post(unsigned count, unsigned& prev_count, debug_info_param info);
 
