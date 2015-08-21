@@ -71,13 +71,11 @@ struct yield_event
 
 template<typename test_t, typename scheduler_t>
 class context_impl
-    : thread_local_contxt_impl<context_addr_hash<context>, test_t::params::thread_count>
+    : thread_local_contxt_impl<context, test_t::params::thread_count>
 {
 private:
-    typedef thread_local_contxt_impl
-        <context_addr_hash<context>,
-            test_t::params::thread_count>
-                base_t;
+    typedef thread_local_contxt_impl<context, test_t::params::thread_count>
+        base_t;
     typedef typename scheduler_t::shared_context_t shared_context_t;
 
     using base_t::params_;
@@ -106,7 +104,8 @@ private:
     test_t*                         current_test_suite;
     bool                            current_test_suite_constructed;
     bool                            first_thread_;
-    timestamp_t                     seq_cst_fence_order_ [thread_count];
+    timestamp_t                     seq_cst_fence_order_[thread_count];
+    context_addr_hash               context_addr_hash_;
 
     aligned<thread_info> threads_ [thread_count];
 
@@ -121,6 +120,11 @@ private:
     slab_allocator<condvar_data>*       condvar_alloc_;
     slab_allocator<sema_data>*          sema_alloc_;
     slab_allocator<event_data>*         event_alloc_;
+
+    virtual size_t get_addr_hash(void const* p) override
+    {
+        return context_addr_hash_.get_addr_hash(p);
+    }
 
     virtual atomic_data* atomic_ctor(void* ctx)
     {
@@ -616,6 +620,7 @@ public:
             seq_cst_fence_order_,
             &assign_zero);
 
+        context_addr_hash_.iteration_begin();
         base_t::iteration_begin();
 
         for (thread_id_t i = 0; i != thread_count; ++i)
