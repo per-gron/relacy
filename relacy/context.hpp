@@ -70,11 +70,11 @@ struct yield_event
 
 template<typename test_t, typename scheduler_t>
 class context_impl
-    : thread_local_contxt_impl<context_addr_hash_impl<context>, test_t::params::thread_count>
+    : thread_local_contxt_impl<context_addr_hash<context>, test_t::params::thread_count>
 {
 private:
     typedef thread_local_contxt_impl
-        <context_addr_hash_impl<context>,
+        <context_addr_hash<context>,
             test_t::params::thread_count>
                 base_t;
     typedef typename scheduler_t::shared_context_t shared_context_t;

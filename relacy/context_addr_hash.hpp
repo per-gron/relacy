@@ -16,10 +16,10 @@ namespace rl
 {
 
 template<typename base_t>
-class context_addr_hash_impl : protected base_t
+class context_addr_hash : protected base_t
 {
 public:
-    context_addr_hash_impl(thread_id_t thread_count_param, test_params& params)
+    context_addr_hash(thread_id_t thread_count_param, test_params& params)
         : base_t(thread_count_param, params)
     {
     }
