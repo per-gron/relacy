@@ -15,16 +15,6 @@
 namespace rl
 {
 
-
-struct context_addr_hash_iface
-{
-    virtual size_t      get_addr_hash               (void const* p) = 0;
-    virtual             ~context_addr_hash_iface    () {} // to calm down g++
-};
-
-
-
-
 template<typename base_t>
 class context_addr_hash_impl : protected base_t
 {

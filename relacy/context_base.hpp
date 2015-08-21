@@ -80,7 +80,6 @@ long volatile context_holder<fake>::ctx_seq = 0;
 
 class context
     : public thread_local_context_iface
-    , public context_addr_hash_iface
 {
 public:
     context(const context &) = delete;
@@ -96,6 +95,8 @@ public:
     {
         return context_holder<>::instance_ != nullptr;
     }
+
+    virtual size_t get_addr_hash(void const* p) = 0;
 
     virtual atomic_data* atomic_ctor(void* ctx) = 0;
     virtual void atomic_dtor(atomic_data* data) = 0;
