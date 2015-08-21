@@ -10,6 +10,8 @@
 #pragma once
 
 #include "base.hpp"
+#include "defs.hpp"
+#include "test_params.hpp"
 
 
 namespace rl

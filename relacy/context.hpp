@@ -10,6 +10,7 @@
 #pragma once
 
 #include "base.hpp"
+#include "context_addr_hash.hpp"
 #include "context_base.hpp"
 #include "data/condvar_data.hpp"
 #include "data/event_data.hpp"
